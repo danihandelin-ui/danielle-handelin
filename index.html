@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danielle Handelin</title>
+  <meta name="description" content="I make complicated operations feel simple and human. Jira Administration & Event Coordination." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --cream:      #F5F0E8;
+      --cream-deep: #EDE5D4;
+      --terra:      #C1673A;
+      --terra-mute: #D4845E;
+      --terra-pale: #EDD5C5;
+      --sage:       #6B7F6E;
+      --sage-light: #A8B8A4;
+      --sage-pale:  #DDE5DA;
+      --ink:        #1E1A16;
+      --ink-mid:    #3D352C;
+      --ink-soft:   #6B5F52;
+      --border:     rgba(30,26,22,0.10);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --max: 1140px;
+      --pad: clamp(1.5rem, 5vw, 4rem);
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ─── NAV ────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem var(--pad);
+      background: transparent;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(245,240,232,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--terra); }
+    .nav-cta {
+      background: var(--terra) !important;
+      color: var(--cream) !important;
+      padding: 0.55rem 1.3rem;
+      border-radius: 2px;
+      letter-spacing: 0.08em !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--ink) !important; }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      padding-top: 0;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem var(--pad) 6rem calc(var(--pad) + 1rem);
+      position: relative;
+    }
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 10%; bottom: 10%;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 6vw, 5.6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s ease 0.25s forwards;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--terra);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--ink-soft);
+      max-width: 42ch;
+      line-height: 1.7;
+      margin-bottom: 2.8rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s ease 0.55s forwards;
+    }
+
+    .btn-primary {
+      background: var(--terra);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--ink); transform: translateY(-1px); }
+
+    .btn-ghost {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--terra); border-color: var(--terra); }
+
+    /* ─── HERO PHOTO SIDE ─────────────────────────── */
+    .hero-right {
+      position: relative;
+      background: var(--cream-deep);
+      overflow: hidden;
+    }
+    .hero-right-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 60% 30%, rgba(193,103,58,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(107,127,110,0.15) 0%, transparent 55%);
+    }
+    .hero-photo-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 0;
+    }
+    .hero-photo-wrap img {
+      width: clamp(200px, 36vmin, 300px);
+      height: clamp(200px, 36vmin, 300px);
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top center;
+      border: 3px solid var(--cream);
+      box-shadow: 0 12px 40px rgba(47, 42, 37, 0.12);
+      opacity: 0;
+      transform: scale(1.04);
+      animation: photoReveal 1s ease 0.6s forwards;
+    }
+
+    /* Placeholder when no photo */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .photo-placeholder-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: var(--terra-pale);
+      border: 2px dashed var(--terra-mute);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-placeholder-circle svg {
+      width: 64px; height: 64px;
+      fill: var(--terra-mute);
+      opacity: 0.5;
+    }
+    .photo-placeholder p {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-detail-tag {
+      position: absolute;
+      bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+      right: clamp(0.75rem, 2.5vw, 1.25rem);
+      background: rgba(245, 240, 232, 0.82);
+      border: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      border-radius: 2px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 1s forwards;
+    }
+    .hero-detail-tag .tag-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--terra);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .hero-detail-tag .tag-value {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ─── SECTION BASE ────────────────────────────── */
+    section {
+      padding: clamp(5rem, 10vw, 9rem) var(--pad);
+    }
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 1rem;
+    }
+    .section-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .section-headline em { font-style: italic; color: var(--terra); }
+
+    /* ─── WHAT I DO ──────────────────────────────── */
+    .what-i-do {
+      background: var(--cream);
+      color: var(--ink);
+    }
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+    .what-card {
+      padding: 3.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .what-card:last-child { border-right: none; }
+    .what-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--terra);
+      transition: height 0.4s ease;
+    }
+    .what-card:hover { background: rgba(193,103,58,0.04); }
+    .what-card:hover::before { height: 100%; }
+
+    .what-number {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: rgba(30,26,22,0.12);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+    .what-title {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .what-title em { color: var(--terra-mute); font-style: italic; }
+    .what-body {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.75;
+    }
+    .what-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    .what-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+      border: 1px solid rgba(107,127,110,0.28);
+      padding: 0.3rem 0.75rem;
+      border-radius: 1px;
+    }
+
+    /* ─── WORK / CASE STUDIES ─────────────────────── */
+    .work { background: var(--cream); }
+    .work-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+    .work-cases {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .case-item {
+      display: grid;
+      grid-template-columns: 4fr 6fr auto;
+      gap: 3rem;
+      align-items: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: default;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .case-item:hover { background: rgba(193,103,58,0.03); }
+    .case-item:hover .case-arrow { opacity: 1; transform: translateX(0); }
+
+    .case-index {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+      opacity: 0.5;
+      margin-bottom: 0.5rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .case-org {
+      font-size: 0.78rem;
+      color: var(--terra);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+    }
+    .case-desc {
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+    .case-outcome {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.3rem;
+    }
+    .case-outcome-number {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--terra);
+      line-height: 1;
+    }
+    .case-outcome-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: right;
+    }
+    .case-arrow {
+      position: absolute;
+      right: 0;
+      font-size: 1.3rem;
+      color: var(--terra);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    /* ─── ABOUT ──────────────────────────────────── */
+    .about {
+      background: var(--sage-pale);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .about-copy p {
+      font-size: 1.05rem;
+      color: var(--ink-mid);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .about-copy p:last-child { margin-bottom: 0; }
+    .about-copy strong { color: var(--terra); font-weight: 500; }
+
+    .about-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding-top: 0.5rem;
+    }
+    .sidebar-block {
+      padding: 2rem;
+      background: var(--cream);
+      border-radius: 2px;
+    }
+    .sidebar-block-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1rem;
+    }
+    .sidebar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-list li {
+      font-size: 0.88rem;
+      color: var(--ink-mid);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .sidebar-list li::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--terra);
+      flex-shrink: 0;
+    }
+
+    /* ─── CONTACT ────────────────────────────────── */
+    .contact {
+      background: var(--cream-deep);
+      text-align: center;
+    }
+    .contact-inner {
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .contact-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--ink);
+      margin: 1.2rem 0 1.5rem;
+    }
+    .contact-headline em { font-style: italic; color: var(--terra); }
+    .contact-sub {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    .contact-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 3.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .contact-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+    }
+    .contact-links a:hover { color: var(--terra); }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      padding: 2rem var(--pad);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.3);
+      letter-spacing: 0.05em;
+    }
+    footer a {
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.3);
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--terra-mute); }
+
+    /* ─── ANIMATIONS ─────────────────────────────── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes photoReveal {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .hero-left::after { display: none; }
+      .hero-right {
+        height: 50vw;
+        min-height: 320px;
+      }
+      .what-grid {
+        grid-template-columns: 1fr;
+      }
+      .what-card { border-right: none; }
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .case-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .case-outcome { align-items: flex-start; }
+      .work-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links .nav-hide { display: none; }
+      .hero-left { padding: 7rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ──────────────────────────────────── -->
+  <nav id="nav">
+    <a class="nav-logo" href="#">Danielle Handelin</a>
+    <ul class="nav-links">
+      <li><a href="#work" class="nav-hide">Work</a></li>
+      <li><a href="#about" class="nav-hide">About</a></li>
+      <li><a href="https://calendly.com/YOUR_LINK" target="_blank" rel="noreferrer" class="nav-cta">Let's talk</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────── -->
+  <section class="hero" id="top">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Jira Administration &amp; Event Coordination</p>
+      <h1 class="hero-headline">
+        Operations that feel<br>
+        <em>simple</em> — finally.
+      </h1>
+      <p class="hero-sub">
+        I make complicated operations feel simple and human. Teams work better. Projects land cleanly. You stop losing sleep over the details.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Work with me</a>
+        <a href="#work" class="btn-ghost">See my work ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-bg"></div>
+      <div class="hero-photo-wrap">
+        <img
+          src="Headshot.png"
+          alt="Danielle Handelin"
+          width="800"
+          height="800"
+          fetchpriority="high"
+        />
+      </div>
+      <div class="hero-detail-tag">
+        <span class="tag-label">Based in</span>
+        <span class="tag-value">Mebane, NC</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHAT I DO ─────────────────────────────── -->
+  <section class="what-i-do">
+    <div class="container">
+      <p class="section-label" style="color:var(--terra-mute);">What I do</p>
+      <div class="what-grid">
+
+        <div class="what-card reveal">
+          <div class="what-number">01</div>
+          <h3 class="what-title">Jira <em>Administration</em></h3>
+          <p class="what-body">
+            I build Jira instances that people actually open. Workflows, dashboards, and visibility layers designed for how your team works — not how a manual says they should. From messy stacks to clean systems that leadership trusts.
+          </p>
+          <div class="what-tags">
+            <span class="what-tag">Jira Setup</span>
+            <span class="what-tag">JQL</span>
+            <span class="what-tag">Dashboards</span>
+            <span class="what-tag">Agile / Scrum</span>
+            <span class="what-tag">Confluence</span>
+          </div>
+        </div>
+
+        <div class="what-card reveal reveal-delay-2">
+          <div class="what-number">02</div>
+          <h3 class="what-title">Event <em>Coordination</em></h3>
+          <p class="what-body">
+            Complex events without the chaos. I handle the ownership maps, the communication layers, the run-of-show, and the contingency plans — so the day you've been building toward actually feels controlled.
+          </p>
+          <div class="what-tags">
+            <span class="what-tag">Logistics</span>
+            <span class="what-tag">Run-of-Show</span>
+            <span class="what-tag">Vendor Coordination</span>
+            <span class="what-tag">Cross-functional</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WORK ──────────────────────────────────── -->
+  <section class="work" id="work">
+    <div class="container">
+      <div class="work-header">
+        <div>
+          <p class="section-label">Selected work</p>
+          <h2 class="section-headline">Real problems.<br><em>Real outcomes.</em></h2>
+        </div>
+      </div>
+
+      <div class="work-cases">
+
+        <div class="case-item reveal">
+          <div>
+            <p class="case-index">01 / Jira Administration</p>
+            <h3 class="case-name">Advising Case Tracking System</h3>
+            <p class="case-org">Montana State University</p>
+          </div>
+          <p class="case-desc">
+            Built a Jira-based student advising case management system from scratch. Identified the gap, designed the workflow, and trained the team. Director formally adopted it across the department.
+          </p>
+          <div class="case-outcome">
+            <span class="case-outcome-number">Adopted</span>
+            <span class="case-outcome-label">org-wide by director</span>
+          </div>
+          <span class="case-arrow">→</span>
+        </div>
+
+        <div class="case-item reveal reveal-delay-1">
+          <div>
+            <p class="case-index">02 / Operations</p>
+            <h3 class="case-name">CRM Migration &amp; Program Ops</h3>
+            <p class="case-org">Big Brothers Big Sisters</p>
+          </div>
+          <p class="case-desc">
+            Led a full CRM migration while maintaining program continuity. Built internal documentation, managed cross-functional data integrity, and kept the team aligned throughout the transition.
+          </p>
+          <div class="case-outcome">
+            <span class="case-outcome-number">CRM</span>
+            <span class="case-outcome-label">migration completed</span>
+          </div>
+          <span class="case-arrow">→</span>
+        </div>
+
+        <div class="case-item reveal reveal-delay-2">
+          <div>
+            <p class="case-index">03 / Event Coordination</p>
+            <h3 class="case-name">Multi-Stakeholder Event Delivery</h3>
+            <p class="case-org">Hospitality &amp; Nonprofit</p>
+          </div>
+          <p class="case-desc">
+            Coordinated high-stakes events across venues, vendors, and cross-functional teams, managing staff and volunteers, stakeholder communication, and day-of logistics without missed handoffs. Calm is a skill that I carry with me.
+          </p>
+          <div class="case-outcome">
+            <span class="case-outcome-number">On time</span>
+            <span class="case-outcome-label">every time</span>
+          </div>
+          <span class="case-arrow">→</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ──────────────────────────────────── -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-copy reveal">
+          <p class="section-label">About</p>
+          <h2 class="section-headline" style="margin-bottom:2rem;">
+            The person<br>behind the <em>systems.</em>
+          </h2>
+          <p>
+            I've spent my career at the intersection of people and process, the place where a good system either holds things together or quietly falls apart. My background runs through higher education, nonprofits, hospitality, and operations, and the through-line in all of it is the same: <strong>I find what's broken and I fix it.</strong>
+          </p>
+          <p>
+            At Montana State, I built a Jira advising system that leadership formally adopted across the department. I have led CRM migration work while keeping teams supported and aligned, and I have coordinated complex events that required steady communication across stakeholders. I do my best work when the stakes are real and the brief is complicated.
+          </p>
+          <p>
+            Outside of work, I run trails, host a women's book club, and cook everything from scratch. At home, I also have a small farm of personality with 2 dogs and 4 cats. I believe in warmth without fluff, precision without coldness, and follow-through that feels like relief.
+          </p>
+        </div>
+
+        <div class="about-sidebar reveal reveal-delay-2">
+          <div class="sidebar-block">
+            <p class="sidebar-block-label">Core skills</p>
+            <ul class="sidebar-list">
+              <li>Jira Administration &amp; JQL</li>
+              <li>Agile / Scrum Facilitation</li>
+              <li>Event Logistics &amp; Run-of-Show</li>
+              <li>Cross-functional Coordination</li>
+              <li>Process Documentation</li>
+              <li>Stakeholder Communication</li>
+              <li>CRM Systems &amp; Data Integrity</li>
+            </ul>
+          </div>
+          <div class="sidebar-block">
+            <p class="sidebar-block-label">Certifications</p>
+            <ul class="sidebar-list">
+              <li>Certified Scrum Master (CSM)</li>
+            </ul>
+          </div>
+          <div class="sidebar-block">
+            <p class="sidebar-block-label">Available for</p>
+            <ul class="sidebar-list">
+              <li>Freelance &amp; contract engagements</li>
+              <li>Greensboro / Charlotte / Triangle, NC</li>
+              <li>Remote</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ────────────────────────────────── -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-inner reveal">
+        <p class="section-label" style="justify-content:center;display:flex;">Get in touch</p>
+        <h2 class="contact-headline">
+          Let's make something<br><em>work better.</em>
+        </h2>
+        <p class="contact-sub">
+          Whether you've got a Jira instance that's turned into a graveyard, an event that needs a steadier hand, or an operation that's outgrown its current setup — I'd love to hear about it.
+        </p>
+        <div class="contact-actions">
+          <!-- Replace with your Calendly link -->
+          <a href="https://calendly.com/YOUR_LINK" target="_blank" class="btn-primary">Book a call</a>
+          <a href="mailto:DaniHandelin@gmail.com" class="btn-ghost">DaniHandelin@gmail.com</a>
+        </div>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/daniellehandelin/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:DaniHandelin@gmail.com">Email</a>
+          <!-- Add resume link when ready -->
+          <!-- <a href="./resume.pdf" target="_blank">Resume</a> -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer>
+    <p>© <span id="yr"></span> Danielle Handelin</p>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <!-- ── SCRIPTS ────────────────────────────────── -->
+  <script>
+    // Year
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

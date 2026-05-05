@@ -1,0 +1,4 @@
+v4 quick notes
+- Replace https://your-domain.com in sitemap.xml and robots.txt after domain is live.
+- If you move inline CSS/JS out of index.html later, wire styles.css and script.js in the head/body.
+

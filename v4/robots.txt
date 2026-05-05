@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Add your live sitemap URL after launch.
+# Sitemap: https://your-domain.com/sitemap.xml
+
