@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Festival Schedule Style Calendar - 3 Options</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #fffdf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e0d6;
+      --accent: #b4534b;
+      --accent-soft: #f5e8e6;
+      --teal: #2d6a6a;
+      --teal-soft: #e8f2f2;
+      --cat-restaurant: rgba(147, 197, 253, 0.35);
+      --cat-museum: rgba(255, 192, 210, 0.42);
+      --cat-park: rgba(253, 224, 71, 0.35);
+      --cat-shopping: rgba(134, 239, 172, 0.35);
+      --cat-coffee: rgba(199, 184, 252, 0.38);
+      --cat-destination: rgba(153, 246, 228, 0.42);
+      --cat-other: rgba(253, 186, 116, 0.35);
+      --cat-restaurant-border: rgba(147, 197, 253, 0.55);
+      --cat-museum-border: rgba(244, 114, 182, 0.55);
+      --cat-park-border: rgba(253, 224, 71, 0.55);
+      --cat-shopping-border: rgba(134, 239, 172, 0.55);
+      --cat-coffee-border: rgba(167, 139, 250, 0.55);
+      --cat-destination-border: rgba(13, 148, 136, 0.55);
+      --cat-other-border: rgba(253, 186, 116, 0.55);
+    }
+    body { font-family: "Outfit", system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+    .section-title { font-size: 22px; font-weight: bold; color: var(--ink); margin: 50px 0 10px; text-align: center; }
+    .section-subtitle { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 25px; }
+    .option-grid { display: grid; grid-template-columns: 1fr; gap: 40px; max-width: 1100px; margin: 0 auto 60px; }
+    .wireframe { background: var(--paper); border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .page-label { background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; }
+    .option-title { padding: 12px 14px; background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%); color: var(--paper); font-weight: 700; font-size: 12px; letter-spacing: 0.05em; }
+    .header { background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%); color: var(--paper); padding: 12px 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .header-brand { letter-spacing: 2px; font-size: 14px; }
+    .header-actions { display: flex; gap: 5px; font-size: 9px; flex-wrap: wrap; }
+    .btn-header { background: rgba(255,255,255,0.15); color: var(--paper); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; font-size: 9px; font-weight: 500; }
+    .pane-title { padding: 12px 14px; border-bottom: 2px solid var(--accent); font-weight: 700; font-size: 11px; text-transform: uppercase; color: var(--accent); background: var(--paper); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
+    .pane-icon { font-size: 14px; }
+
+    /* OPTION 1: VERTICAL DAY COLUMNS */
+    .festival-layout { display: flex; gap: 12px; overflow-x: auto; padding: 12px; min-height: 520px; align-items: flex-start; }
+    .day-column { flex: 0 0 140px; display: flex; flex-direction: column; gap: 8px; }
+    .day-header { background: linear-gradient(135deg, var(--teal) 0%, var(--ink) 100%); color: white; padding: 10px 8px; border-radius: 8px 8px 0 0; text-align: center; font-weight: 700; font-size: 11px; }
+    .day-subheader { background: var(--teal-soft); color: var(--teal); padding: 4px 8px; text-align: center; font-size: 8px; font-weight: 600; border-radius: 0 0 8px 8px; }
+    .activity-card { background: var(--cat-coffee); border: 1px solid var(--cat-coffee-border); border-radius: 6px; padding: 7px 6px; font-size: 8px; font-weight: 600; color: var(--ink); line-height: 1.3; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.08); transition: all 0.15s; }
+    .activity-card:hover { transform: translateY(-2px); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+    .activity-card.restaurant { background: var(--cat-restaurant); border-color: var(--cat-restaurant-border); }
+    .activity-card.museum { background: var(--cat-museum); border-color: var(--cat-museum-border); }
+    .activity-card.park { background: var(--cat-park); border-color: var(--cat-park-border); }
+    .activity-card.shopping { background: var(--cat-shopping); border-color: var(--cat-shopping-border); }
+    .activity-card.destination { background: var(--cat-destination); border-color: var(--cat-destination-border); }
+    .activity-card.other { background: var(--cat-other); border-color: var(--cat-other-border); }
+    .activity-name { display: block; margin-bottom: 2px; }
+    .activity-time { display: block; font-size: 7px; opacity: 0.8; }
+    .empty-slot { background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 12px 6px; text-align: center; color: var(--muted); font-size: 7px; font-style: italic; min-height: 35px; display: flex; align-items: center; justify-content: center; }
+
+    /* OPTION 2: HORIZONTAL SCROLL WITH LARGER CARDS */
+    .festival-layout-2 { display: flex; gap: 16px; overflow-x: auto; padding: 12px; min-height: 520px; align-items: flex-start; }
+    .day-column-2 { flex: 0 0 180px; display: flex; flex-direction: column; gap: 8px; }
+    .day-header-2 { background: var(--accent); color: white; padding: 12px 10px; border-radius: 8px; text-align: center; font-weight: 700; font-size: 12px; letter-spacing: 0.05em; }
+    .day-subheader-2 { background: var(--accent-soft); color: var(--accent); padding: 6px 10px; text-align: center; font-size: 9px; font-weight: 600; }
+    .activity-card-2 { background: var(--cat-coffee); border: 1px solid var(--cat-coffee-border); border-radius: 8px; padding: 10px 8px; font-size: 9px; font-weight: 600; color: var(--ink); line-height: 1.4; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
+    .activity-card-2:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .activity-card-2.restaurant { background: var(--cat-restaurant); border-color: var(--cat-restaurant-border); }
+    .activity-card-2.museum { background: var(--cat-museum); border-color: var(--cat-museum-border); }
+    .activity-card-2.park { background: var(--cat-park); border-color: var(--cat-park-border); }
+    .activity-card-2.shopping { background: var(--cat-shopping); border-color: var(--cat-shopping-border); }
+    .activity-card-2.destination { background: var(--cat-destination); border-color: var(--cat-destination-border); }
+    .activity-card-2.other { background: var(--cat-other); border-color: var(--cat-other-border); }
+    .activity-name-2 { display: block; margin-bottom: 3px; }
+    .activity-time-2 { display: block; font-size: 8px; opacity: 0.8; }
+    .empty-slot-2 { background: var(--bg); border: 2px dashed var(--line); border-radius: 8px; padding: 16px 8px; text-align: center; color: var(--muted); font-size: 8px; font-style: italic; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+
+    /* OPTION 3: WOW - CIRCULAR DAY CARDS WITH TIMELINE */
+    .wow-layout { display: flex; flex-direction: column; gap: 16px; padding: 12px; }
+    .wow-day-row { display: flex; gap: 12px; align-items: stretch; }
+    .wow-day-circle { flex: 0 0 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--teal) 0%, var(--accent) 100%); color: white; border-radius: 50%; aspect-ratio: 1; font-weight: 700; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .wow-day-number { font-size: 28px; line-height: 1; }
+    .wow-day-label { font-size: 9px; margin-top: 4px; opacity: 0.9; }
+    .wow-timeline { flex: 1; display: flex; gap: 8px; position: relative; overflow-x: auto; padding: 4px 0; }
+    .wow-timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); z-index: 0; }
+    .wow-activity { flex: 0 0 130px; position: relative; z-index: 1; background: var(--cat-coffee); border: 1px solid var(--cat-coffee-border); border-radius: 8px; padding: 10px 8px; font-size: 9px; font-weight: 600; color: var(--ink); line-height: 1.3; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.15s; }
+    .wow-activity:hover { transform: scale(1.05); box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
+    .wow-activity.restaurant { background: var(--cat-restaurant); border-color: var(--cat-restaurant-border); }
+    .wow-activity.museum { background: var(--cat-museum); border-color: var(--cat-museum-border); }
+    .wow-activity.park { background: var(--cat-park); border-color: var(--cat-park-border); }
+    .wow-activity.shopping { background: var(--cat-shopping); border-color: var(--cat-shopping-border); }
+    .wow-activity.destination { background: var(--cat-destination); border-color: var(--cat-destination-border); }
+    .wow-activity.other { background: var(--cat-other); border-color: var(--cat-other-border); }
+    .wow-time { font-size: 7px; opacity: 0.75; }
+    .wow-empty { flex: 0 0 80px; background: var(--bg); border: 1px dashed var(--line); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 7px; text-align: center; padding: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="section-title">Festival Schedule Style — 3 Options</div>
+<div class="section-subtitle">Days as columns, activities as cards • Together but separate</div>
+
+<div class="option-grid">
+  <!-- OPTION 1: VERTICAL DAY COLUMNS (Like Festival) -->
+  <div class="wireframe">
+    <div class="page-label">Option 1: Vertical Day Columns (Festival Style)</div>
+    <div class="option-title">Compact, vertical scrolling within each day, clean separation</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+        <button class="btn-header">Home</button>
+        <button class="btn-header">Maps</button>
+      </div>
+    </div>
+    <div class="pane-title"><span class="pane-icon">📅</span> Calendar</div>
+    <div class="festival-layout">
+      <!-- Day 1 -->
+      <div class="day-column">
+        <div class="day-header">Thursday</div>
+        <div class="day-subheader">May 1</div>
+        <div class="activity-card" style="background: var(--cat-coffee); border-color: var(--cat-coffee-border);">
+          <span class="activity-name">☕ Bagels</span>
+          <span class="activity-time">8:00am • 45m</span>
+        </div>
+        <div class="empty-slot">Free time</div>
+        <div class="activity-card museum">
+          <span class="activity-name">🚶 High Line</span>
+          <span class="activity-time">10:30am • 90m</span>
+        </div>
+        <div class="empty-slot">Free time</div>
+        <div class="activity-card restaurant">
+          <span class="activity-name">🍽️ Dinner</span>
+          <span class="activity-time">6:00pm • 90m</span>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-column">
+        <div class="day-header">Friday</div>
+        <div class="day-subheader">May 2</div>
+        <div class="empty-slot">Open</div>
+        <div class="activity-card museum">
+          <span class="activity-name">🎨 Museum</span>
+          <span class="activity-time">11:00am • 120m</span>
+        </div>
+        <div class="empty-slot">Free time</div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-column">
+        <div class="day-header">Saturday</div>
+        <div class="day-subheader">May 3</div>
+        <div class="empty-slot">Open</div>
+        <div class="activity-card restaurant">
+          <span class="activity-name">🍽️ Lunch</span>
+          <span class="activity-time">1:00pm • 60m</span>
+        </div>
+        <div class="empty-slot">Free time</div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="day-column">
+        <div class="day-header">Sunday</div>
+        <div class="day-subheader">May 4</div>
+        <div class="empty-slot">Rest day</div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="day-column">
+        <div class="day-header">Monday</div>
+        <div class="day-subheader">May 5</div>
+        <div class="activity-card restaurant">
+          <span class="activity-name">🍽️ Dinner</span>
+          <span class="activity-time">6:00pm • 90m</span>
+        </div>
+        <div class="empty-slot">Free time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION 2: HORIZONTAL WITH LARGER CARDS -->
+  <div class="wireframe">
+    <div class="page-label">Option 2: Larger Cards, More Readable</div>
+    <div class="option-title">Bigger activity cards, easier to read, still scrollable</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+        <button class="btn-header">Home</button>
+        <button class="btn-header">Maps</button>
+      </div>
+    </div>
+    <div class="pane-title"><span class="pane-icon">📅</span> Calendar</div>
+    <div class="festival-layout-2">
+      <!-- Day 1 -->
+      <div class="day-column-2">
+        <div class="day-header-2">THURSDAY</div>
+        <div class="day-subheader-2">May 1 • 3 activities</div>
+        <div class="activity-card-2" style="background: var(--cat-coffee); border-color: var(--cat-coffee-border);">
+          <span class="activity-name-2">☕ Bagels</span>
+          <span class="activity-time-2">8:00 AM • 45 min</span>
+        </div>
+        <div class="empty-slot-2">9:45am–10:30am</div>
+        <div class="activity-card-2 museum">
+          <span class="activity-name-2">🚶 High Line</span>
+          <span class="activity-time-2">10:30 AM • 90 min</span>
+        </div>
+        <div class="empty-slot-2">12:00pm–6:00pm</div>
+        <div class="activity-card-2 restaurant">
+          <span class="activity-name-2">🍽️ Dinner</span>
+          <span class="activity-time-2">6:00 PM • 90 min</span>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-column-2">
+        <div class="day-header-2">FRIDAY</div>
+        <div class="day-subheader-2">May 2 • 1 activity</div>
+        <div class="empty-slot-2">Morning open</div>
+        <div class="activity-card-2 museum">
+          <span class="activity-name-2">🎨 Museum Tour</span>
+          <span class="activity-time-2">11:00 AM • 120 min</span>
+        </div>
+        <div class="empty-slot-2">1:00pm–11:59pm</div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-column-2">
+        <div class="day-header-2">SATURDAY</div>
+        <div class="day-subheader-2">May 3 • 1 activity</div>
+        <div class="empty-slot-2">Morning open</div>
+        <div class="activity-card-2 restaurant">
+          <span class="activity-name-2">🍽️ Lunch</span>
+          <span class="activity-time-2">1:00 PM • 60 min</span>
+        </div>
+        <div class="empty-slot-2">2:00pm–11:59pm</div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="day-column-2">
+        <div class="day-header-2">SUNDAY</div>
+        <div class="day-subheader-2">May 4 • Open</div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 10px; text-align: center; font-style: italic;">
+          No activities scheduled<br>Perfect day to explore!
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="day-column-2">
+        <div class="day-header-2">MONDAY</div>
+        <div class="day-subheader-2">May 5 • 1 activity</div>
+        <div class="empty-slot-2">Morning–evening</div>
+        <div class="activity-card-2 restaurant">
+          <span class="activity-name-2">🍽️ Dinner</span>
+          <span class="activity-time-2">6:00 PM • 90 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION 3: WOW FACTOR - CIRCULAR DAYS + HORIZONTAL TIMELINE -->
+  <div class="wireframe">
+    <div class="page-label">Option 3: ⭐ WOW FACTOR - Circular Day Badges + Timeline</div>
+    <div class="option-title">Eye-catching circular day indicators, activities flow horizontally, very visual</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+        <button class="btn-header">Home</button>
+        <button class="btn-header">Maps</button>
+      </div>
+    </div>
+    <div class="pane-title"><span class="pane-icon">📅</span> 5-Day Trip Timeline</div>
+    <div class="wow-layout">
+      <!-- Day 1 -->
+      <div class="wow-day-row">
+        <div class="wow-day-circle">
+          <div class="wow-day-number">1</div>
+          <div class="wow-day-label">THU<br>May 1</div>
+        </div>
+        <div class="wow-timeline">
+          <div class="wow-activity" style="background: var(--cat-coffee); border-color: var(--cat-coffee-border);">
+            <strong>☕ Bagels</strong><br><span class="wow-time">8:00 AM</span>
+          </div>
+          <div class="wow-empty">1h 30m</div>
+          <div class="wow-activity museum">
+            <strong>🚶 High Line</strong><br><span class="wow-time">10:30 AM</span>
+          </div>
+          <div class="wow-empty">7h 30m</div>
+          <div class="wow-activity restaurant">
+            <strong>🍽️ Dinner</strong><br><span class="wow-time">6:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="wow-day-row">
+        <div class="wow-day-circle" style="background: linear-gradient(135deg, var(--accent) 0%, var(--ink) 100%);">
+          <div class="wow-day-number">2</div>
+          <div class="wow-day-label">FRI<br>May 2</div>
+        </div>
+        <div class="wow-timeline">
+          <div class="wow-empty">11h</div>
+          <div class="wow-activity museum">
+            <strong>🎨 Museum</strong><br><span class="wow-time">11:00 AM</span>
+          </div>
+          <div class="wow-empty">12h</div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="wow-day-row">
+        <div class="wow-day-circle" style="background: linear-gradient(135deg, var(--accent) 0%, var(--teal) 100%); transform: rotate(30deg);">
+          <div class="wow-day-number" style="transform: rotate(-30deg);">3</div>
+          <div class="wow-day-label" style="transform: rotate(-30deg); font-size: 8px;">SAT<br>May 3</div>
+        </div>
+        <div class="wow-timeline">
+          <div class="wow-empty">13h</div>
+          <div class="wow-activity restaurant">
+            <strong>🍽️ Lunch</strong><br><span class="wow-time">1:00 PM</span>
+          </div>
+          <div class="wow-empty">11h</div>
+        </div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="wow-day-row">
+        <div class="wow-day-circle" style="background: linear-gradient(135deg, var(--teal) 0%, var(--accent) 100%);">
+          <div class="wow-day-number">4</div>
+          <div class="wow-day-label">SUN<br>May 4</div>
+        </div>
+        <div class="wow-timeline">
+          <div class="wow-empty">Full day</div>
+          <div style="flex: 0 0 100px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 9px; font-weight: 600; text-align: center;">Rest & Explore</div>
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="wow-day-row">
+        <div class="wow-day-circle" style="background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%);">
+          <div class="wow-day-number">5</div>
+          <div class="wow-day-label">MON<br>May 5</div>
+        </div>
+        <div class="wow-timeline">
+          <div class="wow-empty">18h</div>
+          <div class="wow-activity restaurant">
+            <strong>🍽️ Dinner</strong><br><span class="wow-time">6:00 PM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; margin: 50px 0 30px; color: var(--muted); font-size: 12px; max-width: 1100px; margin-left: auto; margin-right: auto;">
+  <p><strong>Option Comparison:</strong></p>
+  <p>
+    <strong>Option 1</strong> (Festival Classic) — Most compact, like your reference image<br>
+    <strong>Option 2</strong> (Readable) — Bigger cards, easier to read, good for older users<br>
+    <strong>Option 3 ⭐ WOW</strong> — Circular day badges + timeline = brand new visual experience, very modern
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option 6: Bold Colors + Icon Accent</title>
+  <style>
+    body { font-family: system-ui; background: #f7f4ef; margin: 0; padding: 20px; }
+    .wireframe { max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1c1917; }
+    .header { background: linear-gradient(135deg, #1c1917 0%, #2d6a6a 100%); color: white; padding: 14px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { font-size: 16px; letter-spacing: 3px; }
+    .header-buttons { display: flex; gap: 6px; font-size: 11px; }
+    .btn { background: rgba(255,255,255,0.15); color: white; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; font-weight: 500; }
+    .container { display: flex; height: 450px; background: white; }
+    .left { flex: 1; border-right: 2px solid #e7e0d6; display: flex; flex-direction: column; }
+    .right { flex: 1; display: flex; flex-direction: column; background: #fffdf9; }
+    .pane-title { padding: 12px 14px; border-bottom: 3px solid #2d6a6a; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #1c1917; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+    .pane-icon { font-size: 14px; }
+    .pane-content { flex: 1; overflow: auto; padding: 12px; }
+    .day-section { margin-bottom: 12px; }
+    .day-label { font-size: 9px; font-weight: 700; color: #78716c; text-transform: uppercase; margin-bottom: 6px; padding: 0 4px; letter-spacing: 0.5px; }
+    .day-chip { padding: 10px 12px; margin: 5px 0; border-radius: 8px; font-size: 11px; cursor: grab; font-weight: 600; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+    .day-chip:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(0,0,0,0.18); }
+    .day-chip.blue { background: #3b82f6; }
+    .day-chip.accent { background: #dc2626; }
+    .day-chip.green { background: #059669; }
+    .day-chip.orange { background: #ea580c; }
+    .day-chip.purple { background: #7c3aed; }
+    .day-chip-text { flex: 1; }
+    .day-chip-name { display: block; line-height: 1.3; }
+    .day-chip-time { font-size: 9px; opacity: 0.95; display: block; margin-top: 1px; }
+    .day-chip-icon { font-size: 14px; }
+    .spot-card { background: white; border: 2px solid #e7e0d6; padding: 11px 12px; margin: 6px 0; border-radius: 8px; font-size: 10px; cursor: pointer; transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+    .spot-card:hover { border-color: #2d6a6a; box-shadow: 0 2px 8px rgba(45,106,106,0.15); }
+    .spot-info-left { flex: 1; }
+    .spot-name { font-weight: 700; margin-bottom: 2px; color: #1c1917; }
+    .spot-meta { color: #78716c; font-size: 9px; }
+    .spot-duration { font-size: 9px; color: #2d6a6a; font-weight: 600; background: #e8f2f2; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+    .spot-icon { font-size: 16px; margin-left: 8px; }
+    .nav { display: flex; border-top: 2px solid #e7e0d6; background: white; }
+    .nav-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: 600; border-top: 3px solid transparent; transition: all 0.15s; }
+    .nav-btn.active { background: linear-gradient(180deg, #e8f2f2 0%, transparent 100%); border-top-color: #2d6a6a; color: #2d6a6a; }
+    .nav-btn:hover { background: #f7f4ef; }
+    .title { text-align: center; margin: 20px 0 10px; font-weight: bold; color: #1c1917; }
+    .subtitle { text-align: center; color: #78716c; font-size: 12px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="title">OPTION 6: Bold Colors + Icon Accents</div>
+  <div class="subtitle">Vibrant cards with emojis, clearer visual hierarchy</div>
+
+  <div class="wireframe">
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-buttons">
+        <button class="btn">Plan</button>
+        <button class="btn">Save</button>
+        <button class="btn">Export</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="left">
+        <div class="pane-title"><span class="pane-icon">📅</span> Calendar</div>
+        <div class="pane-content">
+          <div class="day-section">
+            <div class="day-label">Thu, May 1</div>
+            <div class="day-chip blue">
+              <div class="day-chip-text">
+                <span class="day-chip-name">Breakfast</span>
+                <span class="day-chip-time">8:00 AM • 45 min</span>
+              </div>
+              <span class="day-chip-icon">☕</span>
+            </div>
+            <div class="day-chip accent">
+              <div class="day-chip-text">
+                <span class="day-chip-name">High Line Walk</span>
+                <span class="day-chip-time">10:30 AM • 90 min</span>
+              </div>
+              <span class="day-chip-icon">🚶</span>
+            </div>
+          </div>
+
+          <div class="day-section">
+            <div class="day-label">Fri, May 2</div>
+            <div class="day-chip green">
+              <div class="day-chip-text">
+                <span class="day-chip-name">Museum</span>
+                <span class="day-chip-time">11:00 AM • 120 min</span>
+              </div>
+              <span class="day-chip-icon">🎨</span>
+            </div>
+            <div class="day-chip orange">
+              <div class="day-chip-text">
+                <span class="day-chip-name">Dinner</span>
+                <span class="day-chip-time">6:00 PM • 90 min</span>
+              </div>
+              <span class="day-chip-icon">🍽️</span>
+            </div>
+          </div>
+
+          <div class="day-section">
+            <div class="day-label">Sat, May 3</div>
+            <div class="day-chip purple">
+              <div class="day-chip-text">
+                <span class="day-chip-name">Jazz Club</span>
+                <span class="day-chip-time">9:00 PM • 90 min</span>
+              </div>
+              <span class="day-chip-icon">🎺</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pane-title"><span class="pane-icon">🎯</span> Backlog (12)</div>
+        <div class="pane-content">
+          <div class="spot-card">
+            <div class="spot-info-left">
+              <div class="spot-name">Strand Book Store</div>
+              <div class="spot-meta">NoHo / Nolita</div>
+            </div>
+            <div class="spot-duration">45 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-info-left">
+              <div class="spot-name">Greenacre Park</div>
+              <div class="spot-meta">Midtown East</div>
+            </div>
+            <div class="spot-duration">90 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-info-left">
+              <div class="spot-name">Palma Restaurant</div>
+              <div class="spot-meta">West Village</div>
+            </div>
+            <div class="spot-duration">60 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-info-left">
+              <div class="spot-name">Tomi Jazz Club</div>
+              <div class="spot-meta">Midtown East</div>
+            </div>
+            <div class="spot-duration">90 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-info-left">
+              <div class="spot-name">Blue Bottle Coffee</div>
+              <div class="spot-meta">Midtown</div>
+            </div>
+            <div class="spot-duration">45 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active">Calendar</button>
+      <button class="nav-btn">Backlog</button>
+      <button class="nav-btn">Schedule</button>
+    </div>
+  </div>
+</body>
+</html>

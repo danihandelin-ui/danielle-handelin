@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option 4: Enhanced Side-by-Side (1+2 Mix)</title>
+  <style>
+    body { font-family: system-ui; background: #f7f4ef; margin: 0; padding: 20px; }
+    .wireframe { max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1c1917; }
+    .header { background: linear-gradient(135deg, #1c1917 0%, #2d6a6a 100%); color: white; padding: 14px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { font-size: 16px; letter-spacing: 3px; }
+    .header-buttons { display: flex; gap: 8px; font-size: 11px; }
+    .btn { background: rgba(255,255,255,0.15); color: white; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; }
+    .btn:hover { background: rgba(255,255,255,0.25); }
+    .container { display: flex; height: 450px; background: white; }
+    .left { flex: 1; border-right: 2px solid #e7e0d6; display: flex; flex-direction: column; }
+    .right { flex: 1; display: flex; flex-direction: column; background: #fafaf8; }
+    .pane-title { background: linear-gradient(90deg, #f7f4ef 0%, transparent 100%); padding: 10px 14px; border-bottom: 2px solid #b4534b; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #b4534b; letter-spacing: 1px; }
+    .pane-content { flex: 1; overflow: auto; padding: 12px; }
+    .day-label { font-size: 10px; font-weight: bold; color: #2d6a6a; text-transform: uppercase; margin: 10px 0 6px; padding: 0 4px; letter-spacing: 0.5px; }
+    .day-chip { background: linear-gradient(135deg, #93c5fd 0%, #a78bfc 100%); color: white; padding: 10px 12px; margin: 5px 0; border-radius: 8px; font-size: 11px; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s; font-weight: 500; }
+    .day-chip:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
+    .day-chip.accent { background: linear-gradient(135deg, #b4534b 0%, #a16b5e 100%); }
+    .day-chip.green { background: linear-gradient(135deg, #86efac 0%, #6ee7b7 100%); }
+    .day-chip.orange { background: linear-gradient(135deg, #fdb874 0%, #fca55d 100%); }
+    .day-chip-name { font-weight: 600; display: block; }
+    .day-chip-time { font-size: 9px; opacity: 0.9; display: block; margin-top: 2px; }
+    .spot-card { background: white; border: 1.5px solid #e7e0d6; padding: 10px 12px; margin: 6px 0; border-radius: 9px; font-size: 10px; cursor: pointer; transition: all 0.15s; }
+    .spot-card:hover { border-color: #2d6a6a; box-shadow: 0 2px 8px rgba(45,106,106,0.12); }
+    .spot-name { font-weight: 600; margin-bottom: 3px; color: #1c1917; }
+    .spot-meta { color: #78716c; font-size: 9px; }
+    .spot-duration { font-size: 9px; color: #2d6a6a; font-weight: 500; margin-top: 3px; }
+    .nav { display: flex; border-top: 2px solid #e7e0d6; background: white; }
+    .nav-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: 600; border-top: 3px solid transparent; transition: all 0.2s; }
+    .nav-btn.active { background: linear-gradient(180deg, #e8f2f2 0%, transparent 100%); border-top-color: #2d6a6a; color: #2d6a6a; }
+    .nav-btn:hover { background: #f7f4ef; }
+    .title { text-align: center; margin: 20px 0 10px; font-weight: bold; color: #1c1917; }
+    .subtitle { text-align: center; color: #78716c; font-size: 12px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="title">OPTION 4: Enhanced Side-by-Side (1+2 Mix)</div>
+  <div class="subtitle">Polished split-view with gradient cards & better colors</div>
+
+  <div class="wireframe">
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-buttons">
+        <button class="btn">Plan</button>
+        <button class="btn">Save</button>
+        <button class="btn">Export</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="left">
+        <div class="pane-title">📅 Calendar</div>
+        <div class="pane-content">
+          <div class="day-label">Thu, May 1</div>
+          <div class="day-chip">
+            <span class="day-chip-name">Breakfast</span>
+            <span class="day-chip-time">8:00 AM • 45 min</span>
+          </div>
+          <div class="day-chip accent">
+            <span class="day-chip-name">High Line Walk</span>
+            <span class="day-chip-time">10:30 AM • 90 min</span>
+          </div>
+
+          <div class="day-label" style="margin-top: 14px;">Fri, May 2</div>
+          <div class="day-chip green">
+            <span class="day-chip-name">Museum</span>
+            <span class="day-chip-time">11:00 AM • 120 min</span>
+          </div>
+          <div class="day-chip orange">
+            <span class="day-chip-name">Dinner</span>
+            <span class="day-chip-time">6:00 PM • 90 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pane-title">🎯 Backlog (12)</div>
+        <div class="pane-content">
+          <div class="spot-card">
+            <div class="spot-name">Strand Book Store</div>
+            <div class="spot-meta">NoHo / Nolita</div>
+            <div class="spot-duration">45 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Greenacre Park</div>
+            <div class="spot-meta">Midtown East</div>
+            <div class="spot-duration">90 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Palma Restaurant</div>
+            <div class="spot-meta">West Village</div>
+            <div class="spot-duration">60 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Tomi Jazz Club</div>
+            <div class="spot-meta">Midtown East</div>
+            <div class="spot-duration">90 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active">Calendar</button>
+      <button class="nav-btn">Backlog</button>
+      <button class="nav-btn">Schedule</button>
+    </div>
+  </div>
+</body>
+</html>

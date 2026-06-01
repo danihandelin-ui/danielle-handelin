@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option 2: Card-First Grid (WOW)</title>
+  <style>
+    body { font-family: system-ui; background: #f7f4ef; margin: 0; padding: 20px; }
+    .wireframe { max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1c1917; }
+    .header { background: linear-gradient(135deg, #1c1917 0%, #2d6a6a 100%); color: white; padding: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { font-size: 18px; letter-spacing: 3px; }
+    .header-buttons { display: flex; gap: 8px; font-size: 11px; }
+    .btn { background: rgba(255,255,255,0.2); color: white; padding: 6px 10px; border: 1px solid white; cursor: pointer; border-radius: 4px; }
+    .pane-title { padding: 12px 16px; font-weight: bold; font-size: 12px; text-transform: uppercase; color: #b4534b; border-bottom: 2px solid #b4534b; }
+    .content { padding: 16px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .day-card { background: linear-gradient(135deg, #93c5fd 0%, #a78bfc 100%); color: white; padding: 16px; border-radius: 12px; cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .day-card.accent { background: linear-gradient(135deg, #b4534b 0%, #a16b5e 100%); }
+    .day-card-day { font-size: 11px; opacity: 0.9; }
+    .day-card-name { font-weight: bold; font-size: 13px; margin-top: 4px; }
+    .day-card-time { font-size: 10px; opacity: 0.8; margin-top: 4px; }
+    .spot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .spot-card { background: #f7f4ef; border: 2px solid #e7e0d6; padding: 10px; border-radius: 10px; font-size: 10px; cursor: pointer; transition: all 0.2s; }
+    .spot-card:hover { border-color: #2d6a6a; box-shadow: 0 2px 6px rgba(45,106,106,0.15); }
+    .spot-name { font-weight: bold; margin-bottom: 3px; }
+    .spot-meta { color: #78716c; font-size: 9px; }
+    .nav { display: flex; border-top: 1px solid #e7e0d6; background: white; }
+    .nav-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: bold; border-top: 3px solid transparent; }
+    .nav-btn.active { background: #e8f2f2; border-top-color: #2d6a6a; color: #2d6a6a; }
+    .title { text-align: center; margin: 20px 0 10px; font-weight: bold; color: #1c1917; }
+    .subtitle { text-align: center; color: #78716c; font-size: 12px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="title">OPTION 2: Card-First Grid (⭐ WOW FACTOR)</div>
+  <div class="subtitle">Visual, gamified, instant overview of trip</div>
+
+  <div class="wireframe">
+    <div class="header">
+      <div class="header-brand">DNA Travels</div>
+      <div class="header-buttons">
+        <button class="btn">+ Add</button>
+        <button class="btn">Plan</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="pane-title">Your 5-Day Trip</div>
+      <div class="grid">
+        <div class="day-card">
+          <div class="day-card-day">DAY 1</div>
+          <div class="day-card-name">Breakfast</div>
+          <div class="day-card-time">8:00 AM</div>
+        </div>
+        <div class="day-card">
+          <div class="day-card-day">DAY 1</div>
+          <div class="day-card-name">Walk the Line</div>
+          <div class="day-card-time">10:00 AM</div>
+        </div>
+        <div class="day-card accent">
+          <div class="day-card-day">DAY 2</div>
+          <div class="day-card-name">Museum</div>
+          <div class="day-card-time">11:00 AM</div>
+        </div>
+        <div class="day-card">
+          <div class="day-card-day">DAY 2</div>
+          <div class="day-card-name">Lunch</div>
+          <div class="day-card-time">1:00 PM</div>
+        </div>
+      </div>
+
+      <div class="pane-title">Unscheduled (12 spots)</div>
+      <div class="spot-grid">
+        <div class="spot-card">
+          <div class="spot-name">Strand Books</div>
+          <div class="spot-meta">NoHo • 45 min</div>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">Greenacre</div>
+          <div class="spot-meta">Midtown • 90 min</div>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">Palma</div>
+          <div class="spot-meta">W. Village • 60 min</div>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">Tomi Jazz</div>
+          <div class="spot-meta">Midtown • 90 min</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active">Overview</button>
+      <button class="nav-btn">Schedule</button>
+      <button class="nav-btn">Backlog</button>
+    </div>
+  </div>
+</body>
+</html>

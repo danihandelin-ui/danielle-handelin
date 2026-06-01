@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNA TRAVELS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #fffdf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e0d6;
+      --accent: #b4534b;
+      --accent-soft: #f5e8e6;
+      --teal: #2d6a6a;
+      --teal-soft: #e8f2f2;
+      --shadow: 0 2px 12px rgba(28, 25, 23, 0.06);
+      --header-h: 52px;
+      --nav-h: 52px;
+      --cat-restaurant: rgba(147, 197, 253, 0.35);
+      --cat-museum: rgba(255, 192, 210, 0.42);
+      --cat-park: rgba(253, 224, 71, 0.35);
+      --cat-shopping: rgba(134, 239, 172, 0.35);
+      --cat-coffee: rgba(199, 184, 252, 0.38);
+      --cat-destination: rgba(153, 246, 228, 0.42);
+      --cat-other: rgba(253, 186, 116, 0.35);
+      --cat-restaurant-border: rgba(147, 197, 253, 0.55);
+      --cat-museum-border: rgba(244, 114, 182, 0.55);
+      --cat-park-border: rgba(253, 224, 71, 0.55);
+      --cat-shopping-border: rgba(134, 239, 172, 0.55);
+      --cat-coffee-border: rgba(167, 139, 250, 0.55);
+      --cat-destination-border: rgba(13, 148, 136, 0.55);
+      --cat-other-border: rgba(253, 186, 116, 0.55);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .screen { display: none; min-height: 100%; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* —— Landing —— */
+    #landing {
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%),
+        var(--bg);
+    }
+    .landing-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 2.25rem 2rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .dna-mark {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      margin: 0 0 0.25rem;
+      color: var(--ink);
+      padding-left: 0.35em;
+    }
+    .dna-mark span { color: var(--accent); }
+    .landing-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 0.35rem;
+    }
+    .landing-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0 0 1.25rem;
+    }
+    .field { text-align: left; margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .field input {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 1rem;
+      background: var(--bg);
+    }
+    .field input:focus,
+    .field select:focus {
+      outline: 2px solid var(--teal);
+      outline-offset: 1px;
+      border-color: var(--teal);
+    }
+    .field select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 1rem;
+      background: var(--bg);
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 4.5rem 1fr;
+      gap: 0.5rem;
+    }
+    .day-schedule-row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .field-hint {
+      margin: 0.35rem 0 0;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .btn-main {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 10px;
+      background: var(--ink);
+      color: var(--paper);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-main:hover { background: var(--accent); }
+    .landing-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin: 1.25rem 0 0;
+      line-height: 1.45;
+    }
+    .flight-section {
+      margin: 0 0 1rem;
+      padding: 0.85rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+    }
+    .flight-section legend {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      padding: 0 0.35rem;
+    }
+    .flight-section legend .optional {
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--muted);
+    }
+    .flight-leg {
+      margin-bottom: 0.85rem;
+    }
+    .flight-leg:last-child { margin-bottom: 0; }
+    .flight-leg > label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .flight-leg-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 0.45rem;
+    }
+    .flight-leg-row select,
+    .flight-leg-row > input {
+      width: 100%;
+      padding: 0.55rem 0.6rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 0.92rem;
+      background: var(--paper);
+    }
+    .flight-leg-row .flight-other { grid-column: 1 / -1; margin-top: 0.45rem; }
+    .flight-time-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+      margin-top: 0.45rem;
+    }
+    .flight-time-row label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .flight-time-row input {
+      width: 100%;
+      padding: 0.5rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 0.92rem;
+      background: var(--paper);
+    }
+    .flight-other,
+    .flight-number {
+      margin-top: 0.4rem;
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 0.92rem;
+      background: var(--paper);
+    }
+    .flight-leg-hint {
+      margin: 0.35rem 0 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .flight-summary {
+      flex-shrink: 0;
+      margin: 0 1rem 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, var(--teal-soft) 0%, var(--paper) 100%);
+    }
+    .flight-summary-inner { margin: 0; }
+    .flight-line {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .flight-line:last-of-type { margin-bottom: 0.5rem; }
+    .flight-icon { margin-right: 0.25rem; }
+    .flight-edit-hint { margin: 0; font-size: 0.72rem; }
+    .linkish {
+      font: inherit;
+      font-size: inherit;
+      font-weight: 600;
+      color: var(--teal);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* —— Planner —— */
+    #planner { height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    .planner-body {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+    }
+    .planner-page {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .planner-page.active { display: flex; }
+    #page-calendar {
+      flex: 1.2;
+      min-width: 50%;
+    }
+    #page-backlog {
+      flex: 0.8;
+      min-width: 40%;
+      display: flex !important;
+      border-left: 1px solid var(--line);
+    }
+    #page-schedule {
+      flex: 1;
+    }
+    .planner-nav {
+      flex-shrink: 0;
+      height: var(--nav-h);
+      display: flex;
+      border-top: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .planner-nav[hidden] { display: none; }
+    .planner-nav button {
+      flex: 1;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      border-top: 2px solid transparent;
+      margin-top: -1px;
+    }
+    .planner-nav button.active {
+      color: var(--teal);
+      border-top-color: var(--teal);
+      background: var(--teal-soft);
+    }
+    .page-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .schedule-header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .btn-back {
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.4rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+    .schedule-title-wrap { flex: 1; min-width: 0; }
+    .schedule-title-wrap h2 { margin: 0; font-size: 0.95rem; font-weight: 600; }
+    .schedule-title-wrap p { margin: 0.15rem 0 0; font-size: 0.72rem; color: var(--muted); }
+    #schedule-content { flex: 1; min-height: 0; overflow: auto; padding: 0.75rem 1rem 1.25rem; }
+    .cat-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15rem 0.4rem;
+      border-radius: 999px;
+      margin-bottom: 0.3rem;
+    }
+    .cat-restaurant .cat-badge { background: var(--cat-restaurant); color: #1e40af; }
+    .cat-museum .cat-badge { background: var(--cat-museum); color: #be185d; }
+    .cat-park .cat-badge { background: var(--cat-park); color: #854d0e; }
+    .cat-shopping .cat-badge { background: var(--cat-shopping); color: #166534; }
+    .cat-coffee .cat-badge { background: var(--cat-coffee); color: #5b21b6; }
+    .cat-destination .cat-badge { background: var(--cat-destination); color: #0f766e; }
+    .cat-other .cat-badge { background: var(--cat-other); color: #9a3412; }
+    .spot-card.cat-restaurant { background: var(--cat-restaurant); border-color: var(--cat-restaurant-border); }
+    .spot-card.cat-museum { background: var(--cat-museum); border-color: var(--cat-museum-border); }
+    .spot-card.cat-park { background: var(--cat-park); border-color: var(--cat-park-border); }
+    .spot-card.cat-shopping { background: var(--cat-shopping); border-color: var(--cat-shopping-border); }
+    .spot-card.cat-coffee { background: var(--cat-coffee); border-color: var(--cat-coffee-border); }
+    .spot-card.cat-destination { background: var(--cat-destination); border-color: var(--cat-destination-border); }
+    .spot-card.cat-other { background: var(--cat-other); border-color: var(--cat-other-border); }
+    .day-chip.cat-restaurant { background: var(--cat-restaurant); }
+    .day-chip.cat-museum { background: var(--cat-museum); }
+    .day-chip.cat-park { background: var(--cat-park); }
+    .day-chip.cat-shopping { background: var(--cat-shopping); }
+    .day-chip.cat-coffee { background: var(--cat-coffee); }
+    .day-chip.cat-destination { background: var(--cat-destination); }
+    .day-chip.cat-other { background: var(--cat-other); }
+    .block.cat-restaurant { background: var(--cat-restaurant); border-left-color: var(--cat-restaurant-border); }
+    .block.cat-museum { background: var(--cat-museum); border-left-color: var(--cat-museum-border); }
+    .block.cat-park { background: var(--cat-park); border-left-color: var(--cat-park-border); }
+    .block.cat-shopping { background: var(--cat-shopping); border-left-color: var(--cat-shopping-border); }
+    .block.cat-coffee { background: var(--cat-coffee); border-left-color: var(--cat-coffee-border); }
+    .block.cat-destination { background: var(--cat-destination); border-left-color: var(--cat-destination-border); }
+    .block.cat-other { background: var(--cat-other); border-left-color: var(--cat-other-border); }
+    .cat-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.55rem 1.15rem;
+      flex-shrink: 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    .cat-legend span {
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+    }
+    .review-dialog { border: none; border-radius: 16px; padding: 0; max-width: 400px; width: calc(100% - 2rem); box-shadow: var(--shadow); }
+    .review-dialog::backdrop { background: rgba(0,0,0,0.35); }
+    .review-sub { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--muted); }
+    .star-rating { display: flex; gap: 0.35rem; margin-bottom: 0.75rem; }
+    .star-rating button {
+      font: inherit;
+      font-size: 1.75rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--line);
+      padding: 0;
+      line-height: 1;
+    }
+    .star-rating button.on { color: #eab308; }
+    .review-dialog textarea {
+      width: 100%;
+      min-height: 5rem;
+      padding: 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      margin-bottom: 0.75rem;
+    }
+    .block-review { font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; }
+    .btn-rate { font: inherit; font-size: 0.62rem; font-weight: 600; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; }
+    .review-banner {
+      position: fixed;
+      bottom: calc(var(--nav-h) + 0.75rem);
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100% - 2rem);
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.65rem 1rem;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      box-shadow: var(--shadow);
+      z-index: 90;
+      cursor: pointer;
+      display: none;
+    }
+    .review-banner.show { display: block; }
+    .excursion-panel {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--line);
+    }
+    .excursion-panel h3 {
+      margin: 0 0 0.25rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+    }
+    .excursion-hint {
+      margin: 0 0 0.65rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .excursion-group { margin-bottom: 0.9rem; }
+    .excursion-group h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .excursion-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.55rem 0.65rem;
+      margin-bottom: 0.45rem;
+    }
+    .excursion-card p {
+      margin: 0.2rem 0 0.35rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .excursion-live {
+      margin: 0.1rem 0 0.4rem !important;
+      font-size: 0.68rem !important;
+      color: var(--teal) !important;
+      font-weight: 500;
+    }
+    .excursion-empty {
+      margin: 0 0 0.6rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .planner-bar {
+      flex-shrink: 0;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .planner-brand {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+      color: var(--paper);
+    }
+    .planner-brand em { font-style: italic; color: var(--paper); font-weight: 500; }
+    .planner-meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      overflow: hidden;
+    }
+    #trip-label { font-size: 0.8rem; color: rgba(255, 253, 249, 0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #save-status {
+      font-size: 0.65rem;
+      color: rgba(255, 253, 249, 0.8);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #save-status[hidden] { display: none; }
+    .btn-plan {
+      font-weight: 600;
+      color: var(--paper);
+      border-color: rgba(255, 253, 249, 0.3);
+      background: rgba(255, 253, 249, 0.1);
+    }
+    .btn-plan:hover { background: rgba(255, 253, 249, 0.2); }
+    .btn-save { font-weight: 600; }
+    .bar-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+    .btn-ghost, .btn-outline {
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid rgba(255, 253, 249, 0.3);
+      background: rgba(255, 253, 249, 0.1);
+      color: var(--paper);
+    }
+    .btn-ghost:hover, .btn-outline:hover { background: rgba(255, 253, 249, 0.2); }
+    .btn-outline { background: rgba(255, 253, 249, 0.1); }
+
+    .split {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .pane {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .pane-calendar {
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 40%;
+      max-height: 45%;
+      border-bottom: 2px solid var(--line);
+      background: var(--paper);
+      transition: flex 0.25s ease, max-height 0.25s ease;
+    }
+    .pane-backlog {
+      flex: 1;
+      min-height: 0;
+      background: var(--bg);
+      transition: flex 0.25s ease;
+    }
+    .split.focus-calendar .pane-calendar {
+      flex: 1;
+      max-height: none;
+    }
+    .split.focus-calendar .pane-backlog {
+      flex: 0 0 auto;
+    }
+    .split.focus-calendar #calendar {
+      max-height: 32vh;
+      flex: 0 0 auto;
+    }
+    .split.focus-calendar #hours-panel {
+      flex: 1;
+      max-height: none;
+      min-height: 12rem;
+    }
+
+    .backlog-minimized-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .btn-backlog-expand {
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+      color: var(--teal);
+    }
+    .btn-backlog-expand:hover { background: var(--teal-soft); }
+    .backlog-mini-count { font-size: 0.75rem; color: var(--muted); }
+
+    .pane-head {
+      flex-shrink: 0;
+      padding: 0.85rem 1.15rem 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: var(--paper);
+      border-bottom: 2px solid var(--accent);
+    }
+    .pane-head h2 {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pane-head p { margin: 0; font-size: 0.65rem; color: var(--muted); font-weight: 500; margin-left: auto; }
+    .pane-hint { font-size: 0.75rem; color: var(--muted); padding: 0.6rem 1.15rem 0.75rem; flex-shrink: 0; line-height: 1.4; background: var(--bg); }
+
+    #calendar {
+      flex: 1;
+      overflow: auto;
+      padding: 0 1rem 0.75rem;
+      min-height: 0;
+    }
+    #hours-panel {
+      flex: 1;
+      min-height: 0;
+      max-height: 50%;
+      overflow: auto;
+      border-top: 2px solid var(--line);
+      background: var(--bg);
+      padding: 0.75rem 1rem 1rem;
+    }
+    .excursion-panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+    }
+    .excursion-panel h3 {
+      margin: 0 0 0.4rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      font-weight: 700;
+    }
+    .excursion-item {
+      background: var(--bg);
+      padding: 0.4rem 0.55rem;
+      border-radius: 6px;
+      margin-bottom: 0.3rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .excursion-item:last-child { margin-bottom: 0; }
+    #hours-panel[hidden] { display: none !important; }
+    .days-overview {
+      display: flex;
+      gap: 0.85rem;
+      padding: 0 0.25rem 0.25rem;
+      min-height: min-content;
+    }
+    .day-column {
+      flex: 0 0 152px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 120px;
+    }
+    .day-column.selected { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal); }
+    .day-column.selected-target { background: var(--teal-soft); }
+    .day-col-head {
+      padding: 0.5rem 0.55rem 0.35rem;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .day-col-head h3 { margin: 0; font-size: 0.78rem; font-weight: 600; }
+    .day-count { font-size: 0.65rem; color: var(--muted); }
+    .day-drop {
+      flex: 1;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      min-height: 80px;
+    }
+    .day-drop.drag-over { background: var(--accent-soft); outline: 2px dashed var(--accent); }
+    .day-drop-hint { font-size: 0.65rem; color: var(--muted); text-align: center; padding: 0.5rem 0; }
+    .day-chip {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.65rem 0.7rem;
+      font-size: 0.72rem;
+      position: relative;
+      cursor: grab;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.15s;
+    }
+    .day-chip:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); border-color: var(--teal); }
+    .day-chip.untimed { border-left: 3px solid var(--accent); }
+    .chip-content { flex: 1; }
+    .chip-name { display: block; font-weight: 700; line-height: 1.25; }
+    .chip-enjoy { display: block; font-size: 0.62rem; color: var(--teal); margin-top: 0.12rem; font-weight: 500; }
+    .chip-time { display: block; font-size: 0.62rem; color: var(--muted); margin-top: 0.08rem; }
+    .chip-emoji { font-size: 1.1rem; margin-left: 0.6rem; flex-shrink: 0; }
+    .chip-remove {
+      position: absolute; top: 2px; right: 3px;
+      border: none; background: none; color: var(--muted); cursor: pointer; font-size: 0.85rem;
+    }
+    .day-col-actions {
+      display: flex; gap: 0.25rem; padding: 0.35rem;
+      border-top: 1px solid var(--line);
+    }
+    .btn-mini {
+      flex: 1;
+      font: inherit;
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 0.3rem 0.2rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--paper);
+      cursor: pointer;
+    }
+    .btn-mini.active { background: var(--ink); color: var(--paper); }
+    .hours-head { margin-bottom: 0.5rem; font-size: 0.78rem; }
+    .hours-head span { display: block; color: var(--muted); font-size: 0.68rem; margin-top: 0.15rem; }
+    .untimed-row { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin-bottom: 0.5rem; font-size: 0.72rem; }
+    .untimed-label { color: var(--muted); font-weight: 600; }
+    .untimed-chip {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      cursor: grab;
+      font-size: 0.7rem;
+    }
+    .untimed-chip em { font-style: normal; font-size: 0.62rem; color: var(--muted); display: block; margin-top: 0.1rem; }
+    .hours-grid { margin-top: 0.25rem; }
+    .backlog-controls {
+      flex-shrink: 0;
+      padding: 0 1rem 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .backlog-search {
+      flex: 1;
+      min-width: 140px;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.85rem;
+      background: var(--paper);
+    }
+    .backlog-search:focus {
+      outline: 2px solid var(--teal);
+      outline-offset: 1px;
+    }
+    .backlog-view-toggle {
+      display: flex;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .backlog-view-toggle button {
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.4rem 0.65rem;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .backlog-view-toggle button.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .backlog-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 1.15rem 1.25rem;
+    }
+    #page-backlog { background: var(--bg); }
+    #page-backlog .pane-head { background: var(--paper); }
+    .never-again-section {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 2px dashed rgba(180, 83, 75, 0.35);
+    }
+    .never-again-title {
+      margin: 0 0 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+    .never-again-hint {
+      margin: 0 0 0.75rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .never-again-card {
+      opacity: 0.92;
+      background: rgba(245, 232, 230, 0.55) !important;
+      border-color: rgba(180, 83, 75, 0.35) !important;
+    }
+    .never-again-stars {
+      margin: 0 0 0.25rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: #ca8a04;
+    }
+    .never-again-note {
+      margin: 0 0 0.35rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.35;
+    }
+    #suggestions { margin-bottom: 1rem; }
+    .suggest-title { margin: 0 0 0.4rem; font-size: 0.72rem; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 0.06em; }
+    .suggest-empty { margin: 0; font-size: 0.75rem; color: var(--muted); }
+    .spot-card.suggest { outline: 2px solid var(--teal); outline-offset: 1px; }
+    .home-dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      max-width: 400px;
+      width: calc(100% - 2rem);
+      box-shadow: var(--shadow);
+    }
+    .home-dialog::backdrop { background: rgba(0,0,0,0.35); }
+    .dialog-inner { padding: 1.25rem; }
+    .dialog-inner h2 { margin: 0 0 0.75rem; font-size: 1rem; }
+    .dialog-inner select { width: 100%; padding: 0.5rem; font: inherit; margin-bottom: 0.75rem; }
+    .dialog-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .cal-header {
+      background: var(--bg);
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .cal-header.corner { border-right: 1px solid var(--line); }
+    .cal-hour {
+      padding: 0.5rem 0.55rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 52px;
+      text-align: right;
+    }
+    .cal-slot {
+      min-height: 52px;
+      border-bottom: 1px solid var(--line);
+      padding: 5px;
+      cursor: pointer;
+    }
+    .cal-slot.selected-target { background: var(--teal-soft); }
+    .cal-slot.drag-over { background: var(--accent-soft); outline: 2px dashed var(--accent); }
+    .slot-hint { font-size: 0.62rem; color: var(--line); }
+
+    .block {
+      background: var(--teal-soft);
+      border-left: 3px solid var(--teal);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.75rem;
+      position: relative;
+      margin-bottom: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    .block-name { font-weight: 700; padding-right: 1rem; line-height: 1.25; }
+    .block-enjoy { color: var(--teal); font-size: 0.65rem; font-weight: 500; margin-top: 0.12rem; }
+    .block-time { color: var(--muted); font-size: 0.65rem; margin-top: 0.08rem; }
+    .block .remove {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .block-actions { display: flex; gap: 0.35rem; margin-top: 0.2rem; }
+    .link-btn {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* —— Timeline Grid Calendar —— */
+    .timeline-grid-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.75rem;
+      overflow: auto;
+    }
+    .timeline-header-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .timeline-header-spacer {
+      width: 40px;
+      flex-shrink: 0;
+    }
+    .timeline-day-header {
+      flex: 0 0 140px;
+    }
+    .timeline-day-header .day-header {
+      background: var(--accent);
+      color: var(--paper);
+      padding: 0.55rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+    .timeline-day-header .day-subheader {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.35rem 0.5rem;
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+    .timeline-grid-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .time-col {
+      width: 40px;
+      flex-shrink: 0;
+    }
+    .time-marker {
+      height: 60px;
+      display: flex;
+      align-items: flex-start;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: right;
+      padding-right: 0.5rem;
+      padding-top: 0.25rem;
+    }
+    .grid-container {
+      flex: 1;
+      display: grid;
+      gap: 0.75rem;
+      position: relative;
+      min-height: 840px;
+      align-items: stretch;
+    }
+    .grid-background {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      z-index: 0;
+    }
+    .grid-line {
+      border-bottom: 2px dotted var(--line);
+      height: 60px;
+    }
+    .day-col {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border-radius: 8px;
+      border: 2px solid transparent;
+    }
+    .day-col.selected,
+    .timeline-day-header.selected {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 1px var(--teal);
+    }
+    .day-col.selected-target,
+    .timeline-day-header.selected-target {
+      background: var(--teal-soft);
+    }
+    .timeline-day-header {
+      cursor: pointer;
+      border-radius: 8px;
+      border: 2px solid transparent;
+    }
+    .timeline-day-header:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+    .day-untimed {
+      flex-shrink: 0;
+      min-height: 2.75rem;
+      padding: 0.35rem 0.4rem;
+      margin-bottom: 0.35rem;
+      border-radius: 8px;
+      border: 1px dashed var(--line);
+      background: var(--bg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+      z-index: 3;
+    }
+    .day-untimed.drag-over {
+      background: var(--accent-soft);
+      border-color: var(--teal);
+    }
+    .day-untimed .day-drop-hint {
+      font-size: 0.62rem;
+      color: var(--muted);
+      padding: 0.15rem;
+    }
+    .timeline-untimed-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      cursor: grab;
+      max-width: 100%;
+    }
+    .day-timeline {
+      position: relative;
+      flex: 1;
+      min-height: 840px;
+    }
+    .day-timeline .timeline-drop-zone {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 60px;
+      pointer-events: auto;
+    }
+    .timeline-drop-zone {
+      transition: background-color 0.15s;
+      z-index: 0;
+    }
+    .timeline-drop-zone.drag-over {
+      background-color: rgba(45, 106, 106, 0.15);
+      border-top: 2px dashed var(--teal);
+    }
+    /* Fire-engine-red diagonal stripes for blocked flight times */
+    .timeline-drop-zone.drop-blocked {
+      background: repeating-linear-gradient(
+        -45deg,
+        #c8102e,
+        #c8102e 8px,
+        #ff2a1a 8px,
+        #ff2a1a 16px
+      );
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .timeline-drop-zone.drop-blocked.drag-over {
+      opacity: 0.8;
+    }
+    .timeline-flight-block {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      z-index: 4;
+      border-radius: 8px;
+      padding: 0.35rem 0.45rem;
+      font-size: 0.62rem;
+      font-weight: 700;
+      line-height: 1.3;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid #8c0a1f;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+      background: repeating-linear-gradient(
+        -45deg,
+        #c8102e,
+        #c8102e 9px,
+        #ff2a1a 9px,
+        #ff2a1a 18px
+      );
+    }
+    .flight-block-time {
+      font-weight: 600;
+      font-size: 0.58rem;
+    }
+    .cal-slot.slot-blocked {
+      background: repeating-linear-gradient(
+        -45deg,
+        #c8102e,
+        #c8102e 8px,
+        #ff2a1a 8px,
+        #ff2a1a 16px
+      );
+      min-height: 2.5rem;
+    }
+    .slot-flight-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+      padding: 0.25rem;
+    }
+    .custom-maps-link {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--teal);
+      text-decoration: underline;
+    }
+    .custom-maps-hint { margin: 0.25rem 0 0.5rem !important; }
+    .timeline-activity {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      right: 0;
+      background: var(--cat-coffee);
+      border: 1px solid var(--cat-coffee-border);
+      border-radius: 8px;
+      padding: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      cursor: grab;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .timeline-activity:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+    .timeline-activity.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+    .timeline-activity.restaurant { background: var(--cat-restaurant); border-color: var(--cat-restaurant-border); }
+    .timeline-activity.museum { background: var(--cat-museum); border-color: var(--cat-museum-border); }
+    .timeline-activity.park { background: var(--cat-park); border-color: var(--cat-park-border); }
+    .timeline-activity.shopping { background: var(--cat-shopping); border-color: var(--cat-shopping-border); }
+    .timeline-activity.destination { background: var(--cat-destination); border-color: var(--cat-destination-border); }
+    .timeline-activity.other { background: var(--cat-other); border-color: var(--cat-other-border); }
+    .activity-name {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .activity-time {
+      display: block;
+      font-size: 0.62rem;
+      opacity: 0.85;
+    }
+    .activity-remove {
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding: 2px 4px;
+    }
+    .activity-edit {
+      position: absolute;
+      top: 2px;
+      right: 16px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.7rem;
+      line-height: 1;
+      padding: 2px 4px;
+      opacity: 0;
+    }
+    .timeline-activity:hover .activity-edit {
+      opacity: 1;
+    }
+    .timeline-dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      max-width: 300px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .timeline-dialog::backdrop {
+      background: rgba(0,0,0,0.35);
+    }
+    .dialog-form {
+      padding: 1.25rem;
+    }
+    .dialog-form label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .dialog-form select {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      margin-bottom: 0.5rem;
+      font-family: inherit;
+    }
+    .dur-custom-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .dur-custom-row input {
+      width: 4rem;
+      padding: 0.55rem 0.5rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      font-family: inherit;
+      text-align: center;
+    }
+    .dur-custom-row span {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .dur-hint {
+      margin: 0 0 0.5rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .dialog-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      padding: 0 1.25rem 1.25rem;
+    }
+    .dialog-actions button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .dialog-actions .btn-cancel {
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .dialog-actions .btn-save {
+      background: var(--teal);
+      color: white;
+    }
+
+    .backlog-toolbar {
+      flex-shrink: 0;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    #btn-sync-maps {
+      align-self: flex-start;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .add-dropdown {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+    .add-dropdown summary {
+      padding: 0.55rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .add-dropdown summary::before { content: "+"; color: var(--accent); font-size: 1.1rem; }
+    .add-dropdown summary::-webkit-details-marker { display: none; }
+    .add-dropdown[open] summary { border-bottom: 1px solid var(--line); background: var(--bg); }
+    .add-form {
+      padding: 0.75rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .add-form label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .add-form input, .add-form select {
+      width: 100%;
+      padding: 0.45rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.85rem;
+    }
+    .add-form button {
+      margin-top: 0.25rem;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--teal);
+      color: white;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hood-section { margin-bottom: 1rem; }
+    .hood-title {
+      margin: 0 0 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .hood-title span {
+      color: var(--muted);
+      font-weight: 500;
+      margin-left: 0.35rem;
+    }
+    .spots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+      gap: 0.65rem;
+    }
+    .hood-scroll {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+      gap: 0.65rem;
+    }
+    .spot-card {
+      min-width: 0;
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.15s;
+    }
+    .spot-card:hover { border-color: var(--teal); box-shadow: 0 2px 8px rgba(45, 106, 106, 0.1); }
+    .spot-card.selected { border-color: var(--accent); background: var(--accent-soft); outline: none; }
+    .spot-card.dragging { opacity: 0.5; }
+    .spot-card h4 {
+      margin: 0 0 0.3rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: var(--ink);
+    }
+    .spot-enjoy { margin: 0 0 0.15rem; font-size: 0.72rem; font-weight: 500; color: var(--teal); }
+    .spot-meta { margin: 0 0 0.3rem; font-size: 0.68rem; color: var(--muted); }
+    .spot-duration-badge { display: inline-block; font-size: 0.68rem; color: var(--teal); font-weight: 600; background: var(--teal-soft); padding: 0.2rem 0.45rem; border-radius: 4px; }
+    .spot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.45rem;
+      align-items: center;
+    }
+    .btn-add {
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.45rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--ink);
+      color: var(--paper);
+      cursor: pointer;
+    }
+    .empty-msg { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <section id="landing" class="screen">
+    <div class="landing-card">
+      <p class="dna-mark">D<span>·</span>N<span>·</span>A</p>
+      <h1 class="landing-title">Plan your trip</h1>
+      <p class="landing-sub">DNA TRAVELS</p>
+      <form id="landing-form">
+        <div class="field">
+          <label>Where are you going?</label>
+          <div class="field-row">
+            <div class="field" style="margin-bottom:0">
+              <label for="landing-city">City</label>
+              <input type="text" id="landing-city" required placeholder="New York" autocomplete="address-level2">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="landing-state">State</label>
+              <input type="text" id="landing-state" placeholder="NY" autocomplete="address-level1" maxlength="8">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="landing-country">Country</label>
+              <input type="text" id="landing-country" required placeholder="USA" autocomplete="country-name">
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="landing-maps-list">Google Maps saved list</label>
+          <input type="url" id="landing-maps-list" required placeholder="https://maps.app.goo.gl/…" inputmode="url">
+          <p class="field-hint">Saved → your list → Share → copy link. Saving here refreshes your backlog from that list (use <strong>./start.sh</strong> so sync works).</p>
+        </div>
+        <div class="field">
+          <label for="landing-ferry-site">Excursions website (NYC Ferry)</label>
+          <input type="url" id="landing-ferry-site" placeholder="https://www.ferry.nyc/routes-and-schedules/" inputmode="url">
+          <p class="field-hint">Optional. Used in day suggestions for ferries/excursions.</p>
+        </div>
+        <div class="field">
+          <label for="landing-start">Trip starts</label>
+          <input type="date" id="landing-start" required>
+        </div>
+        <div class="field">
+          <label for="landing-end">Trip ends</label>
+          <input type="date" id="landing-end" required>
+        </div>
+        <fieldset class="flight-section">
+          <legend>Flights <span class="optional">optional</span></legend>
+          <p class="field-hint" style="margin-top:0">The calendar blocks <strong>everything before your arrival lands</strong> on day 1 and <strong>everything after your departure takes off</strong> on the last day.</p>
+          <div class="flight-leg">
+            <label for="landing-arrival-airport">Arrival flight</label>
+            <div class="flight-leg-row">
+              <select id="landing-arrival-airport" aria-label="Arrival airport">
+                <option value="">— Airport —</option>
+                <option value="JFK">JFK (Kennedy)</option>
+                <option value="LGA">LGA (LaGuardia)</option>
+                <option value="EWR">EWR (Newark)</option>
+                <option value="OTHER">Other…</option>
+              </select>
+              <input type="date" id="landing-arrival-date" aria-label="Arrival date">
+              <input type="text" class="flight-other" id="landing-arrival-airport-other" placeholder="Airport name" hidden>
+            </div>
+            <div class="flight-time-row">
+              <label>Takes off<input type="time" id="landing-arrival-dep" aria-label="Arrival flight take-off time"></label>
+              <label>Lands<input type="time" id="landing-arrival-arr" aria-label="Arrival flight landing time"></label>
+            </div>
+            <input type="text" class="flight-number" id="landing-arrival-flightno" placeholder="Flight # / confirmation (e.g. DL123 / ABC123)">
+          </div>
+          <div class="flight-leg">
+            <label for="landing-departure-airport">Departure flight</label>
+            <div class="flight-leg-row">
+              <select id="landing-departure-airport" aria-label="Departure airport">
+                <option value="">— Airport —</option>
+                <option value="JFK">JFK (Kennedy)</option>
+                <option value="LGA">LGA (LaGuardia)</option>
+                <option value="EWR">EWR (Newark)</option>
+                <option value="OTHER">Other…</option>
+              </select>
+              <input type="date" id="landing-departure-date" aria-label="Departure date">
+              <input type="text" class="flight-other" id="landing-departure-airport-other" placeholder="Airport name" hidden>
+            </div>
+            <div class="flight-time-row">
+              <label>Takes off<input type="time" id="landing-departure-dep" aria-label="Departure flight take-off time"></label>
+              <label>Lands<input type="time" id="landing-departure-arr" aria-label="Departure flight landing time"></label>
+            </div>
+            <input type="text" class="flight-number" id="landing-departure-flightno" placeholder="Flight # / confirmation (e.g. DL456 / ABC123)">
+          </div>
+        </fieldset>
+        <div class="field">
+          <label>Your day schedule</label>
+          <div class="field-row day-schedule-row">
+            <div class="field" style="margin-bottom:0">
+              <label for="landing-day-start">Day starts</label>
+              <input type="time" id="landing-day-start" value="08:00" step="900">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="landing-day-end">Day ends</label>
+              <input type="time" id="landing-day-end" value="22:00" step="900">
+            </div>
+          </div>
+          <p class="field-hint">Calendar hours and flight blocks use this range (not everyone starts at 7 AM).</p>
+        </div>
+        <div class="field">
+          <label for="landing-home">Starting from (home base)</label>
+          <select id="landing-home"></select>
+          <p class="field-hint">Pick your hotel or apartment from spots in your list.</p>
+        </div>
+        <button type="submit" class="btn-main">Start planning</button>
+      </form>
+      <p class="landing-note">Reloading always returns here. Use <strong>Save</strong> in the planner before <strong>Export</strong>. Your last trip stays filled in below.</p>
+    </div>
+  </section>
+
+  <section id="planner" class="screen">
+    <header class="planner-bar">
+      <div class="planner-brand">DNA <em>Travels</em></div>
+      <div class="planner-meta">
+        <span id="trip-label"></span>
+        <span id="save-status" hidden></span>
+      </div>
+      <div class="bar-actions">
+        <button type="button" class="btn-ghost btn-plan" id="btn-plan">Plan</button>
+        <button type="button" class="btn-ghost btn-save" id="save-trip" title="Save trip to this device and download a backup file">Save</button>
+        <button type="button" class="btn-ghost" id="export-gcal" title="Saves your trip, then downloads calendar file">Export</button>
+        <button type="button" class="btn-ghost" id="edit-home" title="Change home base"><span id="home-label">Home</span></button>
+        <a class="btn-outline" id="maps-list" href="https://maps.app.goo.gl/SJWZdZ3FnuYX69Ri6" target="_blank" rel="noopener">Maps</a>
+      </div>
+    </header>
+    <div class="planner-body">
+      <div id="page-calendar" class="planner-page active">
+        <div class="pane-head">
+          <h2>Calendar</h2>
+          <p id="backlog-count-top"></p>
+        </div>
+        <p class="pane-hint">Drag spots onto a <strong>day column</strong> (top = no time, rows = hours). Tap a <strong>day header</strong> to select it for Add to day.</p>
+        <div id="flight-summary" class="flight-summary" hidden></div>
+        <div class="page-scroll">
+          <div id="calendar"></div>
+        </div>
+      </div>
+
+      <div id="page-backlog" class="planner-page">
+        <div class="pane-head">
+          <h2>Backlog</h2>
+          <p id="backlog-count"></p>
+        </div>
+        <div class="cat-legend" id="cat-legend"></div>
+        <div class="backlog-toolbar">
+          <button type="button" class="btn-ghost" id="btn-sync-maps" title="Pull latest places from your Google Maps saved list">Refresh from Maps</button>
+          <details class="add-dropdown">
+            <summary>Add your own activity</summary>
+            <form class="add-form" id="custom-form">
+              <div>
+                <label for="custom-name">Name</label>
+                <input type="text" id="custom-name" required placeholder="e.g. Walk the High Line">
+              </div>
+              <div>
+                <label for="custom-hood">Neighborhood</label>
+                <input type="text" id="custom-hood" placeholder="Chelsea">
+              </div>
+              <div>
+                <label for="custom-duration">Enjoy for</label>
+                <select id="custom-duration"></select>
+              </div>
+              <div>
+                <label for="custom-address">Address (Maps)</label>
+                <input type="text" id="custom-address" placeholder="Optional — helps find it in Maps">
+              </div>
+              <button type="submit">Add to backlog</button>
+              <p class="field-hint custom-maps-hint">This app can’t add places to your Google Maps list (Google has no API for that). <a id="custom-maps-link" class="custom-maps-link" href="#" target="_blank" rel="noopener">Open my Google Maps list</a> to add it there.</p>
+            </form>
+          </details>
+        </div>
+        <div class="backlog-controls">
+          <input type="search" class="backlog-search" id="backlog-search" placeholder="Search backlog…" autocomplete="off">
+          <div class="backlog-view-toggle" role="group" aria-label="Backlog view">
+            <button type="button" data-backlog-view="all" class="active">All</button>
+            <button type="button" data-backlog-view="areas">Area</button>
+            <button type="button" data-backlog-view="types">Type</button>
+          </div>
+        </div>
+        <div class="backlog-scroll" id="backlog-scroll">
+          <div id="suggestions"></div>
+          <div id="backlog"></div>
+          <div id="never-again" hidden></div>
+        </div>
+      </div>
+
+      <div id="page-schedule" class="planner-page">
+        <div class="schedule-header">
+          <button type="button" class="btn-back" id="schedule-back">← Calendar</button>
+          <div class="schedule-title-wrap">
+            <h2 id="schedule-day-label"></h2>
+            <p id="schedule-hint">Drag stops onto hours, or tap Auto day</p>
+          </div>
+          <button type="button" class="btn-mini" id="schedule-auto-day">Auto day</button>
+        </div>
+        <div id="schedule-content"></div>
+      </div>
+    </div>
+
+    <nav class="planner-nav" id="planner-nav">
+      <button type="button" data-nav="calendar" class="active">Calendar</button>
+      <button type="button" data-nav="backlog">Backlog</button>
+    </nav>
+  </section>
+
+  <dialog class="home-dialog" id="home-dialog">
+    <div class="dialog-inner">
+      <h2>Starting location</h2>
+      <p style="margin:0 0 0.75rem;font-size:0.85rem;color:var(--muted)">Used to sort your backlog and plan routes.</p>
+      <select id="home-base-select"></select>
+      <div class="dialog-actions">
+        <button type="button" class="btn-ghost" onclick="document.getElementById('home-dialog').close()">Cancel</button>
+        <button type="button" class="btn-main" id="home-save" style="width:auto;padding:0.5rem 1rem">Save</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="review-dialog" id="review-dialog">
+    <div class="dialog-inner">
+      <h2 id="review-activity-name"></h2>
+      <p class="review-sub">How was it?</p>
+      <div class="star-rating" id="review-stars"></div>
+      <textarea id="review-note" placeholder="What you liked or didn't like…"></textarea>
+      <div class="dialog-actions">
+        <button type="button" class="btn-ghost" id="review-later">Later</button>
+        <button type="button" class="btn-main" id="review-save" style="width:auto;padding:0.5rem 1rem">Save</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="review-banner" id="review-banner" role="button" tabindex="0"></div>
+  <div class="toast" id="toast"></div>
+  <script>window.__PLACES__ = [{"name": "Strand Book Store", "address": "828 Broadway, New York, NY 10003", "lat": 40.7332423, "lng": -73.9909687, "placeId": "/g/1ydpv9vcj", "neighborhood": "NoHo / Nolita / SoHo", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Strand%20Book%20Store&query_place_id=/g/1ydpv9vcj", "distFromPod": 2.09}, {"name": "Liberty View Industrial Plaza", "address": "850 3rd Ave, Brooklyn, NY 11232", "lat": 40.659125599999996, "lng": -74.0045449, "placeId": "/g/11b7h5lb_c", "neighborhood": "South Brooklyn", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Liberty%20View%20Industrial%20Plaza&query_place_id=/g/11b7h5lb_c", "distFromPod": 4.54}, {"name": "Old City Hall Station", "address": "New York, NY 10038", "lat": 40.712627499999996, "lng": -74.0068215, "placeId": "/g/11svrcyv2w", "neighborhood": "Financial District / Battery Park", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Old%20City%20Hall%20Station&query_place_id=/g/11svrcyv2w", "distFromPod": 2.51}, {"name": "Greenacre Park", "address": "217 E 51st St, New York, NY 10022", "lat": 40.7562408, "lng": -73.9692841, "placeId": "/g/11dz5q534g", "neighborhood": "Midtown East / Turtle Bay", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Greenacre%20Park&query_place_id=/g/11dz5q534g", "distFromPod": 2.9}, {"name": "Miss Nellie's", "address": "321 W 44th St, New York, NY 10036", "lat": 40.7593949, "lng": -73.9900238, "placeId": "/g/11whrnv1m3", "neighborhood": "Midtown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Miss%20Nellie%27s&query_place_id=/g/11whrnv1m3", "distFromPod": 3.47}, {"name": "Jin Mei Dumpling", "address": "25B Henry St B, New York, NY 10002", "lat": 40.7129498, "lng": -73.9965632, "placeId": "/g/11bw4_dc8f", "neighborhood": "Financial District / Battery Park", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Jin%20Mei%20Dumpling&query_place_id=/g/11bw4_dc8f", "distFromPod": 1.97}, {"name": "Sirrah", "address": "1 Little W 12th St, New York, NY 10014", "lat": 40.7395814, "lng": -74.005946, "placeId": "/g/11x7mj7ng7", "neighborhood": "Chelsea / Meatpacking", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sirrah&query_place_id=/g/11x7mj7ng7", "distFromPod": 2.98}, {"name": "Soothr", "address": "204 E 13th St, New York, NY 10003", "lat": 40.7323017, "lng": -73.9873417, "placeId": "/g/11j7dstzyj", "neighborhood": "East Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Soothr&query_place_id=/g/11j7dstzyj", "distFromPod": 1.9}, {"name": "Fu Zhou Wei Zhong Wei Jia Xiang Feng Wei", "address": "88 E Broadway, New York, NY 10002", "lat": 40.7138354, "lng": -73.9941403, "placeId": "/g/11g7zb07t5", "neighborhood": "Financial District / Battery Park", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Fu%20Zhou%20Wei%20Zhong%20Wei%20Jia%20Xiang%20Feng%20Wei&query_place_id=/g/11g7zb07t5", "distFromPod": 1.84}, {"name": "All Seasons Body Work", "address": "57 W 8th St, New York, NY 10011", "lat": 40.7334683, "lng": -73.9988991, "placeId": "/g/11c2p86qdl", "neighborhood": "Chelsea / Meatpacking", "duration": 75, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=All%20Seasons%20Body%20Work&query_place_id=/g/11c2p86qdl", "distFromPod": 2.44}, {"name": "Community Bookstore", "address": "143 7th Ave, Brooklyn, NY 11215", "lat": 40.6727373, "lng": -73.9764706, "placeId": "/g/1tcv775w", "neighborhood": "Park Slope / Gowanus", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Community%20Bookstore&query_place_id=/g/1tcv775w", "distFromPod": 3.06}, {"name": "Peter Pan Donut \\u0026 Pastry Shop", "address": "727 Manhattan Ave, Brooklyn, NY 11222", "lat": 40.726104899999996, "lng": -73.952254, "placeId": "/g/11b6g86wrp", "neighborhood": "Williamsburg", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Peter%20Pan%20Donut%20%5Cu0026%20Pastry%20Shop&query_place_id=/g/11b6g86wrp", "distFromPod": 0.84}, {"name": "Pearl Box", "address": "357 W Broadway, New York, NY 10013", "lat": 40.722921199999995, "lng": -74.0030252, "placeId": "/g/11ltjbscfy", "neighborhood": "Tribeca / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pearl%20Box&query_place_id=/g/11ltjbscfy", "distFromPod": 2.37}, {"name": "I'm donut ? times square", "address": "154 W 45th St, New York, NY 10036", "lat": 40.7575065, "lng": -73.9847053, "placeId": "/g/11wqj40773", "neighborhood": "Midtown", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=I%27m%20donut%20%3F%20times%20square&query_place_id=/g/11wqj40773", "distFromPod": 3.23}, {"name": "Salt Bread Ko", "address": "Next to Sundae's Best, 4 E 32nd St Store 5, New York, NY 10016", "lat": 40.7468898, "lng": -73.9851018, "placeId": "/g/11y_d88kxr", "neighborhood": "Midtown West / Times Square", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Salt%20Bread%20Ko&query_place_id=/g/11y_d88kxr", "distFromPod": 2.59}, {"name": "Papa d\u2019Amour", "address": "64 University Pl, New York, NY 10003", "lat": 40.7329872, "lng": -73.9937877, "placeId": "/g/11y8mzlcgn", "neighborhood": "NoHo / Nolita / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Papa%20d%E2%80%99Amour&query_place_id=/g/11y8mzlcgn", "distFromPod": 2.2}, {"name": "Funny Face Bakery", "address": "319 Lafayette St, New York, NY 10012", "lat": 40.725290699999995, "lng": -73.99493989999999, "placeId": "/g/11q4gwh33b", "neighborhood": "NoHo / Nolita / SoHo", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Funny%20Face%20Bakery&query_place_id=/g/11q4gwh33b", "distFromPod": 2.01}, {"name": "Edith\u2019s Sandwich Counter", "address": "495 Lorimer St, Brooklyn, NY 11211", "lat": 40.7117078, "lng": -73.94917459999999, "placeId": "/g/11kmwps814", "neighborhood": "Williamsburg", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Edith%E2%80%99s%20Sandwich%20Counter&query_place_id=/g/11kmwps814", "distFromPod": 0.57}, {"name": "Caff\u00e8 Panna", "address": "77 Irving Pl, New York, NY 10003", "lat": 40.7370091, "lng": -73.9867455, "placeId": "/g/11h1fz3sxl", "neighborhood": "NoHo / Nolita / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Caff%C3%A8%20Panna&query_place_id=/g/11h1fz3sxl", "distFromPod": 2.1}, {"name": "Or'esh", "address": "450 W Broadway, New York, NY 10012", "lat": 40.7260011, "lng": -74.0008797, "placeId": "/g/11yw0xq6t5", "neighborhood": "Chelsea / Meatpacking", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Or%27esh&query_place_id=/g/11yw0xq6t5", "distFromPod": 2.32}, {"name": "Umeko", "address": "63 Downing St, New York, NY 10014", "lat": 40.7292493, "lng": -74.0047526, "placeId": "/g/11yvy05nfd", "neighborhood": "West Village / Greenwich Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Umeko&query_place_id=/g/11yvy05nfd", "distFromPod": 2.59}, {"name": "AUTOPHOTO | Photobooth Gallery \\u0026 Museum", "address": "121 Orchard St, New York, NY 10002", "lat": 40.71951, "lng": -73.98978, "placeId": "/g/11yjn49qtf", "neighborhood": "Lower East Side / Chinatown", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=AUTOPHOTO%20%7C%20Photobooth%20Gallery%20%5Cu0026%20Museum&query_place_id=/g/11yjn49qtf", "distFromPod": 1.64}, {"name": "Palma", "address": "28 Cornelia St, New York, NY 10014", "lat": 40.7312789, "lng": -74.0023717, "placeId": "/g/1tflnbvh", "neighborhood": "West Village / Greenwich Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Palma&query_place_id=/g/1tflnbvh", "distFromPod": 2.53}, {"name": "Tomi Jazz", "address": "239 E 53rd St, New York, NY 10022", "lat": 40.757174899999995, "lng": -73.9678057, "placeId": "/g/1thr824s", "neighborhood": "Midtown East / Turtle Bay", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tomi%20Jazz&query_place_id=/g/1thr824s", "distFromPod": 2.95}, {"name": "Harry Potter Shop New York", "address": "935 Broadway, New York, NY 10010", "lat": 40.7406137, "lng": -73.9896299, "placeId": "/g/11j1mch7km", "neighborhood": "NoHo / Nolita / SoHo", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Harry%20Potter%20Shop%20New%20York&query_place_id=/g/11j1mch7km", "distFromPod": 2.38}, {"name": "A Pasta Bar", "address": "330 W Broadway, New York, NY 10013", "lat": 40.7223733, "lng": -74.0039913, "placeId": "/g/11c6v90ndy", "neighborhood": "Tribeca / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=A%20Pasta%20Bar&query_place_id=/g/11c6v90ndy", "distFromPod": 2.41}, {"name": "Lexington Candy Shop", "address": "1226 Lexington Ave, New York, NY 10028", "lat": 40.777527899999995, "lng": -73.9572398, "placeId": "/g/1tfk0ryg", "neighborhood": "Upper East Side", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lexington%20Candy%20Shop&query_place_id=/g/1tfk0ryg", "distFromPod": 4.32}, {"name": "David's Brisket House", "address": "533 Nostrand Ave, Brooklyn, NY 11216", "lat": 40.6790911, "lng": -73.9494893, "placeId": "/g/1tm8lhtp", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=David%27s%20Brisket%20House&query_place_id=/g/1tm8lhtp", "distFromPod": 2.54}, {"name": "Blue Bottle Coffee", "address": "10 E 52nd St, New York, NY 10022", "lat": 40.7596884, "lng": -73.9754651, "placeId": "/g/11gbwy7tb_", "neighborhood": "Midtown", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Blue%20Bottle%20Coffee&query_place_id=/g/11gbwy7tb_", "distFromPod": 3.2}, {"name": "SeaGlass Carousel", "address": "Water St \\u0026, State St, New York, NY 10004", "lat": 40.7021532, "lng": -74.0150019, "placeId": "/g/11b8tw21d4", "neighborhood": "Financial District / Battery Park", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=SeaGlass%20Carousel&query_place_id=/g/11b8tw21d4", "distFromPod": 3.06}, {"name": "Sunday Morning", "address": "11 W 25th St, New York, NY 10010", "lat": 40.743483399999995, "lng": -73.9896924, "placeId": "/g/11yvg27r3x", "neighborhood": "NoHo / Nolita / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sunday%20Morning&query_place_id=/g/11yvg27r3x", "distFromPod": 2.54}, {"name": "Cafe Paradiso", "address": "144 W 65th St, New York, NY 10023", "lat": 40.7733834, "lng": -73.9835585, "placeId": "/g/11tsb2sf63", "neighborhood": "Midtown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cafe%20Paradiso&query_place_id=/g/11tsb2sf63", "distFromPod": 4.23}, {"name": "Salt Hank\u2019s", "address": "280 Bleecker St, New York, NY 10014", "lat": 40.7317208, "lng": -74.0034605, "placeId": "/g/11x5k03632", "neighborhood": "West Village / Greenwich Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Salt%20Hank%E2%80%99s&query_place_id=/g/11x5k03632", "distFromPod": 2.6}, {"name": "Moonrise Bagels", "address": "58 W 8th St, New York, NY 10011", "lat": 40.73325, "lng": -73.99909939999999, "placeId": "/g/11xvb9shlc", "neighborhood": "Chelsea / Meatpacking", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Moonrise%20Bagels&query_place_id=/g/11xvb9shlc", "distFromPod": 2.45}, {"name": "Glace NY", "address": "1266 Madison Ave, New York, NY 10128", "lat": 40.7838242, "lng": -73.9568323, "placeId": "/g/11kpy6k30x", "neighborhood": "Upper East Side", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Glace%20NY&query_place_id=/g/11kpy6k30x", "distFromPod": 4.75}, {"name": "The Pastry Box", "address": "515 E 12th St, New York, NY 10009", "lat": 40.728843999999995, "lng": -73.9804952, "placeId": "/g/11v0ncbbwq", "neighborhood": "East Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=The%20Pastry%20Box&query_place_id=/g/11v0ncbbwq", "distFromPod": 1.47}, {"name": "Super Taste", "address": "26 Eldridge St, New York, NY 10002", "lat": 40.7150913, "lng": -73.9934218, "placeId": "/g/1tjhykxq", "neighborhood": "Lower East Side / Chinatown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Super%20Taste&query_place_id=/g/1tjhykxq", "distFromPod": 1.8}, {"name": "Le Crocodile", "address": "80 Wythe Ave, Brooklyn, NY 11249", "lat": 40.721964, "lng": -73.9580438, "placeId": "/g/11fnypyyfd", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Crocodile&query_place_id=/g/11fnypyyfd", "distFromPod": 0.48}, {"name": "Hungry Ghost Coffee", "address": "165 Church St, New York, NY 10007", "lat": 40.7153096, "lng": -74.00746389999999, "placeId": "/g/11fn5txft6", "neighborhood": "Tribeca / SoHo", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Hungry%20Ghost%20Coffee&query_place_id=/g/11fn5txft6", "distFromPod": 2.54}, {"name": "Beanmonger Coffee", "address": "620 Union St, Brooklyn, NY 11215", "lat": 40.677484899999996, "lng": -73.9835461, "placeId": "/g/11t9r0b5kk", "neighborhood": "Park Slope / Gowanus", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Beanmonger%20Coffee&query_place_id=/g/11t9r0b5kk", "distFromPod": 2.9}, {"name": "Obscure Coffee Roasters", "address": "259 Melrose St, Brooklyn, NY 11206", "lat": 40.7020029, "lng": -73.9299478, "placeId": "/g/11x13t3lrv", "neighborhood": "Williamsburg / Greenpoint", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Obscure%20Coffee%20Roasters&query_place_id=/g/11x13t3lrv", "distFromPod": 1.77}, {"name": "Bushwick Comedy Club", "address": "259 Melrose St, Brooklyn, NY 11206", "lat": 40.7020029, "lng": -73.9299478, "placeId": "/g/11w8p_vddp", "neighborhood": "Williamsburg / Greenpoint", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bushwick%20Comedy%20Club&query_place_id=/g/11w8p_vddp", "distFromPod": 1.77}, {"name": "SEY Coffee", "address": "18 Grattan St, Brooklyn, NY 11206", "lat": 40.7054507, "lng": -73.9324397, "placeId": "/g/11d_wvx51n", "neighborhood": "Williamsburg / Greenpoint", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=SEY%20Coffee&query_place_id=/g/11d_wvx51n", "distFromPod": 1.54}, {"name": "Driftaway Coffee", "address": "85 Debevoise Ave, Brooklyn, NY 11222", "lat": 40.7191845, "lng": -73.9394557, "placeId": "/g/11fy56j1rv", "neighborhood": "Williamsburg / Greenpoint", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Driftaway%20Coffee&query_place_id=/g/11fy56j1rv", "distFromPod": 1.06}, {"name": "Qahwah House Coffee - Williamsburg Brooklyn", "address": "162 Bedford Ave, Brooklyn, NY 11211", "lat": 40.718545999999996, "lng": -73.9571277, "placeId": "/g/11qmbj97mm", "neighborhood": "Williamsburg", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Qahwah%20House%20Coffee%20-%20Williamsburg%20Brooklyn&query_place_id=/g/11qmbj97mm", "distFromPod": 0.26}, {"name": "Pod Brooklyn Hotel", "address": "247 Metropolitan Ave, Brooklyn, NY 11211", "lat": 40.7150653, "lng": -73.9590281, "placeId": "/g/11g9vt9zm3", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pod%20Brooklyn%20Hotel&query_place_id=/g/11g9vt9zm3", "distFromPod": 0.0}, {"name": "Devoci\u00f3n", "address": "148 Grand St, Brooklyn, NY 11249", "lat": 40.714774, "lng": -73.9622189, "placeId": "/g/11btm5rh9p", "neighborhood": "Bushwick / East Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Devoci%C3%B3n&query_place_id=/g/11btm5rh9p", "distFromPod": 0.17}, {"name": "Margon", "address": "136 W 46th St, New York, NY 10036", "lat": 40.757906399999996, "lng": -73.9839619, "placeId": "/g/1tffq7rx", "neighborhood": "Midtown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Margon&query_place_id=/g/1tffq7rx", "distFromPod": 3.24}, {"name": "Best Bagel \\u0026 Coffee", "address": "225 W 35th St A, New York, NY 10001", "lat": 40.7522003, "lng": -73.99113489999999, "placeId": "/g/1tq8kgfd", "neighborhood": "Midtown West / Times Square", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Best%20Bagel%20%5Cu0026%20Coffee&query_place_id=/g/1tq8kgfd", "distFromPod": 3.07}, {"name": "Tick Tock Diner NY", "address": "481 8th Ave, New York, NY 10001", "lat": 40.75242, "lng": -73.993544, "placeId": "/g/1vmr28y0", "neighborhood": "Midtown West / Times Square", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tick%20Tock%20Diner%20NY&query_place_id=/g/1vmr28y0", "distFromPod": 3.15}, {"name": "EZ Paella \\u0026 Tapas", "address": "744 9th Ave, New York, NY 10019", "lat": 40.7636014, "lng": -73.98865289999999, "placeId": "/g/11p73q1d3t", "neighborhood": "Midtown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=EZ%20Paella%20%5Cu0026%20Tapas&query_place_id=/g/11p73q1d3t", "distFromPod": 3.7}, {"name": "Xiang Hotpot-Brooklyn", "address": "5816 Fort Hamilton Pkwy, Brooklyn, NY 11219", "lat": 40.633834199999995, "lng": -74.0049059, "placeId": "/g/11h6dbc8hk", "neighborhood": "South Brooklyn", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Xiang%20Hotpot-Brooklyn&query_place_id=/g/11h6dbc8hk", "distFromPod": 6.11}, {"name": "Little Italy", "address": "Little Italy, New York, NY 10013", "lat": 40.7191413, "lng": -73.9973273, "placeId": "/m/01nbpn", "neighborhood": "Little Italy", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Little%20Italy&query_place_id=/m/01nbpn", "distFromPod": 2.03}, {"name": "Chinatown", "address": "Chinatown, New York, NY", "lat": 40.715750899999996, "lng": -73.9970307, "placeId": "/m/0pnb8", "neighborhood": "Chinatown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Chinatown&query_place_id=/m/0pnb8", "distFromPod": 1.99}, {"name": "Juliana\u2019s", "address": "19 Old Fulton St, Brooklyn, NY 11201", "lat": 40.7027152, "lng": -73.9934657, "placeId": "/g/1hc8r8m13", "neighborhood": "Park Slope / Gowanus", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Juliana%E2%80%99s&query_place_id=/g/1hc8r8m13", "distFromPod": 2.0}, {"name": "Maison Premiere", "address": "298 Bedford Ave, Brooklyn, NY 11249", "lat": 40.7142687, "lng": -73.96166459999999, "placeId": "/m/0_yw222", "neighborhood": "Bushwick / East Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Maison%20Premiere&query_place_id=/m/0_yw222", "distFromPod": 0.15}, {"name": "RHYTHM ZERO | WILLIAMSBURG", "address": "209 N 11th St, Brooklyn, NY 11211", "lat": 40.718964199999995, "lng": -73.9534177, "placeId": "/g/11w_fpbhvj", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=RHYTHM%20ZERO%20%7C%20WILLIAMSBURG&query_place_id=/g/11w_fpbhvj", "distFromPod": 0.4}, {"name": "Leon\u2019s Bagels", "address": "128 Bedford Ave Suite B, Brooklyn, NY 11249", "lat": 40.7194267, "lng": -73.95621369999999, "placeId": "/g/11vb6xvr9f", "neighborhood": "Williamsburg", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Leon%E2%80%99s%20Bagels&query_place_id=/g/11vb6xvr9f", "distFromPod": 0.34}, {"name": "Cello's Pizzeria", "address": "36 St Marks Pl, New York, NY 10003", "lat": 40.728674399999996, "lng": -73.9881554, "placeId": "/g/11v_1cybj4", "neighborhood": "East Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cello%27s%20Pizzeria&query_place_id=/g/11v_1cybj4", "distFromPod": 1.79}, {"name": "Lucia Pizza Of SoHo", "address": "375 Canal St, New York, NY 10013", "lat": 40.721404299999996, "lng": -74.0043748, "placeId": "/g/11vhdb66_t", "neighborhood": "Tribeca / SoHo", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lucia%20Pizza%20Of%20SoHo&query_place_id=/g/11vhdb66_t", "distFromPod": 2.41}, {"name": "Philomena's Pizza", "address": "41-16 Queens Blvd, Sunnyside, NY 11104", "lat": 40.743349599999995, "lng": -73.9229155, "placeId": "/g/11gy29g2x9", "neighborhood": "Queens", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Philomena%27s%20Pizza&query_place_id=/g/11gy29g2x9", "distFromPod": 2.72}, {"name": "John's of Bleecker Street", "address": "278 Bleecker St, New York, NY 10014", "lat": 40.7316605, "lng": -74.003359, "placeId": "/g/11b8zbnw8g", "neighborhood": "West Village / Greenwich Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=John%27s%20of%20Bleecker%20Street&query_place_id=/g/11b8zbnw8g", "distFromPod": 2.59}, {"name": "Bleecker Street Pizza", "address": "69 7th Ave S, New York, NY 10014", "lat": 40.732198, "lng": -74.0034014, "placeId": "/g/1tfczq_0", "neighborhood": "West Village / Greenwich Village", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bleecker%20Street%20Pizza&query_place_id=/g/1tfczq_0", "distFromPod": 2.61}, {"name": "Luigi's Pizza", "address": "686 5th Ave, Brooklyn, NY 11215", "lat": 40.6616335, "lng": -73.9933425, "placeId": "/g/1tfwl8k7", "neighborhood": "Park Slope / Gowanus", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Luigi%27s%20Pizza&query_place_id=/g/1tfwl8k7", "distFromPod": 4.11}, {"name": "Jonny's Pizza", "address": "173 Orchard St, New York, NY 10002", "lat": 40.721584799999995, "lng": -73.9885841, "placeId": "/g/11v_444lb3", "neighborhood": "Lower East Side / Chinatown", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Jonny%27s%20Pizza&query_place_id=/g/11v_444lb3", "distFromPod": 1.61}, {"name": "King Souvlaki", "address": "31st Street and, 31st Ave, Astoria, NY 11106", "lat": 40.7643426, "lng": -73.9235858, "placeId": "/g/12ml2vw0b", "neighborhood": "Queens", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=King%20Souvlaki&query_place_id=/g/12ml2vw0b", "distFromPod": 3.88}, {"name": "T\u00eda Julia Comida T\u00edpica Mexicana", "address": "40-08 Case St, Elmhurst, NY 11373", "lat": 40.7481097, "lng": -73.8767665, "placeId": "/g/11h0blkcdg", "neighborhood": "Queens", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=T%C3%ADa%20Julia%20Comida%20T%C3%ADpica%20Mexicana&query_place_id=/g/11h0blkcdg", "distFromPod": 4.88}, {"name": "Queens Night Market", "address": "47-01 111th St, Corona, NY 11368", "lat": 40.748064299999996, "lng": -73.85051349999999, "placeId": "/g/11c1c3fmpr", "neighborhood": "Queens", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Queens%20Night%20Market&query_place_id=/g/11c1c3fmpr", "distFromPod": 6.12}, {"name": "Birria-Landia", "address": "491 Metropolitan Ave, Brooklyn, NY 11211", "lat": 40.7142781, "lng": -73.9525014, "placeId": "/g/11qm0f_6fh", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Birria-Landia&query_place_id=/g/11qm0f_6fh", "distFromPod": 0.35}, {"name": "Tony Dragon's Grille", "address": "Madison Ave \\u0026, E 62nd St, New York, NY 10065", "lat": 40.7656324, "lng": -73.97019139999999, "placeId": "/g/11g6nkv7rg", "neighborhood": "Midtown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tony%20Dragon%27s%20Grille&query_place_id=/g/11g6nkv7rg", "distFromPod": 3.54}, {"name": "Little Island", "address": "Little Island, Pier 55 at Hudson River Park, Hudson River Greenway, New York, NY 10014", "lat": 40.7420024, "lng": -74.010299, "placeId": "/g/11pxwbxpq8", "neighborhood": "Chelsea / Meatpacking", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Little%20Island&query_place_id=/g/11pxwbxpq8", "distFromPod": 3.27}, {"name": "A Taste of Katz's", "address": "1 Dekalb Ave, Brooklyn, NY 11201", "lat": 40.6913317, "lng": -73.98256119999999, "placeId": "/g/11c604tg99", "neighborhood": "Park Slope / Gowanus", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=A%20Taste%20of%20Katz%27s&query_place_id=/g/11c604tg99", "distFromPod": 2.05}, {"name": "Bethesda Terrace", "address": "New York, NY 10024", "lat": 40.773952799999996, "lng": -73.9709657, "placeId": "/m/09z4t6", "neighborhood": "Midtown", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bethesda%20Terrace&query_place_id=/m/09z4t6", "distFromPod": 4.12}, {"name": "Milano Market", "address": "1582 3rd Ave, New York, NY 10128", "lat": 40.780759599999996, "lng": -73.9528721, "placeId": "/g/1tfr1bh1", "neighborhood": "Upper East Side", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Milano%20Market&query_place_id=/g/1tfr1bh1", "distFromPod": 4.55}, {"name": "Adel's Famous Halal Food", "address": "1221 6th Ave, New York, NY 10020", "lat": 40.7591946, "lng": -73.9811521, "placeId": "/g/11bz083p3v", "neighborhood": "Midtown", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Adel%27s%20Famous%20Halal%20Food&query_place_id=/g/11bz083p3v", "distFromPod": 3.26}, {"name": "Pasta de Pasta", "address": "165 1st Ave, New York, NY 10003", "lat": 40.7290212, "lng": -73.98450009999999, "placeId": "/g/11x600ysks", "neighborhood": "East Village", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pasta%20de%20Pasta&query_place_id=/g/11x600ysks", "distFromPod": 1.65}, {"name": "Zeppola Bakery", "address": "499 7th Ave, New York, NY 10018", "lat": 40.752625599999995, "lng": -73.9890855, "placeId": "/g/11j322025z", "neighborhood": "Midtown West / Times Square", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zeppola%20Bakery&query_place_id=/g/11j322025z", "distFromPod": 3.04}, {"name": "L\\u0026B Spumoni Gardens", "address": "2725 86th St, Brooklyn, NY 11223", "lat": 40.5946348, "lng": -73.9813939, "placeId": "/m/0gjdwm1", "neighborhood": "South Brooklyn", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L%5Cu0026B%20Spumoni%20Gardens&query_place_id=/m/0gjdwm1", "distFromPod": 8.4}, {"name": "Tommy's Pizza", "address": "4033 E Tremont Ave, Bronx, NY 10465", "lat": 40.8195554, "lng": -73.81723939999999, "placeId": "/g/12q4xcb35", "neighborhood": "Bronx", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tommy%27s%20Pizza&query_place_id=/g/12q4xcb35", "distFromPod": 10.35}, {"name": "Pugsley Pizza", "address": "590 E 191st St, Bronx, NY 10458", "lat": 40.8588065, "lng": -73.8847706, "placeId": "/g/1v6wq7z4", "neighborhood": "Bronx", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pugsley%20Pizza&query_place_id=/g/1v6wq7z4", "distFromPod": 10.66}, {"name": "Mano's Pizzeria", "address": "62-98 Forest Ave, Ridgewood, NY 11385", "lat": 40.7108531, "lng": -73.9052694, "placeId": "/g/11p1684ryv", "neighborhood": "Queens", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mano%27s%20Pizzeria&query_place_id=/g/11p1684ryv", "distFromPod": 2.83}, {"name": "Rosario's", "address": "22-55 31st St, Astoria, NY 11105", "lat": 40.7749284, "lng": -73.9120251, "placeId": "/g/1tfkx71t", "neighborhood": "Queens", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Rosario%27s&query_place_id=/g/1tfkx71t", "distFromPod": 4.81}, {"name": "Mama's TOO! Upper West Side", "address": "2750 Broadway, New York, NY 10025", "lat": 40.800832899999996, "lng": -73.96765909999999, "placeId": "/g/11h9zpsws6", "neighborhood": "Upper West Side / Morningside", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mama%27s%20TOO%21%20Upper%20West%20Side&query_place_id=/g/11h9zpsws6", "distFromPod": 5.94}, {"name": "Roosevelt Island Tramway", "address": "254 E 60th St, New York, NY 10022", "lat": 40.7612789, "lng": -73.9641664, "placeId": "/g/11flgglh27", "neighborhood": "Midtown East / Turtle Bay", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Roosevelt%20Island%20Tramway&query_place_id=/g/11flgglh27", "distFromPod": 3.2}, {"name": "Robert F. Wagner Jr. Park", "address": "20 Battery Pl, New York, NY 10280", "lat": 40.7052908, "lng": -74.0187626, "placeId": "/g/11c5wlxcw4", "neighborhood": "Financial District / Battery Park", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Robert%20F.%20Wagner%20Jr.%20Park&query_place_id=/g/11c5wlxcw4", "distFromPod": 3.2}, {"name": "The Morgan Library \\u0026 Museum", "address": "225 Madison Ave, New York, NY 10016", "lat": 40.7492258, "lng": -73.9813971, "placeId": "/m/0537mx", "neighborhood": "Midtown West / Times Square", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=The%20Morgan%20Library%20%5Cu0026%20Museum&query_place_id=/m/0537mx", "distFromPod": 2.64}, {"name": "Radio Bakery", "address": "135 India St, Brooklyn, NY 11222", "lat": 40.7324335, "lng": -73.955074, "placeId": "/g/11shjtdl4m", "neighborhood": "Williamsburg", "duration": 45, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Radio%20Bakery&query_place_id=/g/11shjtdl4m", "distFromPod": 1.22}, {"name": "Rule of Thirds", "address": "171 Banker St, Brooklyn, NY 11222", "lat": 40.724744799999996, "lng": -73.9552327, "placeId": "/g/11h4f6rw18", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Rule%20of%20Thirds&query_place_id=/g/11h4f6rw18", "distFromPod": 0.7}, {"name": "L'industrie Pizzeria - Williamsburg", "address": "254 S 2nd St, Brooklyn, NY 11211", "lat": 40.711623499999995, "lng": -73.9578569, "placeId": "/g/11btvlb64w", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L%27industrie%20Pizzeria%20-%20Williamsburg&query_place_id=/g/11btvlb64w", "distFromPod": 0.25}, {"name": "Barnes \\u0026 Noble", "address": "33 E 17th St, New York, NY 10003", "lat": 40.7369844, "lng": -73.98973529999999, "placeId": "/g/1pv1dr4nm", "neighborhood": "NoHo / Nolita / SoHo", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Barnes%20%5Cu0026%20Noble&query_place_id=/g/1pv1dr4nm", "distFromPod": 2.21}, {"name": "Time Out Market New York", "address": "55 Water St, Brooklyn, NY 11201", "lat": 40.7034205, "lng": -73.9921457, "placeId": "/g/11fl78mh38", "neighborhood": "Park Slope / Gowanus", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Time%20Out%20Market%20New%20York&query_place_id=/g/11fl78mh38", "distFromPod": 1.91}, {"name": "Stavros Niarchos Foundation Library (SNFL)", "address": "455 5th Ave, New York, NY 10016", "lat": 40.7518974, "lng": -73.9818374, "placeId": "/g/11jkwtb7st", "neighborhood": "Midtown West / Times Square", "duration": 90, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Stavros%20Niarchos%20Foundation%20Library%20%28SNFL%29&query_place_id=/g/11jkwtb7st", "distFromPod": 2.81}, {"name": "Canticles Sober Lounge", "address": "207 Lewis Ave, Brooklyn, NY 11221", "lat": 40.6895009, "lng": -73.9360666, "placeId": "/g/11clzh57nd", "neighborhood": "Williamsburg / Greenpoint", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Canticles%20Sober%20Lounge&query_place_id=/g/11clzh57nd", "distFromPod": 2.14}, {"name": "Pier 57", "address": "25 11th Ave, New York, NY 10011", "lat": 40.743423799999995, "lng": -74.00901209999999, "placeId": "/g/1hc12738k", "neighborhood": "Chelsea / Meatpacking", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pier%2057&query_place_id=/g/1hc12738k", "distFromPod": 3.27}, {"name": "Sixty Three Clinton", "address": "63 Clinton St, New York, NY 10002", "lat": 40.719502999999996, "lng": -73.985142, "placeId": "/g/11p5lglmj0", "neighborhood": "Lower East Side / Chinatown", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sixty%20Three%20Clinton&query_place_id=/g/11p5lglmj0", "distFromPod": 1.4}, {"name": "Santa Fe BK", "address": "178 N 8th St, Brooklyn, NY 11211", "lat": 40.7179797, "lng": -73.9566863, "placeId": "/g/11rcvj0b8r", "neighborhood": "Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Santa%20Fe%20BK&query_place_id=/g/11rcvj0b8r", "distFromPod": 0.24}, {"name": "Super Burrito", "address": "320 Bedford Ave, Brooklyn, NY 11249", "lat": 40.7135074, "lng": -73.9621674, "placeId": "/g/11k4vsc_rk", "neighborhood": "Bushwick / East Williamsburg", "duration": 60, "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Super%20Burrito&query_place_id=/g/11k4vsc_rk", "distFromPod": 0.2}];</script>
+  <script src="app.js"></script>
+</body>
+</html>

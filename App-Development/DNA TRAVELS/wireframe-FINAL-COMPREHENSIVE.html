@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINAL WIREFRAME: Complete DNA Travels Design</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #fffdf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e0d6;
+      --accent: #b4534b;
+      --accent-soft: #f5e8e6;
+      --teal: #2d6a6a;
+      --teal-soft: #e8f2f2;
+      --cat-restaurant: rgba(147, 197, 253, 0.35);
+      --cat-museum: rgba(255, 192, 210, 0.42);
+      --cat-park: rgba(253, 224, 71, 0.35);
+      --cat-shopping: rgba(134, 239, 172, 0.35);
+      --cat-coffee: rgba(199, 184, 252, 0.38);
+      --cat-destination: rgba(153, 246, 228, 0.42);
+      --cat-other: rgba(253, 186, 116, 0.35);
+    }
+    body { font-family: "Outfit", system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+    .title { text-align: center; margin: 40px 0 10px; font-weight: bold; color: var(--ink); font-size: 22px; }
+    .subtitle { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 30px; }
+    .page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; max-width: 1200px; margin: 0 auto; }
+    .wireframe { background: var(--paper); border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .page-label { background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; }
+    .header { background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%); color: var(--paper); padding: 12px 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .header-brand { letter-spacing: 2px; font-size: 14px; }
+    .header-actions { display: flex; gap: 5px; font-size: 9px; flex-wrap: wrap; }
+    .btn-header { background: rgba(255,255,255,0.15); color: var(--paper); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; font-size: 9px; font-weight: 500; }
+    .btn-header:hover { background: rgba(255,255,255,0.25); }
+    .landing { height: 400px; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%), var(--bg); }
+    .landing-card { width: 85%; max-width: 320px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 24px 20px; text-align: center; box-shadow: 0 2px 12px rgba(28,25,23,0.06); }
+    .landing-mark { font-family: "Cormorant Garamond", Georgia, serif; font-size: 48px; font-weight: 600; letter-spacing: 12px; margin: 0 0 4px; color: var(--ink); }
+    .landing-mark span { color: var(--accent); }
+    .landing-title { font-size: 14px; font-weight: 600; margin: 0 0 3px; }
+    .landing-sub { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+    .landing-form { text-align: left; font-size: 9px; }
+    .landing-field { margin-bottom: 9px; }
+    .landing-label { display: block; font-weight: 600; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; font-size: 7px; letter-spacing: 0.08em; }
+    .landing-input { width: 100%; padding: 5px 7px; border: 1px solid var(--line); border-radius: 8px; font-size: 10px; box-sizing: border-box; background: var(--bg); }
+    .landing-submit { width: 100%; padding: 7px; background: var(--ink); color: var(--paper); border: none; border-radius: 8px; font-weight: 600; font-size: 10px; cursor: pointer; margin-top: 6px; }
+    .calendar-view { height: 480px; display: flex; flex-direction: column; }
+    .schedule-view { height: 480px; display: flex; flex-direction: column; }
+    .backlog-view { height: 480px; display: flex; flex-direction: column; }
+    .pane-title { padding: 10px 12px; border-bottom: 2px solid var(--accent); font-weight: 600; font-size: 10px; text-transform: uppercase; color: var(--accent); background: var(--paper); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
+    .pane-icon { font-size: 14px; }
+    .pane-meta { color: var(--muted); font-size: 8px; margin-left: auto; font-weight: normal; }
+    .container { display: flex; flex: 1; }
+    .left { flex: 1; border-right: 2px solid var(--line); padding: 10px; overflow: auto; }
+    .right { flex: 1; padding: 10px; overflow: auto; background: var(--bg); }
+    .category-legend { display: flex; gap: 4px; flex-wrap: wrap; padding: 6px 10px; background: var(--paper); border-bottom: 1px solid var(--line); font-size: 7px; }
+    .cat-badge { padding: 2px 4px; border-radius: 999px; font-weight: 600; }
+    .cat-badge.restaurant { background: var(--cat-restaurant); color: #1e40af; }
+    .cat-badge.museum { background: var(--cat-museum); color: #be185d; }
+    .cat-badge.park { background: var(--cat-park); color: #854d0e; }
+    .cat-badge.shopping { background: var(--cat-shopping); color: #166534; }
+    .cat-badge.coffee { background: var(--cat-coffee); color: #5b21b6; }
+    .cat-badge.destination { background: var(--cat-destination); color: #0f766e; }
+    .cat-badge.other { background: var(--cat-other); color: #9a3412; }
+    .day-section { margin-bottom: 12px; }
+    .day-label { font-size: 8px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin: 8px 0 4px; letter-spacing: 0.5px; }
+    .day-chip { padding: 10px 12px; margin: 5px 0; border-radius: 10px; font-size: 10px; font-weight: 600; color: var(--ink); box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--line); }
+    .day-chip.blue { background: var(--cat-restaurant); border-color: rgba(147, 197, 253, 0.55); }
+    .day-chip.pink { background: var(--cat-museum); border-color: rgba(244, 114, 182, 0.55); }
+    .day-chip.green { background: var(--cat-shopping); border-color: rgba(134, 239, 172, 0.55); }
+    .day-chip.yellow { background: var(--cat-park); border-color: rgba(253, 224, 71, 0.55); }
+    .day-chip.orange { background: var(--cat-other); border-color: rgba(253, 186, 116, 0.55); }
+    .day-chip.purple { background: var(--cat-coffee); border-color: rgba(167, 139, 250, 0.55); }
+    .day-chip.teal { background: var(--cat-destination); border-color: rgba(13, 148, 136, 0.55); }
+    .day-chip:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+    .day-chip-text { flex: 1; }
+    .day-chip-name { display: block; line-height: 1.3; }
+    .day-chip-time { font-size: 8px; opacity: 0.8; display: block; margin-top: 1px; color: var(--muted); }
+    .day-chip-icon { font-size: 14px; margin-left: 8px; }
+    .spot-card { background: var(--paper); border: 1.5px solid var(--line); padding: 9px 10px; margin: 5px 0; border-radius: 10px; font-size: 9px; cursor: pointer; transition: all 0.15s; }
+    .spot-card:hover { border-color: var(--teal); box-shadow: 0 2px 8px rgba(45,106,106,0.1); }
+    .spot-name { font-weight: 700; margin-bottom: 2px; color: var(--ink); }
+    .spot-meta { color: var(--muted); font-size: 8px; margin-bottom: 3px; }
+    .spot-duration { font-size: 8px; color: var(--teal); font-weight: 600; background: var(--teal-soft); padding: 2px 6px; border-radius: 4px; display: inline-block; }
+    .search-bar { padding: 8px 10px; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; gap: 6px; }
+    .search-input { flex: 1; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; font-size: 9px; background: var(--bg); }
+    .view-toggle { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper); font-size: 8px; }
+    .view-toggle button { flex: 1; padding: 4px 6px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-weight: 600; }
+    .view-toggle button.active { background: var(--ink); color: var(--paper); }
+    .schedule-header { padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--paper); display: flex; gap: 6px; align-items: center; font-size: 9px; }
+    .schedule-back { padding: 4px 8px; font-size: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; cursor: pointer; color: var(--teal); font-weight: 600; }
+    .schedule-auto { padding: 4px 8px; font-size: 9px; background: var(--teal); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .schedule-content { flex: 1; padding: 10px; overflow: auto; }
+    .hour-block { display: flex; margin-bottom: 8px; font-size: 9px; gap: 8px; }
+    .hour-time { width: 35px; font-weight: 600; color: var(--muted); text-align: right; flex-shrink: 0; }
+    .hour-slot { flex: 1; background: var(--bg); border: 1px solid var(--line); padding: 6px; border-radius: 6px; min-height: 32px; display: flex; align-items: center; font-size: 9px; }
+    .hour-slot.filled { background: var(--cat-restaurant); border-color: rgba(147, 197, 253, 0.55); color: var(--ink); display: flex; align-items: center; font-weight: 600; }
+    .excursion-panel { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-top: 8px; font-size: 8px; }
+    .excursion-title { font-weight: 700; color: var(--teal); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.05em; }
+    .excursion-item { background: var(--bg); padding: 4px 6px; border-radius: 4px; margin-bottom: 2px; font-size: 8px; color: var(--muted); }
+    .nav { display: flex; border-top: 2px solid var(--line); background: var(--paper); }
+    .nav-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 9px; font-weight: 600; border-top: 3px solid transparent; transition: all 0.2s; }
+    .nav-btn.active { background: var(--teal-soft); border-top-color: var(--teal); color: var(--teal); }
+    .nav-btn:hover { background: var(--bg); }
+  </style>
+</head>
+<body>
+  <div class="title">FINAL COMPREHENSIVE WIREFRAME</div>
+  <div class="subtitle">All pages, all features, original color scheme + cleaner design</div>
+
+  <div class="page-grid">
+    <!-- PAGE 1: LANDING -->
+    <div class="wireframe">
+      <div class="page-label">Page 1: Landing Screen (Homepage)</div>
+      <div class="landing">
+        <div class="landing-card">
+          <p class="landing-mark">D<span>·</span>N<span>·</span>A</p>
+          <h1 class="landing-title">Plan your trip</h1>
+          <p class="landing-sub">DNA TRAVELS</p>
+          <div class="landing-form">
+            <div class="landing-field">
+              <label class="landing-label">City / State / Country</label>
+              <input class="landing-input" value="New York, NY, USA" />
+            </div>
+            <div class="landing-field">
+              <label class="landing-label">Google Maps List</label>
+              <input class="landing-input" placeholder="https://maps.app.goo.gl/…" />
+            </div>
+            <div class="landing-field">
+              <label class="landing-label">Excursions Site (Optional)</label>
+              <input class="landing-input" placeholder="https://www.ferry.nyc/…" />
+            </div>
+            <div class="landing-field">
+              <label class="landing-label">Dates</label>
+              <input class="landing-input" value="May 1 - May 5" />
+            </div>
+            <div class="landing-field">
+              <label class="landing-label">Home Base</label>
+              <input class="landing-input" placeholder="Select from list" />
+            </div>
+            <button class="landing-submit">Start planning</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: CALENDAR VIEW (Default) -->
+    <div class="wireframe">
+      <div class="page-label">Page 2: Calendar View (Default Open)</div>
+      <div class="calendar-view">
+        <div class="header">
+          <div class="header-brand">DNA TRAVELS</div>
+          <div class="header-actions">
+            <button class="btn-header">Plan</button>
+            <button class="btn-header">Save</button>
+            <button class="btn-header">Export</button>
+            <button class="btn-header">Home</button>
+            <button class="btn-header">Maps</button>
+          </div>
+        </div>
+        <div class="container">
+          <div class="left">
+            <div class="pane-title"><span class="pane-icon">📅</span> Calendar</div>
+            <div class="day-section">
+              <div class="day-label">Thu, May 1 (2 activities)</div>
+              <div class="day-chip blue">
+                <div class="day-chip-text">
+                  <span class="day-chip-name">Breakfast</span>
+                  <span class="day-chip-time">8:00 AM • 45 min</span>
+                </div>
+                <span class="day-chip-icon">☕</span>
+              </div>
+              <div class="day-chip pink">
+                <div class="day-chip-text">
+                  <span class="day-chip-name">High Line Walk</span>
+                  <span class="day-chip-time">10:30 AM • 90 min</span>
+                </div>
+                <span class="day-chip-icon">🚶</span>
+              </div>
+            </div>
+            <div class="day-section">
+              <div class="day-label">Fri, May 2 (2 activities)</div>
+              <div class="day-chip green">
+                <div class="day-chip-text">
+                  <span class="day-chip-name">Museum Tour</span>
+                  <span class="day-chip-time">11:00 AM • 120 min</span>
+                </div>
+                <span class="day-chip-icon">🎨</span>
+              </div>
+              <div class="day-chip orange">
+                <div class="day-chip-text">
+                  <span class="day-chip-name">Dinner</span>
+                  <span class="day-chip-time">6:00 PM • 90 min</span>
+                </div>
+                <span class="day-chip-icon">🍽️</span>
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="pane-title"><span class="pane-icon">🎯</span> Backlog <span class="pane-meta">(12 spots)</span></div>
+            <div class="category-legend">
+              <span class="cat-badge restaurant">Restaurant</span>
+              <span class="cat-badge museum">Museum</span>
+              <span class="cat-badge park">Park</span>
+              <span class="cat-badge shopping">Shop</span>
+              <span class="cat-badge coffee">Coffee</span>
+            </div>
+            <div style="padding: 8px 8px;">
+              <div class="spot-card">
+                <div class="spot-name">Strand Book Store</div>
+                <div class="spot-meta">NoHo / Nolita</div>
+                <div class="spot-duration">45 min</div>
+              </div>
+              <div class="spot-card">
+                <div class="spot-name">Greenacre Park</div>
+                <div class="spot-meta">Midtown East</div>
+                <div class="spot-duration">90 min</div>
+              </div>
+              <div class="spot-card">
+                <div class="spot-name">Palma Restaurant</div>
+                <div class="spot-meta">West Village</div>
+                <div class="spot-duration">60 min</div>
+              </div>
+              <div class="spot-card">
+                <div class="spot-name">Tomi Jazz Club</div>
+                <div class="spot-meta">Midtown East</div>
+                <div class="spot-duration">90 min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="nav-btn active">Calendar</button>
+          <button class="nav-btn">Backlog</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: SCHEDULE/TIMES VIEW (Auto Day / Set Times) -->
+    <div class="wireframe">
+      <div class="page-label">Page 3: Schedule View (Auto Day / Set Times)</div>
+      <div class="schedule-view">
+        <div class="header">
+          <div class="header-brand">DNA TRAVELS</div>
+          <div class="header-actions">
+            <button class="btn-header">Plan</button>
+            <button class="btn-header">Save</button>
+            <button class="btn-header">Export</button>
+          </div>
+        </div>
+        <div class="schedule-header">
+          <button class="schedule-back">← Calendar</button>
+          <div style="flex: 1; font-weight: 600;">Thu, May 1</div>
+          <button class="schedule-auto">Auto Day</button>
+        </div>
+        <div class="schedule-content">
+          <div class="hour-block">
+            <div class="hour-time">08:00</div>
+            <div class="hour-slot filled">☕ Breakfast</div>
+          </div>
+          <div class="hour-block">
+            <div class="hour-time">09:00</div>
+            <div class="hour-slot"></div>
+          </div>
+          <div class="hour-block">
+            <div class="hour-time">10:30</div>
+            <div class="hour-slot filled">🚶 High Line Walk</div>
+          </div>
+          <div class="hour-block">
+            <div class="hour-time">12:00</div>
+            <div class="hour-slot"></div>
+          </div>
+          <div class="hour-block">
+            <div class="hour-time">13:00</div>
+            <div class="hour-slot"></div>
+          </div>
+
+          <div class="excursion-panel">
+            <div class="excursion-title">💡 Suggested Excursions</div>
+            <div class="excursion-item">• Roosevelt Island Tramway (2pm, 90 min)</div>
+            <div class="excursion-item">• NYC Ferry (3pm, 60 min)</div>
+            <div class="excursion-item">• SeaGlass Carousel (4pm, 90 min)</div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="nav-btn active">Calendar</button>
+          <button class="nav-btn">Backlog</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: BACKLOG FOCUSED VIEW -->
+    <div class="wireframe">
+      <div class="page-label">Page 4: Backlog Focused View</div>
+      <div class="backlog-view">
+        <div class="header">
+          <div class="header-brand">DNA TRAVELS</div>
+          <div class="header-actions">
+            <button class="btn-header">Plan</button>
+            <button class="btn-header">Save</button>
+            <button class="btn-header">Export</button>
+          </div>
+        </div>
+        <div class="pane-title"><span class="pane-icon">🎯</span> Backlog <span class="pane-meta">(12 spots)</span></div>
+        <div class="search-bar">
+          <input class="search-input" placeholder="Search backlog…" />
+          <div class="view-toggle">
+            <button class="active">All</button>
+            <button>Area</button>
+            <button>Type</button>
+          </div>
+        </div>
+        <div class="category-legend">
+          <span class="cat-badge restaurant">🍽️ Restaurant</span>
+          <span class="cat-badge museum">🎨 Museum</span>
+          <span class="cat-badge park">🌳 Park</span>
+          <span class="cat-badge shopping">🛍️ Shop</span>
+          <span class="cat-badge coffee">☕ Coffee</span>
+        </div>
+        <div style="flex: 1; padding: 10px; overflow: auto;">
+          <div style="font-size: 9px; font-weight: 700; color: var(--teal); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">Add Your Own</div>
+          <div class="spot-card" style="background: var(--accent-soft); border: 1px dashed var(--accent); cursor: pointer; text-align: center; padding: 12px;">
+            <div style="color: var(--accent); font-weight: 600; font-size: 10px;">+ Add Custom Activity</div>
+          </div>
+
+          <div style="font-size: 9px; font-weight: 700; color: var(--teal); text-transform: uppercase; margin-top: 12px; margin-bottom: 8px; letter-spacing: 0.05em;">All Spots</div>
+          <div class="spot-card">
+            <div class="spot-name">Strand Book Store</div>
+            <div class="spot-meta">NoHo • 45 min</div>
+            <div class="spot-duration">📚</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Greenacre Park</div>
+            <div class="spot-meta">Midtown East • 90 min</div>
+            <div class="spot-duration">🌳</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Palma Restaurant</div>
+            <div class="spot-meta">West Village • 60 min</div>
+            <div class="spot-duration">🍽️</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Tomi Jazz Club</div>
+            <div class="spot-meta">Midtown East • 90 min</div>
+            <div class="spot-duration">🎺</div>
+          </div>
+
+          <div style="font-size: 9px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-top: 12px; margin-bottom: 8px; letter-spacing: 0.05em;">Never Again</div>
+          <div class="spot-card" style="opacity: 0.6;">
+            <div class="spot-name">Bad Restaurant</div>
+            <div class="spot-meta">Midtown • 1⭐</div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="nav-btn">Calendar</button>
+          <button class="nav-btn active">Backlog</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; color: var(--muted); font-size: 12px;">
+    <p><strong>Key Features Included:</strong></p>
+    <p>✓ Full landing form with all options | ✓ Calendar + Backlog side-by-side | ✓ All header buttons (Plan, Save, Export, Home, Maps)<br>
+    ✓ Emoji icons on every activity | ✓ Auto Day & Set Times scheduling | ✓ Excursion suggestions panel<br>
+    ✓ Category legend & filters | ✓ Add custom activities | ✓ Never Again section | ✓ Original pastel colors with cleaner design</p>
+  </div>
+</body>
+</html>

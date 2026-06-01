@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option 5: Compact + Visual Stats</title>
+  <style>
+    body { font-family: system-ui; background: #f7f4ef; margin: 0; padding: 20px; }
+    .wireframe { max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1c1917; }
+    .header { background: linear-gradient(135deg, #1c1917 0%, #2d6a6a 100%); color: white; padding: 14px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { font-size: 16px; letter-spacing: 3px; }
+    .header-buttons { display: flex; gap: 6px; font-size: 11px; }
+    .btn { background: rgba(255,255,255,0.15); color: white; padding: 5px 9px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; }
+    .trip-stats { background: linear-gradient(90deg, rgba(45,106,106,0.05) 0%, transparent 100%); padding: 8px 16px; display: flex; gap: 16px; border-bottom: 1px solid #e7e0d6; font-size: 10px; }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat-value { font-weight: bold; color: #2d6a6a; font-size: 12px; }
+    .stat-label { color: #78716c; font-size: 9px; }
+    .container { display: flex; height: 420px; background: white; }
+    .left { flex: 1; border-right: 2px solid #e7e0d6; display: flex; flex-direction: column; }
+    .right { flex: 1; display: flex; flex-direction: column; }
+    .pane-title { padding: 10px 14px; border-bottom: 2px solid #b4534b; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #b4534b; letter-spacing: 1px; background: #fffdf9; }
+    .pane-content { flex: 1; overflow: auto; padding: 10px; }
+    .day-section { margin-bottom: 12px; }
+    .day-date { font-size: 9px; font-weight: bold; color: #2d6a6a; text-transform: uppercase; margin-bottom: 4px; padding: 0 3px; }
+    .day-chip { background: #93c5fd; color: white; padding: 7px 9px; margin: 3px 0; border-radius: 6px; font-size: 10px; cursor: grab; font-weight: 500; position: relative; padding-right: 20px; }
+    .day-chip.accent { background: #b4534b; }
+    .day-chip.green { background: #86efac; }
+    .day-chip.orange { background: #fdb874; }
+    .day-chip.purple { background: #a78bfc; }
+    .day-chip-badge { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: 8px; background: rgba(0,0,0,0.2); padding: 1px 4px; border-radius: 3px; }
+    .spot-card { background: #f7f4ef; border: 1px solid #e7e0d6; padding: 8px 10px; margin: 4px 0; border-radius: 7px; font-size: 9px; cursor: pointer; border-left: 3px solid #2d6a6a; transition: all 0.15s; }
+    .spot-card:hover { background: #fffdf9; border-color: #2d6a6a; }
+    .spot-card.blue { border-left-color: #93c5fd; }
+    .spot-card.pink { border-left-color: #f4b2b6; }
+    .spot-card.yellow { border-left-color: #fdb874; }
+    .spot-card.green { border-left-color: #86efac; }
+    .spot-name { font-weight: 600; margin-bottom: 2px; color: #1c1917; }
+    .spot-info { color: #78716c; font-size: 8px; display: flex; justify-content: space-between; }
+    .nav { display: flex; border-top: 2px solid #e7e0d6; background: white; }
+    .nav-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 10px; font-weight: 600; border-top: 3px solid transparent; }
+    .nav-btn.active { background: linear-gradient(180deg, #e8f2f2 0%, transparent 100%); border-top-color: #2d6a6a; color: #2d6a6a; }
+    .title { text-align: center; margin: 20px 0 10px; font-weight: bold; color: #1c1917; }
+    .subtitle { text-align: center; color: #78716c; font-size: 12px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="title">OPTION 5: Compact + Visual Stats</div>
+  <div class="subtitle">Smaller cards, trip overview bar, more data density</div>
+
+  <div class="wireframe">
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-buttons">
+        <button class="btn">Plan</button>
+        <button class="btn">Save</button>
+      </div>
+    </div>
+
+    <div class="trip-stats">
+      <div class="stat">
+        <span class="stat-value">5</span>
+        <span class="stat-label">Days</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">4</span>
+        <span class="stat-label">Scheduled</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">12</span>
+        <span class="stat-label">Backlog</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">28h</span>
+        <span class="stat-label">Total time</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="left">
+        <div class="pane-title">📅 Calendar</div>
+        <div class="pane-content">
+          <div class="day-section">
+            <div class="day-date">Thu, May 1</div>
+            <div class="day-chip">Breakfast <span class="day-chip-badge">8a</span></div>
+            <div class="day-chip accent">High Line <span class="day-chip-badge">10:30a</span></div>
+          </div>
+
+          <div class="day-section">
+            <div class="day-date">Fri, May 2</div>
+            <div class="day-chip green">Museum <span class="day-chip-badge">11a</span></div>
+            <div class="day-chip orange">Dinner <span class="day-chip-badge">6p</span></div>
+          </div>
+
+          <div class="day-section">
+            <div class="day-date">Sat, May 3</div>
+            <div class="day-chip purple">Jazz <span class="day-chip-badge">9p</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pane-title">🎯 Backlog</div>
+        <div class="pane-content">
+          <div class="spot-card blue">
+            <div class="spot-name">Strand Books</div>
+            <div class="spot-info"><span>NoHo</span> <span>45m</span></div>
+          </div>
+          <div class="spot-card green">
+            <div class="spot-name">Greenacre Park</div>
+            <div class="spot-info"><span>Midtown</span> <span>90m</span></div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Palma</div>
+            <div class="spot-info"><span>W. Village</span> <span>60m</span></div>
+          </div>
+          <div class="spot-card yellow">
+            <div class="spot-name">Tomi Jazz</div>
+            <div class="spot-info"><span>Midtown East</span> <span>90m</span></div>
+          </div>
+          <div class="spot-card pink">
+            <div class="spot-name">Juliana's Pizza</div>
+            <div class="spot-info"><span>Brooklyn</span> <span>60m</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active">Calendar</button>
+      <button class="nav-btn">Backlog</button>
+      <button class="nav-btn">Schedule</button>
+    </div>
+  </div>
+</body>
+</html>

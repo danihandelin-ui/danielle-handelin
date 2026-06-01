@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option 1: Minimal Split View</title>
+  <style>
+    body { font-family: system-ui; background: #f7f4ef; margin: 0; padding: 20px; }
+    .wireframe { max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1c1917; font-size: 13px; }
+    .header { background: #1c1917; color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .header-brand { font-size: 16px; letter-spacing: 2px; }
+    .header-buttons { display: flex; gap: 6px; font-size: 11px; }
+    .btn { background: #e7e0d6; padding: 4px 8px; border: none; cursor: pointer; }
+    .container { display: flex; height: 500px; }
+    .left { flex: 1; border-right: 1px solid #e7e0d6; display: flex; flex-direction: column; }
+    .right { flex: 1; display: flex; flex-direction: column; }
+    .pane-title { background: #f7f4ef; padding: 8px 12px; border-bottom: 1px solid #e7e0d6; font-weight: bold; font-size: 12px; text-transform: uppercase; color: #2d6a6a; }
+    .pane-content { flex: 1; overflow: auto; padding: 12px; }
+    .day-chip { background: #b4534b; color: white; padding: 8px 10px; margin: 4px 0; border-radius: 6px; font-size: 11px; cursor: grab; }
+    .day-chip.purple { background: #a78bfc; }
+    .day-chip.blue { background: #93c5fd; }
+    .spot-card { background: #f7f4ef; border: 1px solid #e7e0d6; padding: 8px; margin: 4px 0; border-radius: 8px; font-size: 10px; cursor: pointer; }
+    .spot-name { font-weight: bold; margin-bottom: 2px; }
+    .spot-meta { color: #78716c; font-size: 9px; }
+    .nav { display: flex; border-top: 1px solid #e7e0d6; background: white; }
+    .nav-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: bold; border-top: 3px solid transparent; }
+    .nav-btn.active { background: #e8f2f2; border-top-color: #2d6a6a; color: #2d6a6a; }
+    .title { text-align: center; margin: 20px 0 10px; font-weight: bold; color: #1c1917; }
+    .subtitle { text-align: center; color: #78716c; font-size: 12px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="title">OPTION 1: Minimal Split View</div>
+  <div class="subtitle">Drag left ↔ right, low visual density</div>
+
+  <div class="wireframe">
+    <div class="header">
+      <div class="header-brand">DNA Travels</div>
+      <div class="header-buttons">
+        <button class="btn">Plan</button>
+        <button class="btn">Save</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="left">
+        <div class="pane-title">📅 Calendar</div>
+        <div class="pane-content">
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px;">Day 1</div>
+            <div class="day-chip">Breakfast at café</div>
+            <div class="day-chip purple">Walk the High Line</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px;">Day 2</div>
+            <div class="day-chip blue">Museum visit</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pane-title">🎯 Backlog</div>
+        <div class="pane-content">
+          <div class="spot-card">
+            <div class="spot-name">Strand Book Store</div>
+            <div class="spot-meta">NoHo • 45 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Greenacre Park</div>
+            <div class="spot-meta">Midtown East • 90 min</div>
+          </div>
+          <div class="spot-card">
+            <div class="spot-name">Palma Restaurant</div>
+            <div class="spot-meta">West Village • 60 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active">Calendar</button>
+      <button class="nav-btn">Backlog</button>
+    </div>
+  </div>
+</body>
+</html>

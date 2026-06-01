@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View Options + All Pages</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #fffdf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e0d6;
+      --accent: #b4534b;
+      --accent-soft: #f5e8e6;
+      --teal: #2d6a6a;
+      --teal-soft: #e8f2f2;
+      --cat-restaurant: rgba(147, 197, 253, 0.35);
+      --cat-museum: rgba(255, 192, 210, 0.42);
+      --cat-park: rgba(253, 224, 71, 0.35);
+      --cat-shopping: rgba(134, 239, 172, 0.35);
+      --cat-coffee: rgba(199, 184, 252, 0.38);
+      --cat-destination: rgba(153, 246, 228, 0.42);
+      --cat-other: rgba(253, 186, 116, 0.35);
+    }
+    body { font-family: "Outfit", system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+    .section-title { font-size: 20px; font-weight: bold; color: var(--ink); margin: 40px 0 20px; text-align: center; }
+    .section-subtitle { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 25px; }
+    .page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; max-width: 1200px; margin: 0 auto 50px; }
+    .wireframe { background: var(--paper); border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .page-label { background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; }
+    .header { background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%); color: var(--paper); padding: 12px 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .header-brand { letter-spacing: 2px; font-size: 14px; }
+    .header-actions { display: flex; gap: 5px; font-size: 9px; flex-wrap: wrap; }
+    .btn-header { background: rgba(255,255,255,0.15); color: var(--paper); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; border-radius: 4px; font-size: 9px; font-weight: 500; }
+    .pane-title { padding: 10px 12px; border-bottom: 2px solid var(--accent); font-weight: 700; font-size: 10px; text-transform: uppercase; color: var(--accent); background: var(--paper); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
+    .pane-icon { font-size: 14px; }
+    .container { display: flex; flex: 1; height: 420px; }
+    .left { flex: 1; border-right: 2px solid var(--line); display: flex; flex-direction: column; }
+    .right { flex: 1; display: flex; flex-direction: column; background: var(--bg); overflow: auto; padding: 10px; }
+
+    /* OPTION 1: GRID/OUTLOOK STYLE */
+    .grid-calendar { display: grid; grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr; gap: 1px; background: var(--line); padding: 0; overflow: auto; }
+    .grid-header { background: var(--bg); padding: 6px 4px; font-size: 9px; font-weight: 700; text-align: center; color: var(--muted); border-right: 1px solid var(--line); }
+    .grid-time { background: var(--bg); padding: 6px 4px; font-size: 8px; font-weight: 600; text-align: right; color: var(--muted); border-right: 1px solid var(--line); }
+    .grid-slot { background: var(--paper); padding: 4px; min-height: 40px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; font-size: 8px; }
+    .grid-activity { background: var(--cat-coffee); border: 1px solid rgba(199, 184, 252, 0.55); padding: 3px; border-radius: 4px; margin-bottom: 2px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+    .grid-activity.lunch { background: var(--cat-restaurant); border-color: rgba(147, 197, 253, 0.55); }
+    .grid-activity.museum { background: var(--cat-museum); border-color: rgba(244, 114, 182, 0.55); }
+
+    /* OPTION 2: VERTICAL TIMELINE (Music Festival Style) */
+    .timeline-day { display: flex; margin-bottom: 12px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .timeline-col { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--line); min-height: 280px; }
+    .timeline-col:last-child { border-right: none; }
+    .timeline-header { background: var(--bg); padding: 8px 6px; font-size: 10px; font-weight: 700; text-align: center; color: var(--muted); border-bottom: 1px solid var(--line); }
+    .timeline-hours { flex: 1; position: relative; display: flex; flex-direction: column; }
+    .timeline-hour { flex: 1; border-bottom: 1px solid var(--line); position: relative; font-size: 7px; color: var(--muted); padding: 2px; }
+    .timeline-hour:last-child { border-bottom: none; }
+    .timeline-activity { position: absolute; left: 2px; right: 2px; background: var(--cat-coffee); border: 1px solid rgba(199, 184, 252, 0.55); border-radius: 4px; padding: 3px; font-size: 8px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .timeline-activity.lunch { background: var(--cat-restaurant); border-color: rgba(147, 197, 253, 0.55); }
+    .timeline-activity.museum { background: var(--cat-museum); border-color: rgba(244, 114, 182, 0.55); }
+
+    /* OPTION 3: EXPANDED DAY VIEW (One day at a time, very detailed) */
+    .day-timeline { display: flex; gap: 8px; padding: 10px; }
+    .day-time-col { width: 45px; flex-shrink: 0; }
+    .day-time { font-size: 8px; font-weight: 700; color: var(--muted); text-align: right; padding-right: 6px; height: 50px; display: flex; align-items: center; }
+    .day-activities-col { flex: 1; position: relative; min-height: 400px; border-left: 2px solid var(--line); padding-left: 8px; }
+    .day-activity-block { position: absolute; left: 8px; right: 0; background: var(--cat-coffee); border: 1px solid rgba(199, 184, 252, 0.55); border-radius: 8px; padding: 6px; font-size: 9px; font-weight: 600; color: var(--ink); box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+    .day-activity-block.lunch { background: var(--cat-restaurant); border-color: rgba(147, 197, 253, 0.55); }
+    .day-activity-block.museum { background: var(--cat-museum); border-color: rgba(244, 114, 182, 0.55); }
+    .day-gap { color: var(--muted); font-size: 9px; font-style: italic; }
+
+    .spot-card { background: var(--paper); border: 1.5px solid var(--line); padding: 8px 10px; margin: 5px 0; border-radius: 10px; font-size: 9px; transition: all 0.15s; }
+    .spot-card:hover { border-color: var(--teal); box-shadow: 0 2px 8px rgba(45,106,106,0.1); }
+    .spot-name { font-weight: 700; margin-bottom: 2px; color: var(--ink); }
+    .spot-meta { color: var(--muted); font-size: 8px; margin-bottom: 3px; }
+    .spot-duration-badge { font-size: 8px; color: var(--teal); font-weight: 600; background: var(--teal-soft); padding: 2px 6px; border-radius: 4px; display: inline-block; }
+  </style>
+</head>
+<body>
+
+<!-- CALENDAR OPTIONS -->
+<div class="section-title">Calendar View Options (3 Approaches)</div>
+<div class="section-subtitle">Each shows time gaps clearly • All with proper morning/afternoon ordering</div>
+
+<div class="page-grid">
+  <!-- OPTION A: GRID/OUTLOOK STYLE -->
+  <div class="wireframe">
+    <div class="page-label">Option A: Grid View (Outlook-Style)</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">📅</span> Calendar (May 1-5, 2026)</div>
+      <div style="flex: 1; overflow: auto; padding: 6px;">
+        <div class="grid-calendar">
+          <div class="grid-header"></div>
+          <div class="grid-header">Thu 1</div>
+          <div class="grid-header">Fri 2</div>
+          <div class="grid-header">Sat 3</div>
+          <div class="grid-header">Sun 4</div>
+          <div class="grid-header">Mon 5</div>
+
+          <div class="grid-time">8am</div>
+          <div class="grid-slot"><div class="grid-activity">☕ Bagels</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"><div class="grid-activity">☕ Coffee</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+
+          <div class="grid-time">10am</div>
+          <div class="grid-slot"><div class="grid-activity">🚶 High Line</div></div>
+          <div class="grid-slot"><div class="grid-activity museum">🎨 Museum</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+
+          <div class="grid-time">1pm</div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Lunch</div></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+
+          <div class="grid-time">6pm</div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Dinner</div></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Pizza</div></div>
+          <div class="grid-slot></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B: FESTIVAL TIMELINE -->
+  <div class="wireframe">
+    <div class="page-label">Option B: Festival Timeline</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">📅</span> 5-Day Overview</div>
+      <div style="flex: 1; overflow: auto; padding: 8px;">
+        <div class="timeline-day">
+          <div class="timeline-col">
+            <div class="timeline-header">Thu 1</div>
+            <div class="timeline-hours">
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px; position: relative;">
+                <div class="timeline-activity" style="top: 0; height: 30px;">☕ Bagels</div>
+              </div>
+              <div class="timeline-hour" style="height: 60px; position: relative;">
+                <div class="timeline-activity" style="top: 0; height: 35px;">🚶 High Line</div>
+              </div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px; position: relative;">
+                <div class="timeline-activity lunch" style="top: 0; height: 30px;">🍽️ Dinner</div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-col">
+            <div class="timeline-header">Fri 2</div>
+            <div class="timeline-hours">
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px; position: relative;">
+                <div class="timeline-activity museum" style="top: 0; height: 50px;">🎨 Museum</div>
+              </div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+            </div>
+          </div>
+          <div class="timeline-col">
+            <div class="timeline-header">Sat 3</div>
+            <div class="timeline-hours">
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px; position: relative;">
+                <div class="timeline-activity lunch" style="top: 0; height: 30px;">🍽️ Lunch</div>
+              </div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+              <div class="timeline-hour" style="height: 60px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C: EXPANDED SINGLE DAY -->
+  <div class="wireframe">
+    <div class="page-label">Option C: Expanded Day View</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">📅</span> Thursday, May 1</div>
+      <div style="flex: 1; overflow: auto;">
+        <div class="day-timeline">
+          <div class="day-time-col">
+            <div class="day-time">8am</div>
+            <div class="day-time">10am</div>
+            <div class="day-time">12pm</div>
+            <div class="day-time">2pm</div>
+            <div class="day-time">4pm</div>
+            <div class="day-time">6pm</div>
+            <div class="day-time">8pm</div>
+          </div>
+          <div class="day-activities-col">
+            <div class="day-activity-block" style="top: 0; height: 35px;">☕ Bagels + Coffee (45m)</div>
+            <div class="day-activity-block" style="top: 100px; height: 50px;">🚶 Walk the High Line (90m)</div>
+            <div class="day-activity-block lunch" style="top: 250px; height: 40px;">🍽️ Dinner (90m)</div>
+            <div style="position: absolute; top: 50px; left: 8px; right: 0; color: var(--muted); font-size: 9px; font-style: italic;">→ 1h 15m free</div>
+            <div style="position: absolute; top: 170px; left: 8px; right: 0; color: var(--muted); font-size: 9px; font-style: italic;">→ 1h 20m free</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURRENT DESIGN FOR COMPARISON -->
+  <div class="wireframe">
+    <div class="page-label">Current: Chips View (For Reference)</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">📅</span> Calendar</div>
+      <div style="flex: 1; overflow: auto; padding: 10px;">
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 8px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 4px;">Thu, May 1</div>
+          <div style="background: var(--cat-coffee); border: 1px solid rgba(199, 184, 252, 0.55); padding: 8px; border-radius: 8px; margin-bottom: 4px; font-size: 9px; font-weight: 600;">☕ Bagels • 8:00 AM</div>
+          <div style="background: var(--cat-museum); border: 1px solid rgba(244, 114, 182, 0.55); padding: 8px; border-radius: 8px; margin-bottom: 4px; font-size: 9px; font-weight: 600;">🚶 High Line • 10:30 AM</div>
+          <div style="background: var(--cat-restaurant); border: 1px solid rgba(147, 197, 253, 0.55); padding: 8px; border-radius: 8px; font-size: 9px; font-weight: 600;">🍽️ Dinner • 6:00 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL PAGES WITH SELECTED CALENDAR OPTION -->
+<div class="section-title">Full Flow: All Pages with Grid Calendar (Recommended)</div>
+<div class="section-subtitle">Landing + Grid Calendar + Schedule + Backlog</div>
+
+<div class="page-grid">
+  <!-- PAGE 1: LANDING -->
+  <div class="wireframe">
+    <div class="page-label">Page 1: Landing Screen</div>
+    <div style="height: 480px; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-soft) 0%, transparent 55%), var(--bg);">
+      <div style="width: 85%; max-width: 300px; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 2px 12px rgba(28,25,23,0.06);">
+        <p style="font-family: Georgia, serif; font-size: 36px; font-weight: 600; letter-spacing: 8px; margin: 0 0 4px; color: var(--ink);">D<span style="color: var(--accent);">·</span>N<span style="color: var(--accent);">·</span>A</p>
+        <h1 style="font-size: 13px; font-weight: 600; margin: 0 0 2px;">Plan your trip</h1>
+        <p style="font-size: 11px; color: var(--muted); margin: 0 0 12px;">DNA TRAVELS</p>
+        <div style="text-align: left; font-size: 9px;">
+          <div style="margin-bottom: 8px;">
+            <label style="display: block; font-weight: 600; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; font-size: 8px;">City / State / Country</label>
+            <input type="text" value="New York, NY, USA" style="width: 100%; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; font-size: 9px; box-sizing: border-box; background: var(--bg);" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label style="display: block; font-weight: 600; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; font-size: 8px;">Google Maps List</label>
+            <input type="text" placeholder="https://maps.app.goo.gl/…" style="width: 100%; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; font-size: 9px; box-sizing: border-box; background: var(--bg);" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label style="display: block; font-weight: 600; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; font-size: 8px;">Excursions Site</label>
+            <input type="text" placeholder="https://www.ferry.nyc/…" style="width: 100%; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; font-size: 9px; box-sizing: border-box; background: var(--bg);" />
+          </div>
+          <button style="width: 100%; padding: 6px; background: var(--ink); color: var(--paper); border: none; border-radius: 6px; font-weight: 600; font-size: 10px; cursor: pointer; margin-top: 6px;">Start planning</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: GRID CALENDAR -->
+  <div class="wireframe">
+    <div class="page-label">Page 2: Calendar View (Grid Option)</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+        <button class="btn-header">Home</button>
+        <button class="btn-header">Maps</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">📅</span> Calendar (May 1-5)</div>
+      <div style="flex: 1; overflow: auto; padding: 6px;">
+        <div class="grid-calendar">
+          <div class="grid-header"></div>
+          <div class="grid-header">Thu 1</div>
+          <div class="grid-header">Fri 2</div>
+          <div class="grid-header">Sat 3</div>
+          <div class="grid-header">Sun 4</div>
+          <div class="grid-header">Mon 5</div>
+
+          <div class="grid-time">8am</div>
+          <div class="grid-slot"><div class="grid-activity">☕ Bagels (45m)</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"><div class="grid-activity">☕ Coffee</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+
+          <div class="grid-time">10am</div>
+          <div class="grid-slot"><div class="grid-activity">🚶 High Line (90m)</div></div>
+          <div class="grid-slot"><div class="grid-activity museum">🎨 Museum</div></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+          <div class="grid-slot"></div>
+
+          <div class="grid-time">1pm</div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Lunch</div></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+
+          <div class="grid-time">6pm</div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Dinner (90m)</div></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot></div>
+          <div class="grid-slot><div class="grid-activity lunch">🍽️ Pizza</div></div>
+          <div class="grid-slot></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: SCHEDULE WITH IMPROVED AUTO DAY -->
+  <div class="wireframe">
+    <div class="page-label">Page 3: Schedule (Improved Auto Day)</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div style="padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--paper); display: flex; gap: 6px; align-items: center; font-size: 9px;">
+        <button style="padding: 4px 8px; font-size: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; cursor: pointer;">← Back</button>
+        <div style="flex: 1; font-weight: 600;">Thursday, May 1</div>
+        <button style="padding: 4px 8px; font-size: 9px; background: var(--teal); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Auto Day</button>
+      </div>
+      <div style="flex: 1; padding: 10px; overflow: auto;">
+        <div style="font-size: 9px;">
+          <div style="display: flex; margin-bottom: 8px; font-size: 9px; gap: 8px;">
+            <div style="width: 35px; font-weight: 600; color: var(--muted); text-align: right;">8:00</div>
+            <div style="flex: 1; background: var(--cat-coffee); border: 1px solid rgba(199, 184, 252, 0.55); padding: 6px; border-radius: 6px; font-weight: 600; color: var(--ink);">☕ Bagels (45 min)</div>
+          </div>
+          <div style="display: flex; margin-bottom: 8px; font-size: 9px; gap: 8px;">
+            <div style="width: 35px; font-weight: 600; color: var(--muted); text-align: right;">9:00</div>
+            <div style="flex: 1; background: var(--paper); border: 1px solid var(--line); padding: 6px; border-radius: 6px; font-style: italic; color: var(--muted);">→ Free</div>
+          </div>
+          <div style="display: flex; margin-bottom: 8px; font-size: 9px; gap: 8px;">
+            <div style="width: 35px; font-weight: 600; color: var(--muted); text-align: right;">10:30</div>
+            <div style="flex: 1; background: var(--cat-museum); border: 1px solid rgba(244, 114, 182, 0.55); padding: 6px; border-radius: 6px; font-weight: 600; color: var(--ink);">🚶 High Line (90 min)</div>
+          </div>
+          <div style="display: flex; margin-bottom: 8px; font-size: 9px; gap: 8px;">
+            <div style="width: 35px; font-weight: 600; color: var(--muted); text-align: right;">6:00</div>
+            <div style="flex: 1; background: var(--cat-restaurant); border: 1px solid rgba(147, 197, 253, 0.55); padding: 6px; border-radius: 6px; font-weight: 600; color: var(--ink);">🍽️ Dinner (90 min)</div>
+          </div>
+        </div>
+        <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 8px; margin-top: 12px; font-size: 8px;">
+          <div style="font-weight: 700; color: var(--teal); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.05em;">💡 Suggested Excursions</div>
+          <div style="background: var(--bg); padding: 4px 6px; border-radius: 4px; margin-bottom: 3px; color: var(--muted);">• Roosevelt Island Tramway (2pm, 90 min)</div>
+          <div style="background: var(--bg); padding: 4px 6px; border-radius: 4px; margin-bottom: 3px; color: var(--muted);">• NYC Ferry (3pm, 60 min)</div>
+          <div style="background: var(--bg); padding: 4px 6px; border-radius: 4px; color: var(--muted);">• SeaGlass Carousel (4pm, 90 min)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: BACKLOG -->
+  <div class="wireframe">
+    <div class="page-label">Page 4: Backlog View</div>
+    <div class="header">
+      <div class="header-brand">DNA TRAVELS</div>
+      <div class="header-actions">
+        <button class="btn-header">Plan</button>
+        <button class="btn-header">Save</button>
+        <button class="btn-header">Export</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; flex-direction: column;">
+      <div class="pane-title"><span class="pane-icon">🎯</span> Backlog (12 spots)</div>
+      <div style="padding: 8px 10px; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; gap: 6px;">
+        <input type="text" placeholder="Search..." style="flex: 1; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; font-size: 9px; background: var(--bg);" />
+        <div style="display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper);">
+          <button style="padding: 4px 6px; border: none; background: var(--ink); color: white; font-size: 8px; cursor: pointer; font-weight: 600;">All</button>
+          <button style="padding: 4px 6px; border-left: 1px solid var(--line); border: none; background: transparent; font-size: 8px; cursor: pointer;">Area</button>
+          <button style="padding: 4px 6px; border-left: 1px solid var(--line); border: none; background: transparent; font-size: 8px; cursor: pointer;">Type</button>
+        </div>
+      </div>
+      <div style="flex: 1; overflow: auto; padding: 10px;">
+        <div class="spot-card">
+          <div class="spot-name">☕ Strand Book Store</div>
+          <div class="spot-meta">NoHo / Nolita</div>
+          <span class="spot-duration-badge">45 min</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">🌳 Greenacre Park</div>
+          <div class="spot-meta">Midtown East</div>
+          <span class="spot-duration-badge">90 min</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">🍽️ Palma Restaurant</div>
+          <div class="spot-meta">West Village</div>
+          <span class="spot-duration-badge">60 min</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-name">🎺 Tomi Jazz Club</div>
+          <div class="spot-meta">Midtown East</div>
+          <span class="spot-duration-badge">90 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; margin: 40px 0; color: var(--muted); font-size: 12px;">
+  <p><strong>Auto Day Algorithm Fix:</strong> Morning (6am-11am): ☕ coffee/breakfast • Afternoon (11am-4pm): 🍝 lunch/parks • Evening (4pm+): 🍽️ dinner</p>
+</div>
+
+</body>
+</html>
