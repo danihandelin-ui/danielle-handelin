@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dani's Running Tracker — Phase 1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Georgia, serif; background: #fafaf8; color: #1a1a1a; font-size: 14px; }
+
+  .page-header { padding: 28px 24px 16px; border-bottom: 2px solid #1a1a1a; }
+  .page-header h1 { font-size: 22px; font-weight: bold; }
+  .page-header p { font-size: 13px; color: #555; margin-top: 4px; }
+
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; padding: 12px 24px; border-bottom: 1px solid #ccc; background: #f0ede6; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .reference-section { padding: 16px 24px; border-bottom: 2px solid #1a1a1a; background: #fff; }
+  .reference-section h2 { font-size: 15px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ref-box { border: 1px solid #ccc; padding: 12px; border-radius: 4px; }
+  .ref-box h3 { font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+  .ref-box ul { list-style: none; }
+  .ref-box ul li { font-size: 12px; padding: 2px 0; color: #333; }
+  .ref-box ul li::before { content: "• "; color: #888; }
+
+  .week-block { border-bottom: 2px solid #1a1a1a; }
+  .week-header { padding: 10px 24px; background: #1a1a1a; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+  .week-header h2 { font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+  .week-header span { font-size: 12px; color: #aaa; }
+
+  .cutback-banner { background: #f5e6cc; border-left: 4px solid #c47a2a; padding: 6px 24px; font-size: 12px; color: #7a4a10; }
+  .cycle-banner { background: #f5e8ed; border-left: 4px solid #9b6a7a; padding: 6px 24px; font-size: 12px; color: #5a3040; }
+
+  .day-row { border-bottom: 1px solid #ddd; padding: 10px 24px; }
+  .day-row.rest-day { background: #f7f7f5; }
+  .day-row.today-row { background: #fffde8; border-left: 3px solid #c4a23a; }
+  .day-row.cycle-day { background: #fdf0f3; }
+
+  .day-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .day-name { font-weight: bold; font-size: 13px; min-width: 160px; }
+  .day-type-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-family: monospace; letter-spacing: 0.5px; text-transform: uppercase; }
+  .tag-run { background: #dff0d8; color: #2d6a2d; }
+  .tag-strength { background: #d9eaf5; color: #1a4a70; }
+  .tag-yoga { background: #f5e8d8; color: #7a4a20; }
+  .tag-rest { background: #eeeeee; color: #666; }
+  .tag-long { background: #d4edda; color: #155724; }
+  .tag-cycle { background: #f5e8ed; color: #7a3050; }
+  .tag-today { background: #fff3cd; color: #856404; font-weight: bold; }
+
+  .day-content { padding-left: 0; }
+  .workout-detail { font-size: 13px; margin-bottom: 6px; line-height: 1.6; }
+  .workout-detail strong { font-weight: bold; }
+
+  .stretch-block { font-size: 12px; color: #444; margin: 4px 0; padding: 6px 10px; background: #f5f5f0; border-left: 2px solid #aaa; border-radius: 2px; }
+  .stretch-block span { font-weight: bold; color: #1a1a1a; }
+
+  .exercise-list { font-size: 12px; color: #333; margin: 4px 0; }
+  .exercise-list li { padding: 1px 0; }
+
+  .checklist-row { display: flex; align-items: flex-start; gap: 8px; margin: 4px 0; font-size: 13px; }
+  .checklist-row input[type="checkbox"] { margin-top: 2px; width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; }
+  .checklist-row label { cursor: pointer; line-height: 1.4; }
+  .checklist-row input:checked + label { text-decoration: line-through; color: #888; }
+
+  .notes-row { margin-top: 8px; }
+  .notes-row label { font-size: 11px; color: #888; display: block; margin-bottom: 2px; font-style: italic; }
+  .notes-row textarea { width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 5px 8px; font-size: 12px; font-family: Georgia, serif; resize: vertical; min-height: 36px; color: #333; background: #fff; }
+
+  .adriene-link { font-size: 12px; color: #1a5276; font-style: italic; }
+
+  .progress-section { padding: 16px 24px; background: #f0ede6; border-bottom: 1px solid #ccc; }
+  .progress-section h2 { font-size: 14px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .pace-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .pace-table th { background: #1a1a1a; color: #fff; padding: 6px 10px; text-align: left; }
+  .pace-table td { padding: 6px 10px; border-bottom: 1px solid #ddd; background: #fff; }
+  .pace-table tr:nth-child(even) td { background: #f7f7f5; }
+
+  @media print {
+    .page-header, .week-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    textarea { border: 1px solid #999 !important; }
+  }
+
+  #auth-overlay { position: fixed; inset: 0; background: rgba(250,250,248,0.97); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; z-index: 1000; }
+  #auth-overlay h2 { font-size: 20px; font-weight: bold; }
+  #auth-overlay p { font-size: 13px; color: #555; }
+  #sign-in-btn { background: #1a1a1a; color: #fff; border: none; padding: 10px 24px; font-size: 14px; cursor: pointer; border-radius: 4px; font-family: Georgia, serif; }
+  #sign-in-btn:hover { background: #333; }
+  #sign-out-btn { position: fixed; top: 12px; right: 16px; background: transparent; border: 1px solid #ccc; padding: 4px 12px; font-size: 11px; cursor: pointer; border-radius: 3px; color: #666; font-family: Georgia, serif; z-index: 100; }
+</style>
+</head>
+<body>
+
+<div id="auth-overlay">
+  <h2>Dani's Running Tracker</h2>
+  <p>Sign in with your Google account to access your tracker.</p>
+  <button id="sign-in-btn">Sign in with Google</button>
+</div>
+<button id="sign-out-btn" style="display:none">Sign out</button>
+
+<div class="page-header">
+  <h1>Dani's Trail Running Tracker — Phase 1: Build the Base</h1>
+  <p>May 31, 2026 – August 22, 2026 &nbsp;·&nbsp; Goal: consistent 10–12 min/mile, foundation for sub-8 &nbsp;·&nbsp; 4 run/training days per week</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#2d6a2d"></div> Run day</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#155724"></div> Long run</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1a4a70"></div> Strength</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7a4a20"></div> Yoga</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#666"></div> Rest</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7a3050"></div> Cycle rest</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#c47a2a"></div> Cutback week</div>
+</div>
+
+<!-- REFERENCE SECTION -->
+<div class="reference-section">
+  <h2>Reference — Stretches, Workouts & Yoga</h2>
+  <div class="ref-grid">
+
+    <div class="ref-box">
+      <h3>Pre-Run Dynamic Warm-Up (~5 min)</h3>
+      <ul>
+        <li>Leg swings front/back — 10 each leg</li>
+        <li>Leg swings side to side — 10 each leg</li>
+        <li>Hip circles — 10 each direction</li>
+        <li>High knees — 20 steps</li>
+        <li>Butt kicks — 20 steps</li>
+        <li>Ankle circles — 10 each</li>
+        <li>Walking lunges — 10 steps</li>
+        <li>Arm circles — 10 forward, 10 back</li>
+      </ul>
+    </div>
+
+    <div class="ref-box">
+      <h3>Post-Run Static Cool-Down (~8–10 min)</h3>
+      <ul>
+        <li>Standing quad stretch — 30 sec each</li>
+        <li>Standing calf stretch — 30 sec each</li>
+        <li>Seated hamstring stretch — 45 sec each</li>
+        <li>Pigeon pose — 60 sec each side</li>
+        <li>Hip flexor lunge stretch — 30 sec each</li>
+        <li>Figure-4 glute stretch — 30 sec each</li>
+        <li>Child's pose — 60 sec</li>
+        <li>Seated spinal twist — 30 sec each</li>
+      </ul>
+    </div>
+
+    <div class="ref-box">
+      <h3>Strength Workout A — Lower Body Focus</h3>
+      <ul>
+        <li>Goblet squats — 3×12</li>
+        <li>Romanian deadlifts (dumbbells) — 3×10</li>
+        <li>Reverse lunges — 3×10 each leg</li>
+        <li>Glute bridges — 3×15</li>
+        <li>Single-leg deadlift (bodyweight) — 3×8 each</li>
+        <li>Calf raises — 3×20</li>
+        <li>Dead bug — 3×10 each side</li>
+        <li>Plank — 3×30–45 sec</li>
+      </ul>
+    </div>
+
+    <div class="ref-box">
+      <h3>Strength Workout B — Full Body / Core</h3>
+      <ul>
+        <li>Dumbbell sumo squats — 3×12</li>
+        <li>Dumbbell rows — 3×10 each</li>
+        <li>Step-ups (use a chair/step) — 3×10 each</li>
+        <li>Push-ups — 3×10 (modify as needed)</li>
+        <li>Hip thrusts (bodyweight) — 3×15</li>
+        <li>Side-lying leg raises — 3×15 each</li>
+        <li>Russian twists — 3×12 each</li>
+        <li>Superman hold — 3×10</li>
+      </ul>
+    </div>
+
+    <div class="ref-box">
+      <h3>Yoga with Adriene — Phase 1 Picks</h3>
+      <ul>
+        <li>"Yoga for Runners" — post-run recovery</li>
+        <li>"Yoga for Hips" — great after long runs</li>
+        <li>"Yoga for Lower Back Relief" — if back is tight</li>
+        <li>"Morning Yoga — 20 Min" — any active rest day</li>
+        <li>"Yoga for Athletes" — general maintenance</li>
+        <li>"Yin Yoga" — deep holds, ideal Friday nights</li>
+        <li>"Yoga for Beginners" — lighter weeks/cycle week</li>
+        <li>"Yoga for Stress Relief" — rough days</li>
+      </ul>
+    </div>
+
+    <div class="ref-box">
+      <h3>Strides (add to end of easy runs)</h3>
+      <ul>
+        <li>After your run, walk 1 min to catch breath</li>
+        <li>Run 20 sec at 80% effort — not a sprint</li>
+        <li>Walk 40–60 sec full recovery</li>
+        <li>Repeat 4–6 times total</li>
+        <li>Should feel fast but controlled, not gasping</li>
+        <li>Add strides to Tuesday runs from Week 2 on</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- PACE MILESTONES -->
+<div class="progress-section">
+  <h2>Pace Milestone Targets</h2>
+  <table class="pace-table">
+    <tr><th>Phase 1 Week</th><th>Dates</th><th>Target Pace</th><th>Long Run Distance</th><th>Notes</th></tr>
+    <tr><td>Weeks 1–2</td><td>May 31 – Jun 13</td><td>14–15 min/mi (easy, don't push)</td><td>4 miles</td><td>Just getting consistent</td></tr>
+    <tr><td>Weeks 3–4</td><td>Jun 14 – Jun 27</td><td>13–14 min/mi</td><td>4.5 miles</td><td>Effort should feel easier</td></tr>
+    <tr><td>Weeks 5–6</td><td>Jun 28 – Jul 11</td><td>12–13 min/mi</td><td>5 miles</td><td>Week 6 = cutback week</td></tr>
+    <tr><td>Weeks 7–8</td><td>Jul 12 – Jul 25</td><td>11–12 min/mi</td><td>5.5 miles</td><td>Strides paying off</td></tr>
+    <tr><td>Weeks 9–10</td><td>Jul 26 – Aug 8</td><td>10–11 min/mi</td><td>6 miles</td><td>Week 9 = cutback week</td></tr>
+    <tr><td>Weeks 11–12</td><td>Aug 9 – Aug 22</td><td>10 min/mi target</td><td>6.5–7 miles</td><td>Ready for Phase 2 + track work</td></tr>
+  </table>
+</div>
+
+
+<!-- ===================== WEEK 1 ===================== -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 1</h2><span>May 31 – June 6, 2026</span></div>
+
+  <!-- SUN May 31 -->
+  <div class="day-row">
+    <div class="day-top">
+      <div class="day-name">Sunday, May 31</div>
+      <span class="day-type-tag tag-run">Easy Run</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>You already ran this day!</strong> Pioneer Trail area, ~3.38 mi. Backfill your notes below.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (see reference above)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down stretch sequence</div>
+      <div class="checklist-row"><input type="checkbox" id="w1sun-run"><label for="w1sun-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1sun-pre"><label for="w1sun-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1sun-post"><label for="w1sun-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes (pace, how it felt, distance, Maggie came?):</label><textarea id="w1sun-notes" placeholder="e.g. 3.38 mi, felt good, ~15 min/mi, Maggie joined"></textarea></div>
+    </div>
+  </div>
+
+  <!-- MON Jun 1 -->
+  <div class="day-row rest-day">
+    <div class="day-top">
+      <div class="day-name">Monday, June 1</div>
+      <span class="day-type-tag tag-rest">Rest</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail">Full rest. Easy walk if you want movement. No training.</div>
+      <div class="checklist-row"><input type="checkbox" id="w1mon-rest"><label for="w1mon-rest">Rested</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w1mon-notes" placeholder="How are you feeling? Any soreness?"></textarea></div>
+    </div>
+  </div>
+
+  <!-- TUE Jun 2 — TODAY -->
+  <div class="day-row today-row">
+    <div class="day-top">
+      <div class="day-name">Tuesday, June 2</div>
+      <span class="day-type-tag tag-run">Easy Run</span>
+      <span class="day-type-tag tag-today">TODAY</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Pioneer Trail at Cane Creek — 3.38 mi.</strong> Conversational pace. Andrew is joining. Go his pace — this is your easy day. No strides yet this first week.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up — leg swings, hip circles, high knees, walking lunges (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down — quad, calf, hamstring, pigeon pose, child's pose (8–10 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w1tue-run"><label for="w1tue-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1tue-pre"><label for="w1tue-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1tue-post"><label for="w1tue-post">Post-run cool-down</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1tue-andrew"><label for="w1tue-andrew">Andrew joined</label></div>
+      <div class="notes-row"><label>Notes (pace, how it felt, how Andrew did):</label><textarea id="w1tue-notes" placeholder="e.g. 3.38 mi, ~14:30/mi, Andrew kept up well"></textarea></div>
+    </div>
+  </div>
+
+  <!-- WED Jun 3 -->
+  <div class="day-row">
+    <div class="day-top">
+      <div class="day-name">Wednesday, June 3</div>
+      <span class="day-type-tag tag-strength">Strength</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Strength Workout A — Lower Body</strong> (see reference). ~30 min. Home free weights. Or Planet Fitness if you and Andrew go this week.</div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s1"><label for="w1wed-s1">Goblet squats 3×12</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s2"><label for="w1wed-s2">Romanian deadlifts 3×10</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s3"><label for="w1wed-s3">Reverse lunges 3×10 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s4"><label for="w1wed-s4">Glute bridges 3×15</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s5"><label for="w1wed-s5">Single-leg deadlift 3×8 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s6"><label for="w1wed-s6">Calf raises 3×20</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1wed-s7"><label for="w1wed-s7">Dead bug 3×10 each + Plank 3×30 sec</label></div>
+      <div class="notes-row"><label>Notes (weights used, what was hard):</label><textarea id="w1wed-notes" placeholder="e.g. used 15lb dumbbells, glute bridges felt easy, lunges burned"></textarea></div>
+    </div>
+  </div>
+
+  <!-- THU Jun 4 -->
+  <div class="day-row rest-day">
+    <div class="day-top">
+      <div class="day-name">Thursday, June 4</div>
+      <span class="day-type-tag tag-rest">Rest / Yoga</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail">Rest or 20–30 min yoga. <span class="adriene-link">Yoga with Adriene: "Yoga for Runners" or "Morning Yoga 20 Min"</span></div>
+      <div class="checklist-row"><input type="checkbox" id="w1thu-yoga"><label for="w1thu-yoga">Yoga or rest completed</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w1thu-notes" placeholder="Which video? How did it feel?"></textarea></div>
+    </div>
+  </div>
+
+  <!-- FRI Jun 5 -->
+  <div class="day-row">
+    <div class="day-top">
+      <div class="day-name">Friday, June 5</div>
+      <span class="day-type-tag tag-run">Easy Run</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Haw River Trail or Can Creek — 2.5–3.5 mi.</strong> Same easy effort as Tuesday. Focus on breathing and form.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down stretch (8–10 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w1fri-run"><label for="w1fri-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1fri-pre"><label for="w1fri-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1fri-post"><label for="w1fri-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w1fri-notes" placeholder="Trail, distance, pace, how it felt"></textarea></div>
+    </div>
+  </div>
+
+  <!-- SAT Jun 6 -->
+  <div class="day-row">
+    <div class="day-top">
+      <div class="day-name">Saturday, June 6</div>
+      <span class="day-type-tag tag-long">Long Run</span>
+    </div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Cedar Rock or Haw River — 4 miles.</strong> No pace pressure. Andrew and/or Maggie welcome. If paintball today, shift this to Sunday or shorten to 2–3 easy miles.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down + extra pigeon pose (10–12 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w1sat-run"><label for="w1sat-run">Completed long run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1sat-pre"><label for="w1sat-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1sat-post"><label for="w1sat-post">Post-run cool-down</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w1sat-maggie"><label for="w1sat-maggie">Maggie came along</label></div>
+      <div class="notes-row"><label>Notes (trail, total distance, pace, how you felt at the end):</label><textarea id="w1sat-notes" placeholder="e.g. Cedar Rock, 4.1 mi, legs tired last mile but finished strong"></textarea></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== WEEK 2 ===================== -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 2</h2><span>June 7 – June 13, 2026</span></div>
+
+  <div class="day-row rest-day">
+    <div class="day-top"><div class="day-name">Sunday, June 7</div><span class="day-type-tag tag-rest">Rest</span></div>
+    <div class="day-content">
+      <div class="workout-detail">Full rest after Saturday long run.</div>
+      <div class="checklist-row"><input type="checkbox" id="w2sun-rest"><label for="w2sun-rest">Rested</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2sun-notes" placeholder="How are legs feeling after week 1?"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Monday, June 8</div><span class="day-type-tag tag-run">Easy Run</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Pioneer Trail or Haw River — 3–3.5 mi.</strong> Add 4 strides at the end this week. Maggie welcome.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down + strides before cool-down</div>
+      <div class="checklist-row"><input type="checkbox" id="w2mon-run"><label for="w2mon-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2mon-strides"><label for="w2mon-strides">4 strides completed</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2mon-pre"><label for="w2mon-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2mon-post"><label for="w2mon-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2mon-notes" placeholder="Pace, strides felt how?"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Tuesday, June 9</div><span class="day-type-tag tag-strength">Strength</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Strength Workout B — Full Body/Core.</strong> Alternate A and B each week.</div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s1"><label for="w2tue-s1">Dumbbell sumo squats 3×12</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s2"><label for="w2tue-s2">Dumbbell rows 3×10 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s3"><label for="w2tue-s3">Step-ups 3×10 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s4"><label for="w2tue-s4">Push-ups 3×10</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s5"><label for="w2tue-s5">Hip thrusts 3×15</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s6"><label for="w2tue-s6">Side-lying leg raises 3×15 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2tue-s7"><label for="w2tue-s7">Russian twists 3×12 + Superman 3×10</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2tue-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row rest-day">
+    <div class="day-top"><div class="day-name">Wednesday, June 10</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div>
+    <div class="day-content">
+      <div class="workout-detail">Rest or yoga. <span class="adriene-link">Yoga with Adriene: "Yoga for Hips" or "Yin Yoga"</span></div>
+      <div class="checklist-row"><input type="checkbox" id="w2wed-yoga"><label for="w2wed-yoga">Yoga or rest</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2wed-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Thursday, June 11</div><span class="day-type-tag tag-run">Easy Run</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Can Creek or Haw River — 3–3.5 mi.</strong> Easy effort, no strides today.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down (8–10 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w2thu-run"><label for="w2thu-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2thu-pre"><label for="w2thu-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2thu-post"><label for="w2thu-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2thu-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row cycle-day">
+    <div class="day-top"><div class="day-name">Friday, June 12</div><span class="day-type-tag tag-cycle">⚠ Cycle Day 1</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Full rest — no exceptions.</strong> Cramps may be bad today. This day is always off. Gentle walk only if you genuinely feel up to it.</div>
+      <div class="checklist-row"><input type="checkbox" id="w2fri-rest"><label for="w2fri-rest">Rested</label></div>
+      <div class="notes-row"><label>Notes (how you're feeling):</label><textarea id="w2fri-notes" placeholder="Note symptoms — tracking this helps see improvement over months"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row cycle-day">
+    <div class="day-top"><div class="day-name">Saturday, June 13</div><span class="day-type-tag tag-cycle">Cycle Day 2</span></div>
+    <div class="day-content">
+      <div class="workout-detail">Long run was scheduled here (4 mi). If cramps have eased, do an easy 2–3 mi walk/run by feel. If still rough, rest and slide the long run to Sunday. <span class="adriene-link">Yoga with Adriene: "Yoga for Menstrual Relief" or "Yoga for Beginners" — gentle options.</span></div>
+      <div class="checklist-row"><input type="checkbox" id="w2sat-run"><label for="w2sat-run">Easy run or walk completed</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2sat-yoga"><label for="w2sat-yoga">Gentle yoga instead</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w2sat-rest"><label for="w2sat-rest">Full rest (still rough)</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w2sat-notes"></textarea></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== WEEK 3 ===================== -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 3</h2><span>June 14 – June 20, 2026</span></div>
+  <div class="cycle-banner">⚠ Cycle days may continue early this week (Day 3 = Jun 14). Go by feel. Resume normal training when you feel ready.</div>
+
+  <div class="day-row cycle-day">
+    <div class="day-top"><div class="day-name">Sunday, June 14</div><span class="day-type-tag tag-cycle">Cycle Day 3</span></div>
+    <div class="day-content">
+      <div class="workout-detail">Easy walk or gentle yoga only. Resume running when cramps are gone. <span class="adriene-link">Yoga with Adriene: "Yoga for Lower Back Relief"</span></div>
+      <div class="checklist-row"><input type="checkbox" id="w3sun-r"><label for="w3sun-r">Gentle movement or rest</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3sun-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Monday, June 15</div><span class="day-type-tag tag-run">Easy Run</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Pioneer Trail — 3–3.5 mi.</strong> Resume normal training. Add 4–6 strides at end. Maggie welcome.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down (8–10 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w3mon-run"><label for="w3mon-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3mon-strides"><label for="w3mon-strides">Strides completed</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3mon-pre"><label for="w3mon-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3mon-post"><label for="w3mon-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3mon-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Tuesday, June 16</div><span class="day-type-tag tag-strength">Strength A</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Strength Workout A — Lower Body.</strong> Back to normal. Try to go slightly heavier than Week 1 if it felt easy.</div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s1"><label for="w3tue-s1">Goblet squats 3×12</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s2"><label for="w3tue-s2">Romanian deadlifts 3×10</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s3"><label for="w3tue-s3">Reverse lunges 3×10 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s4"><label for="w3tue-s4">Glute bridges 3×15</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s5"><label for="w3tue-s5">Single-leg deadlift 3×8 each</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s6"><label for="w3tue-s6">Calf raises 3×20</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3tue-s7"><label for="w3tue-s7">Dead bug + Plank</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3tue-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row rest-day">
+    <div class="day-top"><div class="day-name">Wednesday, June 17</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Athletes" or "Yoga for Stress Relief"</span></div>
+      <div class="checklist-row"><input type="checkbox" id="w3wed-yoga"><label for="w3wed-yoga">Yoga or rest</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3wed-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Thursday, June 18</div><span class="day-type-tag tag-run">Easy Run</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Haw River or Can Creek — 3.5 mi.</strong> Easy pace.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down</div>
+      <div class="checklist-row"><input type="checkbox" id="w3thu-run"><label for="w3thu-run">Completed run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3thu-pre"><label for="w3thu-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3thu-post"><label for="w3thu-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3thu-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row rest-day">
+    <div class="day-top"><div class="day-name">Friday, June 19</div><span class="day-type-tag tag-rest">Rest</span></div>
+    <div class="day-content">
+      <div class="workout-detail">Rest before long run Saturday.</div>
+      <div class="checklist-row"><input type="checkbox" id="w3fri-rest"><label for="w3fri-rest">Rested</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3fri-notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-top"><div class="day-name">Saturday, June 20</div><span class="day-type-tag tag-long">Long Run</span></div>
+    <div class="day-content">
+      <div class="workout-detail"><strong>Cedar Rock or Haw River — 4.5 mi.</strong> No pace pressure. Andrew and/or Maggie welcome. Paintball? Shift to Sunday.</div>
+      <div class="stretch-block"><span>Pre-run:</span> Dynamic warm-up (5 min)</div>
+      <div class="stretch-block"><span>Post-run:</span> Full cool-down + extra pigeon pose (10–12 min)</div>
+      <div class="checklist-row"><input type="checkbox" id="w3sat-run"><label for="w3sat-run">Completed long run</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3sat-pre"><label for="w3sat-pre">Pre-run warm-up</label></div>
+      <div class="checklist-row"><input type="checkbox" id="w3sat-post"><label for="w3sat-post">Post-run cool-down</label></div>
+      <div class="notes-row"><label>Notes:</label><textarea id="w3sat-notes"></textarea></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- WEEKS 4–12: Condensed but complete -->
+
+<!-- WEEK 4 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 4</h2><span>June 21 – June 27, 2026 · Target pace: 13–14 min/mi</span></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, June 21</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w4sun"><label for="w4sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, June 22</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 3.5 mi + 4–6 strides</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w4mon-r"><label for="w4mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w4mon-s"><label for="w4mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w4mon-w"><label for="w4mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, June 23</div><span class="day-type-tag tag-strength">Strength B</span></div><div class="day-content"><div class="workout-detail">Strength Workout B — Full Body/Core</div><div class="checklist-row"><input type="checkbox" id="w4tue-s1"><label for="w4tue-s1">Sumo squats · Rows · Step-ups</label></div><div class="checklist-row"><input type="checkbox" id="w4tue-s2"><label for="w4tue-s2">Push-ups · Hip thrusts · Leg raises</label></div><div class="checklist-row"><input type="checkbox" id="w4tue-s3"><label for="w4tue-s3">Russian twists · Superman</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, June 24</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Hips" or "Yin Yoga"</span></div><div class="checklist-row"><input type="checkbox" id="w4wed"><label for="w4wed">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, June 25</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 3.5 mi easy</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w4thu-r"><label for="w4thu-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, June 26</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w4fri"><label for="w4fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, June 27</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 4.5–5 mi.</strong> Maggie/Andrew welcome. Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + pigeon pose</div><div class="checklist-row"><input type="checkbox" id="w4sat-r"><label for="w4sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w4sat-w"><label for="w4sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w4sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 5 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 5</h2><span>June 28 – July 4, 2026 · Target pace: 12–13 min/mi</span></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, June 28</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w5sun"><label for="w5sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, June 29</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 3.5–4 mi + 6 strides</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w5mon-r"><label for="w5mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w5mon-s"><label for="w5mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w5mon-w"><label for="w5mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, June 30</div><span class="day-type-tag tag-strength">Strength A</span></div><div class="day-content"><div class="workout-detail">Strength Workout A — Lower Body. Increase weight if Week 3 felt easy.</div><div class="checklist-row"><input type="checkbox" id="w5tue-s1"><label for="w5tue-s1">Goblet squats · RDLs · Lunges</label></div><div class="checklist-row"><input type="checkbox" id="w5tue-s2"><label for="w5tue-s2">Glute bridges · SL deadlift · Calf raises</label></div><div class="checklist-row"><input type="checkbox" id="w5tue-s3"><label for="w5tue-s3">Dead bug + Plank</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, July 1</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Athletes" or "Morning Yoga"</span></div><div class="checklist-row"><input type="checkbox" id="w5wed"><label for="w5wed">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, July 2</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River or Can Creek — 3.5–4 mi easy</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w5thu-r"><label for="w5thu-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, July 3</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w5fri"><label for="w5fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, July 4</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 5 mi.</strong> 4th of July — go early before heat. Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w5sat-r"><label for="w5sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w5sat-w"><label for="w5sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w5sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 6 — CUTBACK -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 6 — CUTBACK WEEK</h2><span>July 5 – July 11, 2026</span></div>
+  <div class="cutback-banner">↓ Cutback week: drop all run distances by 30%. This is not optional — recovery is when fitness locks in.</div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, July 5</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w6sun"><label for="w6sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, July 6</div><span class="day-type-tag tag-run">Easy Run (short)</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 2.5 mi easy.</strong> No strides this week. Just enjoy it.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w6mon-r"><label for="w6mon-r">Short run done</label></div><div class="checklist-row"><input type="checkbox" id="w6mon-w"><label for="w6mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, July 7</div><span class="day-type-tag tag-strength">Strength B (light)</span></div><div class="day-content"><div class="workout-detail">Strength Workout B — go lighter than usual. Focus on form not load.</div><div class="checklist-row"><input type="checkbox" id="w6tue-s1"><label for="w6tue-s1">Sumo squats · Rows · Step-ups</label></div><div class="checklist-row"><input type="checkbox" id="w6tue-s2"><label for="w6tue-s2">Push-ups · Hip thrusts · Leg raises</label></div><div class="checklist-row"><input type="checkbox" id="w6tue-s3"><label for="w6tue-s3">Russian twists · Superman</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, July 8</div><span class="day-type-tag tag-yoga">Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yin Yoga" or "Yoga for Lower Back"</span></div><div class="checklist-row"><input type="checkbox" id="w6wed"><label for="w6wed">Yoga done</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, July 9</div><span class="day-type-tag tag-run">Easy Run (short)</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 2.5 mi.</strong> Truly easy. Maggie day.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w6thu-r"><label for="w6thu-r">Short run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, July 10</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w6fri"><label for="w6fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, July 11</div><span class="day-type-tag tag-long">Long Run (cutback)</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 3.5 mi only.</strong> Keep it easy and short this week.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w6sat-r"><label for="w6sat-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w6sat-w"><label for="w6sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w6sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 7 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 7</h2><span>July 12 – July 18, 2026 · Target pace: 11–12 min/mi</span></div>
+  <div class="cycle-banner">⚠ Cycle week likely (12th–17th). Day 1 = rest. Adjust as needed.</div>
+  <div class="day-row cycle-day"><div class="day-top"><div class="day-name">Sunday, July 12</div><span class="day-type-tag tag-cycle">⚠ Cycle Day 1</span></div><div class="day-content"><div class="workout-detail"><strong>Full rest.</strong></div><div class="checklist-row"><input type="checkbox" id="w7sun"><label for="w7sun">Rested</label></div><div class="notes-row"><label>Notes (symptoms — tracking helps see progress):</label><textarea id="w7sun-n"></textarea></div></div></div>
+  <div class="day-row cycle-day"><div class="day-top"><div class="day-name">Monday, July 13</div><span class="day-type-tag tag-cycle">Cycle Day 2</span></div><div class="day-content"><div class="workout-detail">Easy walk or gentle yoga by feel. <span class="adriene-link">Yoga with Adriene: "Yoga for Stress Relief" or "Yoga for Beginners"</span></div><div class="checklist-row"><input type="checkbox" id="w7mon-r"><label for="w7mon-r">Gentle movement or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, July 14</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 3.5–4 mi + 6 strides.</strong> Resume if feeling good.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w7tue-r"><label for="w7tue-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w7tue-s"><label for="w7tue-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w7tue-w"><label for="w7tue-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7tue-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Wednesday, July 15</div><span class="day-type-tag tag-strength">Strength A</span></div><div class="day-content"><div class="workout-detail">Strength Workout A. Go lighter if still in cycle recovery.</div><div class="checklist-row"><input type="checkbox" id="w7wed-s1"><label for="w7wed-s1">Goblet squats · RDLs · Lunges</label></div><div class="checklist-row"><input type="checkbox" id="w7wed-s2"><label for="w7wed-s2">Glute bridges · SL deadlift · Calves</label></div><div class="checklist-row"><input type="checkbox" id="w7wed-s3"><label for="w7wed-s3">Dead bug + Plank</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7wed-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Thursday, July 16</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Hips" or "Yoga for Runners"</span></div><div class="checklist-row"><input type="checkbox" id="w7thu"><label for="w7thu">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7thu-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Friday, July 17</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 3.5–4 mi easy.</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w7fri-r"><label for="w7fri-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, July 18</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 5.5 mi.</strong> Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + pigeon</div><div class="checklist-row"><input type="checkbox" id="w7sat-r"><label for="w7sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w7sat-w"><label for="w7sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w7sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 8 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 8</h2><span>July 19 – July 25, 2026 · Target pace: 11–12 min/mi</span></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, July 19</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w8sun"><label for="w8sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, July 20</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 4 mi + 6 strides</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w8mon-r"><label for="w8mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w8mon-s"><label for="w8mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w8mon-w"><label for="w8mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, July 21</div><span class="day-type-tag tag-strength">Strength B</span></div><div class="day-content"><div class="workout-detail">Strength Workout B. Try to progress weights where possible.</div><div class="checklist-row"><input type="checkbox" id="w8tue-s1"><label for="w8tue-s1">Sumo squats · Rows · Step-ups</label></div><div class="checklist-row"><input type="checkbox" id="w8tue-s2"><label for="w8tue-s2">Push-ups · Hip thrusts · Leg raises</label></div><div class="checklist-row"><input type="checkbox" id="w8tue-s3"><label for="w8tue-s3">Russian twists · Superman</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, July 22</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Athletes" or "Yin Yoga"</span></div><div class="checklist-row"><input type="checkbox" id="w8wed"><label for="w8wed">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, July 23</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Can Creek or Haw River — 4 mi easy</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w8thu-r"><label for="w8thu-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, July 24</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w8fri"><label for="w8fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, July 25</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 6 mi.</strong> Andrew/Maggie welcome. Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + pigeon</div><div class="checklist-row"><input type="checkbox" id="w8sat-r"><label for="w8sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w8sat-w"><label for="w8sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w8sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 9 — CUTBACK -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 9 — CUTBACK WEEK</h2><span>July 26 – August 1, 2026</span></div>
+  <div class="cutback-banner">↓ Second cutback week. Drop all distances 30%. You've now been training 9 weeks — your body needs this.</div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, July 26</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w9sun"><label for="w9sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, July 27</div><span class="day-type-tag tag-run">Easy Run (short)</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 2.5–3 mi easy. No strides.</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w9mon-r"><label for="w9mon-r">Short run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, July 28</div><span class="day-type-tag tag-strength">Strength A (light)</span></div><div class="day-content"><div class="workout-detail">Strength A — lighter weights, focus on form.</div><div class="checklist-row"><input type="checkbox" id="w9tue-s1"><label for="w9tue-s1">Goblet squats · RDLs · Lunges</label></div><div class="checklist-row"><input type="checkbox" id="w9tue-s2"><label for="w9tue-s2">Glute bridges · SL deadlift · Calves</label></div><div class="checklist-row"><input type="checkbox" id="w9tue-s3"><label for="w9tue-s3">Dead bug + Plank</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, July 29</div><span class="day-type-tag tag-yoga">Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Runners" or "Yoga for Stress Relief"</span></div><div class="checklist-row"><input type="checkbox" id="w9wed"><label for="w9wed">Yoga done</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, July 30</div><span class="day-type-tag tag-run">Easy Run (short)</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 2.5–3 mi easy. Maggie day.</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w9thu-r"><label for="w9thu-r">Short run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, July 31</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w9fri"><label for="w9fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, August 1</div><span class="day-type-tag tag-long">Long Run (cutback)</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 4 mi only.</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w9sat-r"><label for="w9sat-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w9sat-w"><label for="w9sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w9sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 10 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 10</h2><span>August 2 – August 8, 2026 · Target pace: 10–11 min/mi</span></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, August 2</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w10sun"><label for="w10sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, August 3</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 4 mi + 6 strides.</strong> Notice if your easy pace is dropping naturally.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w10mon-r"><label for="w10mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w10mon-s"><label for="w10mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w10mon-w"><label for="w10mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes (record your pace — compare to Week 1):</label><textarea id="w10mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, August 4</div><span class="day-type-tag tag-strength">Strength B</span></div><div class="day-content"><div class="workout-detail">Strength Workout B. You should be noticeably stronger than Week 1.</div><div class="checklist-row"><input type="checkbox" id="w10tue-s1"><label for="w10tue-s1">Sumo squats · Rows · Step-ups</label></div><div class="checklist-row"><input type="checkbox" id="w10tue-s2"><label for="w10tue-s2">Push-ups · Hip thrusts · Leg raises</label></div><div class="checklist-row"><input type="checkbox" id="w10tue-s3"><label for="w10tue-s3">Russian twists · Superman</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, August 5</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Hips" or "Yoga for Athletes"</span></div><div class="checklist-row"><input type="checkbox" id="w10wed"><label for="w10wed">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, August 6</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River or Can Creek — 4 mi easy</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w10thu-r"><label for="w10thu-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, August 7</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w10fri"><label for="w10fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, August 8</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 6.5 mi.</strong> Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + pigeon</div><div class="checklist-row"><input type="checkbox" id="w10sat-r"><label for="w10sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w10sat-w"><label for="w10sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w10sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 11 -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 11</h2><span>August 9 – August 15, 2026 · Target pace: 10 min/mi</span></div>
+  <div class="cycle-banner">⚠ Cycle week likely (12th–17th). Day 1 = rest. Adjust as needed — same protocol as always.</div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, August 9</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w11sun"><label for="w11sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w11sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, August 10</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 4 mi + 6 strides.</strong> You are closing in on 10 min/mi. The strides are working.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w11mon-r"><label for="w11mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w11mon-s"><label for="w11mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w11mon-w"><label for="w11mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes (record pace):</label><textarea id="w11mon-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, August 11</div><span class="day-type-tag tag-strength">Strength A</span></div><div class="day-content"><div class="workout-detail">Strength Workout A. Push the weights if you can.</div><div class="checklist-row"><input type="checkbox" id="w11tue-s1"><label for="w11tue-s1">Goblet squats · RDLs · Lunges</label></div><div class="checklist-row"><input type="checkbox" id="w11tue-s2"><label for="w11tue-s2">Glute bridges · SL deadlift · Calves</label></div><div class="checklist-row"><input type="checkbox" id="w11tue-s3"><label for="w11tue-s3">Dead bug + Plank</label></div><div class="notes-row"><label>Notes:</label><textarea id="w11tue-n"></textarea></div></div></div>
+  <div class="day-row cycle-day"><div class="day-top"><div class="day-name">Wednesday, August 12</div><span class="day-type-tag tag-cycle">⚠ Cycle Day 1</span></div><div class="day-content"><div class="workout-detail"><strong>Full rest.</strong></div><div class="checklist-row"><input type="checkbox" id="w11wed-r"><label for="w11wed-r">Rested</label></div><div class="notes-row"><label>Notes (symptoms — compare to June):</label><textarea id="w11wed-n"></textarea></div></div></div>
+  <div class="day-row cycle-day"><div class="day-top"><div class="day-name">Thursday, August 13</div><span class="day-type-tag tag-cycle">Cycle Day 2</span></div><div class="day-content"><div class="workout-detail">Gentle yoga or walk by feel. <span class="adriene-link">Yoga with Adriene: "Yoga for Lower Back" or "Yoga for Beginners"</span></div><div class="checklist-row"><input type="checkbox" id="w11thu-y"><label for="w11thu-y">Gentle movement or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w11thu-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Friday, August 14</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 3.5–4 mi easy.</strong> Resume when you feel ready.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w11fri-r"><label for="w11fri-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w11fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, August 15</div><span class="day-type-tag tag-long">Long Run</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 6.5–7 mi.</strong> Paintball → shift Sunday.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + pigeon</div><div class="checklist-row"><input type="checkbox" id="w11sat-r"><label for="w11sat-r">Long run done</label></div><div class="checklist-row"><input type="checkbox" id="w11sat-w"><label for="w11sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w11sat-n"></textarea></div></div></div>
+</div>
+
+<!-- WEEK 12 — FINAL PHASE 1 WEEK -->
+<div class="week-block">
+  <div class="week-header"><h2>WEEK 12 — PHASE 1 COMPLETE</h2><span>August 16 – August 22, 2026 · Target: 10 min/mi consistent</span></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Sunday, August 16</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w12sun"><label for="w12sun">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w12sun-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Monday, August 17</div><span class="day-type-tag tag-run">Easy Run + Strides</span></div><div class="day-content"><div class="workout-detail"><strong>Pioneer Trail — 4 mi + 6 strides.</strong> Record your pace carefully today — this is your Phase 1 benchmark.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w12mon-r"><label for="w12mon-r">Run done</label></div><div class="checklist-row"><input type="checkbox" id="w12mon-s"><label for="w12mon-s">Strides done</label></div><div class="checklist-row"><input type="checkbox" id="w12mon-w"><label for="w12mon-w">Warm-up + cool-down</label></div><div class="notes-row"><label>⭐ BENCHMARK — record your pace:</label><textarea id="w12mon-n" placeholder="What is your easy pace today? Compare to May 31."></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Tuesday, August 18</div><span class="day-type-tag tag-strength">Strength B</span></div><div class="day-content"><div class="workout-detail">Strength Workout B. Final strength session of Phase 1.</div><div class="checklist-row"><input type="checkbox" id="w12tue-s1"><label for="w12tue-s1">Sumo squats · Rows · Step-ups</label></div><div class="checklist-row"><input type="checkbox" id="w12tue-s2"><label for="w12tue-s2">Push-ups · Hip thrusts · Leg raises</label></div><div class="checklist-row"><input type="checkbox" id="w12tue-s3"><label for="w12tue-s3">Russian twists · Superman</label></div><div class="notes-row"><label>Notes (how much stronger are you than week 1?):</label><textarea id="w12tue-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Wednesday, August 19</div><span class="day-type-tag tag-rest">Rest / Yoga</span></div><div class="day-content"><div class="workout-detail"><span class="adriene-link">Yoga with Adriene: "Yoga for Runners" — celebrate 12 weeks of consistency.</span></div><div class="checklist-row"><input type="checkbox" id="w12wed"><label for="w12wed">Yoga or rest</label></div><div class="notes-row"><label>Notes:</label><textarea id="w12wed-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Thursday, August 20</div><span class="day-type-tag tag-run">Easy Run</span></div><div class="day-content"><div class="workout-detail"><strong>Haw River — 4 mi easy.</strong></div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down</div><div class="checklist-row"><input type="checkbox" id="w12thu-r"><label for="w12thu-r">Run + warm-up + cool-down</label></div><div class="notes-row"><label>Notes:</label><textarea id="w12thu-n"></textarea></div></div></div>
+  <div class="day-row rest-day"><div class="day-top"><div class="day-name">Friday, August 21</div><span class="day-type-tag tag-rest">Rest</span></div><div class="day-content"><div class="checklist-row"><input type="checkbox" id="w12fri"><label for="w12fri">Rested</label></div><div class="notes-row"><label>Notes:</label><textarea id="w12fri-n"></textarea></div></div></div>
+  <div class="day-row"><div class="day-top"><div class="day-name">Saturday, August 22</div><span class="day-type-tag tag-long">Long Run — Phase 1 Finale</span></div><div class="day-content"><div class="workout-detail"><strong>Cedar Rock — 7 mi.</strong> You did 12 weeks. Phase 2 starts next week with track intervals. This is your last pure base run.</div><div class="stretch-block"><span>Pre:</span> Dynamic warm-up · <span>Post:</span> Full cool-down + full stretch sequence, take your time</div><div class="checklist-row"><input type="checkbox" id="w12sat-r"><label for="w12sat-r">Long run done ✓</label></div><div class="checklist-row"><input type="checkbox" id="w12sat-w"><label for="w12sat-w">Warm-up + cool-down</label></div><div class="notes-row"><label>⭐ Phase 1 reflection — how far have you come?</label><textarea id="w12sat-n" placeholder="Write whatever you want here. Pace, how it felt, what surprised you, what's next."></textarea></div></div></div>
+</div>
+
+<div style="background:#1a1a1a;color:#aaa;text-align:center;font-family:monospace;font-size:11px;padding:16px;">
+  DANI'S TRAIL RUNNING TRACKER · PHASE 1 · MAY 31 – AUG 22, 2026 · PHASE 2 BEGINS AUG 23
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDFxucCUoLZEU8iUnO8J185G3Z3LWYMYWQ",
+    authDomain: "dani-run-tracker.firebaseapp.com",
+    databaseURL: "https://dani-run-tracker-default-rtdb.firebaseio.com",
+    projectId: "dani-run-tracker",
+    storageBucket: "dani-run-tracker.firebasestorage.app",
+    messagingSenderId: "716475428915",
+    appId: "1:716475428915:web:f5a1f652b02a9eae457346"
+  });
+
+  const auth = firebase.auth();
+  const db = firebase.database();
+  const ALLOWED_EMAIL = "danihandelin@gmail.com";
+
+  document.getElementById('sign-in-btn').addEventListener('click', () => {
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  });
+
+  document.getElementById('sign-out-btn').addEventListener('click', () => auth.signOut());
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.email === ALLOWED_EMAIL) {
+      document.getElementById('auth-overlay').style.display = 'none';
+      document.getElementById('sign-out-btn').style.display = 'block';
+      loadAndSync(user.uid);
+    } else {
+      if (user) auth.signOut();
+      document.getElementById('auth-overlay').style.display = 'flex';
+      document.getElementById('sign-out-btn').style.display = 'none';
+    }
+  });
+
+  function loadAndSync(uid) {
+    const ref = db.ref('users/' + uid);
+    ref.once('value', snap => {
+      const data = snap.val() || {};
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        if (data[cb.id] !== undefined) cb.checked = data[cb.id];
+      });
+      document.querySelectorAll('textarea').forEach(ta => {
+        if (data[ta.id] !== undefined) ta.value = data[ta.id];
+      });
+    });
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', () => ref.child(cb.id).set(cb.checked));
+    });
+    document.querySelectorAll('textarea').forEach(ta => {
+      ta.addEventListener('blur', () => ref.child(ta.id).set(ta.value));
+    });
+  }
+</script>
+</body>
+</html>
