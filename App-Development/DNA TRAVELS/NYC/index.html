@@ -1504,6 +1504,91 @@
       transition: opacity 0.2s;
     }
     .toast.show { opacity: 1; }
+
+    /* —— Stay card ——  */
+    .stay-summary { flex-shrink:0; margin:0 1rem 0.65rem; padding:0.6rem 0.85rem; border-radius:10px; border:1px solid #e8d5b0; background:linear-gradient(135deg,#fdf3e3 0%,var(--paper) 100%); display:flex; gap:0.65rem; flex-wrap:wrap; align-items:center; }
+    .stay-summary[hidden] { display:none !important; }
+    .stay-summary-name { font-size:0.78rem; font-weight:700; color:#7c5c2d; }
+    .stay-summary-rows { display:flex; gap:0.85rem; flex-wrap:wrap; flex:1; }
+    .stay-summary-row { font-size:0.7rem; color:var(--muted); }
+    .stay-summary-row strong { color:var(--ink); font-weight:600; }
+    .stay-summary-edit { font:inherit; font-size:0.65rem; font-weight:600; color:var(--teal); background:none; border:none; cursor:pointer; padding:0; text-decoration:underline; flex-shrink:0; }
+
+    /* —— Trip tab ——  */
+    .trip-stay-card { background:linear-gradient(135deg,#fdf3e3 0%,var(--paper) 100%); border:1.5px solid #e8d5b0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.5rem; }
+    .trip-stay-header { font-size:0.75rem; font-weight:700; color:#7c5c2d; margin-bottom:0.45rem; display:flex; justify-content:space-between; align-items:center; }
+    .trip-stay-rows { display:flex; flex-direction:column; gap:0.3rem; }
+    .trip-stay-row { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--ink); }
+    .trip-stay-row-label { font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }
+    .trip-day-card { background:var(--paper); border:1.5px solid var(--line); border-radius:12px; padding:0.85rem 1rem; cursor:pointer; transition:all 0.15s; margin-bottom:0.5rem; }
+    .trip-day-card:hover { border-color:var(--teal); box-shadow:0 2px 8px rgba(45,106,106,0.1); transform:translateY(-1px); }
+    .trip-day-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem; }
+    .trip-day-name { font-size:0.82rem; font-weight:700; color:var(--ink); }
+    .trip-day-right { display:flex; align-items:center; gap:0.35rem; font-size:0.65rem; color:var(--muted); }
+    .trip-chips-row { display:flex; flex-wrap:wrap; gap:0.3rem; }
+    .mini-chip { font-size:0.6rem; font-weight:600; padding:0.18rem 0.5rem; border-radius:999px; display:inline-block; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; }
+    .mc-stay { background:#fdf3e3; color:#7c5c2d; border:1px solid #e8d5b0; }
+    .mc-coffee { background:var(--cat-coffee); color:#5b21b6; }
+    .mc-restaurant { background:var(--cat-restaurant); color:#1e40af; }
+    .mc-destination { background:var(--cat-destination); color:#0f766e; }
+    .mc-museum { background:var(--cat-museum); color:#be185d; }
+    .mc-park { background:var(--cat-park); color:#854d0e; }
+    .mc-shopping { background:var(--cat-shopping); color:#166534; }
+    .mc-other { background:var(--cat-other); color:#9a3412; }
+
+    /* —— Discover / Nearby tab ——  */
+    .discover-scroll { flex:1; min-height:0; overflow:auto; -webkit-overflow-scrolling:touch; padding:0.75rem 1rem 1.25rem; display:flex; flex-direction:column; gap:0.65rem; }
+    .discover-day-strip { display:flex; gap:0.35rem; overflow-x:auto; flex-shrink:0; padding-bottom:0.15rem; scrollbar-width:none; }
+    .discover-day-strip::-webkit-scrollbar { display:none; }
+    .discover-day-btn { font:inherit; font-size:0.7rem; font-weight:700; padding:0.3rem 0.75rem; border:1px solid var(--line); border-radius:999px; background:var(--paper); color:var(--muted); cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; }
+    .discover-day-btn.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+    .discover-context { font-size:0.72rem; color:var(--muted); line-height:1.45; flex-shrink:0; }
+    .discover-context strong { color:var(--ink); }
+    .discover-section { background:var(--paper); border:1px solid var(--line); border-radius:10px; overflow:hidden; flex-shrink:0; }
+    .discover-section-title { padding:0.5rem 0.85rem; font-size:0.65rem; font-weight:700; color:var(--teal); background:var(--teal-soft); border-bottom:1px solid var(--line); letter-spacing:0.04em; text-transform:uppercase; }
+    .discover-section-title.new { background:#fef9c3; color:#92400e; }
+    .discover-item { display:flex; align-items:center; gap:0.55rem; padding:0.6rem 0.85rem; border-bottom:1px solid var(--line); }
+    .discover-item:last-child { border-bottom:none; }
+    .discover-emoji { font-size:1.05rem; flex-shrink:0; line-height:1; }
+    .discover-info { flex:1; min-width:0; }
+    .discover-name { font-size:0.72rem; font-weight:700; color:var(--ink); line-height:1.25; }
+    .discover-meta { font-size:0.62rem; color:var(--muted); margin-top:1px; }
+    .discover-add { font:inherit; font-size:0.62rem; font-weight:700; color:var(--paper); background:var(--teal); border:none; border-radius:6px; padding:0.25rem 0.55rem; cursor:pointer; flex-shrink:0; transition:background 0.15s; }
+    .discover-add:hover { background:var(--ink); }
+    .discover-add:disabled { background:var(--muted); cursor:default; }
+    .discover-new-badge { font-size:0.55rem; font-weight:700; background:#fef3c7; color:#92400e; border:1px solid #fcd34d; border-radius:4px; padding:1px 4px; margin-left:3px; vertical-align:middle; }
+    .discover-loading { font-size:0.75rem; color:var(--muted); text-align:center; padding:1.5rem; }
+
+    /* —— Nav icon + label ——  */
+    .nav-tab-icon { font-size:1.05rem; display:block; line-height:1; margin-bottom:1px; }
+    .planner-nav button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+
+    /* —— Mobile (≤ 640px) ——  */
+    @media (max-width: 640px) {
+      #trip-label, #save-status { display:none; }
+      .planner-brand { font-size:1rem; letter-spacing:0.06em; }
+      .btn-ghost, .btn-outline { font-size:0.68rem; padding:0.3rem 0.45rem; border-radius:6px; }
+      .bar-actions { gap:0.2rem; }
+      .planner-bar { padding:0 0.75rem; gap:0.5rem; }
+      .planner-body { flex-direction:column; }
+      #page-calendar, #page-backlog, #page-schedule, #page-trip, #page-discover {
+        flex:1 !important; width:100% !important; min-width:0 !important; border-left:none !important;
+      }
+      #page-backlog { display:none !important; }
+      #page-backlog.active { display:flex !important; }
+      .planner-nav button { font-size:0.6rem; padding:0.55rem 0; }
+      .nav-tab-icon { font-size:1.15rem; margin-bottom:2px; }
+      #landing { padding:1rem 1rem 2rem; }
+      .landing-card { padding:1.5rem 1.25rem; border-radius:14px; }
+      .dna-mark { font-size:2.75rem; }
+      .spot-card { padding:0.9rem 1rem; }
+      .day-chip { min-height:48px; padding:0.75rem 0.85rem; }
+      .btn-mini { padding:0.5rem 0.6rem; font-size:0.72rem; }
+      .spots-grid, .hood-scroll { grid-template-columns:1fr; }
+      .day-column { flex:0 0 125px; }
+      .toast { bottom:calc(var(--nav-h) + 0.75rem); }
+      .pane-hint { font-size:0.7rem; padding:0.5rem 1rem 0.55rem; }
+    }
   </style>
 </head>
 <body>
@@ -1590,6 +1675,36 @@
             <input type="text" class="flight-number" id="landing-departure-flightno" placeholder="Flight # / confirmation (e.g. DL456 / ABC123)">
           </div>
         </fieldset>
+        <fieldset class="flight-section">
+          <legend>Stay <span class="optional">optional</span></legend>
+          <p class="field-hint" style="margin-top:0">Adds check-in/checkout info to your Trip overview.</p>
+          <div class="flight-leg">
+            <label for="landing-stay-name">Accommodation name</label>
+            <input type="text" id="landing-stay-name" placeholder="Pod Brooklyn Hotel, Airbnb on Bedford…">
+          </div>
+          <div class="flight-leg">
+            <label>Check-in</label>
+            <div class="flight-time-row">
+              <label>Date<input type="date" id="landing-stay-checkin-date"></label>
+              <label>Time<input type="time" id="landing-stay-checkin-time" value="15:00" step="900"></label>
+            </div>
+          </div>
+          <div class="flight-leg">
+            <label>Check-out</label>
+            <div class="flight-time-row">
+              <label>Date<input type="date" id="landing-stay-checkout-date"></label>
+              <label>Time<input type="time" id="landing-stay-checkout-time" value="11:00" step="900"></label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="flight-section">
+          <legend>Discover nearby <span class="optional">optional</span></legend>
+          <p class="field-hint" style="margin-top:0">Paste your Google Places API key to unlock the "✨ not in your list" section in the Nearby tab. <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Get a key →</a></p>
+          <div class="flight-leg">
+            <label for="landing-places-key">Google Places API key</label>
+            <input type="password" id="landing-places-key" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
+          </div>
+        </fieldset>
         <div class="field">
           <label>Your day schedule</label>
           <div class="field-row day-schedule-row">
@@ -1631,6 +1746,17 @@
       </div>
     </header>
     <div class="planner-body">
+      <div id="page-trip" class="planner-page">
+        <div class="pane-head">
+          <h2>📅 Trip</h2>
+          <p id="trip-day-count"></p>
+        </div>
+        <div class="page-scroll" id="trip-scroll" style="flex-direction:column;gap:0;padding:0.75rem 1rem 1.5rem;">
+          <div id="trip-stay-card"></div>
+          <div id="trip-days"></div>
+        </div>
+      </div>
+
       <div id="page-calendar" class="planner-page active">
         <div class="pane-head">
           <h2>Calendar</h2>
@@ -1638,6 +1764,7 @@
         </div>
         <p class="pane-hint">Drag spots onto a <strong>day column</strong> (top = no time, rows = hours). Tap a <strong>day header</strong> to select it for Add to day.</p>
         <div id="flight-summary" class="flight-summary" hidden></div>
+        <div id="stay-summary" class="stay-summary" hidden></div>
         <div class="page-scroll">
           <div id="calendar"></div>
         </div>
@@ -1701,11 +1828,21 @@
         </div>
         <div id="schedule-content"></div>
       </div>
+
+      <div id="page-discover" class="planner-page">
+        <div class="pane-head">
+          <h2>✨ Nearby</h2>
+          <p id="discover-day-label"></p>
+        </div>
+        <div class="discover-scroll" id="discover-scroll"></div>
+      </div>
     </div>
 
     <nav class="planner-nav" id="planner-nav">
-      <button type="button" data-nav="calendar" class="active">Calendar</button>
-      <button type="button" data-nav="backlog">Backlog</button>
+      <button type="button" data-nav="trip"><span class="nav-tab-icon">📅</span>Trip</button>
+      <button type="button" data-nav="day"><span class="nav-tab-icon">🗓</span>Day</button>
+      <button type="button" data-nav="backlog"><span class="nav-tab-icon">📋</span>Backlog</button>
+      <button type="button" data-nav="discover"><span class="nav-tab-icon">✨</span>Nearby</button>
     </nav>
   </section>
 

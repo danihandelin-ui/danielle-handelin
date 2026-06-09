@@ -657,6 +657,8 @@
         s.flights = normalizeFlights(s.flights);
         s.dayStartTime = s.dayStartTime || DEFAULT_DAY_START_TIME;
         s.dayEndTime = s.dayEndTime || DEFAULT_DAY_END_TIME;
+        s.stay = s.stay || { name: '', checkinDate: '', checkinTime: '15:00', checkoutDate: '', checkoutTime: '11:00' };
+        s.googlePlacesKey = s.googlePlacesKey || '';
         if (!s.tripEnd && s.tripStart && s.days?.length)
           s.tripEnd = s.days[s.days.length - 1]?.date || s.tripStart;
         if (key !== STORAGE_KEY && s.days?.length && s.tripStart) s.onboarded = true;
@@ -684,6 +686,8 @@
       dayStartTime: DEFAULT_DAY_START_TIME,
       dayEndTime: DEFAULT_DAY_END_TIME,
       neverAgain: {},
+      stay: { name: '', checkinDate: '', checkinTime: '15:00', checkoutDate: '', checkoutTime: '11:00' },
+      googlePlacesKey: '',
     };
   }
 
@@ -757,6 +761,14 @@
     const dayEndEl = document.getElementById('landing-day-end');
     if (dayStartEl) dayStartEl.value = state.dayStartTime || DEFAULT_DAY_START_TIME;
     if (dayEndEl) dayEndEl.value = state.dayEndTime || DEFAULT_DAY_END_TIME;
+    const stay = state.stay || {};
+    const f = id => document.getElementById(id);
+    if (f('landing-stay-name')) f('landing-stay-name').value = stay.name || '';
+    if (f('landing-stay-checkin-date')) f('landing-stay-checkin-date').value = stay.checkinDate || '';
+    if (f('landing-stay-checkin-time')) f('landing-stay-checkin-time').value = stay.checkinTime || '15:00';
+    if (f('landing-stay-checkout-date')) f('landing-stay-checkout-date').value = stay.checkoutDate || '';
+    if (f('landing-stay-checkout-time')) f('landing-stay-checkout-time').value = stay.checkoutTime || '11:00';
+    if (f('landing-places-key')) f('landing-places-key').value = state.googlePlacesKey || '';
     const submitBtn = document.querySelector('#landing-form .btn-main');
     if (submitBtn) {
       const hasPlan = state.days?.some(d => d.blocks?.length);
@@ -769,7 +781,7 @@
     document.getElementById('landing').classList.remove('active');
     document.getElementById('planner').classList.add('active');
     selectedDayId = selectedDayId || state.days[0]?.id;
-    showPlannerPage('calendar');
+    showPlannerPage(window.innerWidth <= 640 ? 'trip' : 'calendar');
     updateTripLabel();
     updateHomeLabel();
     updateMapsLink();
@@ -780,30 +792,49 @@
 
   function showPlannerPage(page) {
     plannerPage = page;
+    const mobile = window.innerWidth <= 640;
     document.querySelectorAll('.planner-page').forEach(p => p.classList.remove('active'));
 
-    // For calendar, show both calendar and backlog side-by-side
-    if (page === 'calendar') {
+    if (page === 'trip') {
+      if (mobile) {
+        document.getElementById('page-trip')?.classList.add('active');
+        renderTripOverview();
+      } else {
+        document.getElementById('page-calendar')?.classList.add('active');
+        document.getElementById('page-backlog')?.classList.add('active');
+        renderCalendar(); renderCatLegend(); renderBacklog();
+      }
+    } else if (page === 'calendar') {
       document.getElementById('page-calendar')?.classList.add('active');
-      document.getElementById('page-backlog')?.classList.add('active');
-      renderCalendar();
-      renderCatLegend();
-      renderBacklog();
+      if (!mobile) document.getElementById('page-backlog')?.classList.add('active');
+      renderCalendar(); renderCatLegend(); renderBacklog();
+    } else if (page === 'day') {
+      if (!expandedDayId && state.days?.length) expandedDayId = selectedDayId || state.days[0]?.id;
+      document.getElementById('page-schedule')?.classList.add('active');
+      renderSchedulePage();
+    } else if (page === 'discover') {
+      document.getElementById('page-discover')?.classList.add('active');
+      renderDiscover();
     } else {
       const pageEl = document.getElementById('page-' + page);
       if (pageEl) pageEl.classList.add('active');
-      if (page === 'backlog') {
-        renderCatLegend();
-        renderBacklog();
-      }
+      if (page === 'backlog') { renderCatLegend(); renderBacklog(); }
       if (page === 'schedule') renderSchedulePage();
     }
 
     const nav = document.getElementById('planner-nav');
     if (nav) nav.hidden = page === 'schedule';
+
     document.querySelectorAll('[data-nav]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.nav === page);
+      const bp = btn.dataset.nav;
+      btn.classList.toggle('active',
+        bp === page ||
+        (bp === 'trip' && page === 'calendar' && !mobile) ||
+        (bp === 'day' && page === 'schedule')
+      );
     });
+
+    renderStaySummary();
   }
 
   function updateTripLabel() {
@@ -885,6 +916,15 @@
       }
       state.dayStartTime = dayStartTime;
       state.dayEndTime = dayEndTime;
+      const g = id => document.getElementById(id);
+      state.stay = {
+        name: (g('landing-stay-name')?.value || '').trim(),
+        checkinDate: g('landing-stay-checkin-date')?.value || '',
+        checkinTime: g('landing-stay-checkin-time')?.value || '15:00',
+        checkoutDate: g('landing-stay-checkout-date')?.value || '',
+        checkoutTime: g('landing-stay-checkout-time')?.value || '11:00',
+      };
+      state.googlePlacesKey = (g('landing-places-key')?.value || '').trim();
       state.onboarded = true;
       rebuildDaysPreservingBlocks();
       selectedDayId = state.days[0]?.id;
@@ -913,6 +953,8 @@
       days: state.days,
       backlogView: state.backlogView,
       neverAgain: state.neverAgain,
+      stay: state.stay,
+      googlePlacesKey: state.googlePlacesKey,
     };
   }
 
@@ -1439,11 +1481,315 @@
     el.querySelector('#btn-edit-flights')?.addEventListener('click', () => showLanding());
   }
 
+  /* ———— Stay / Trip / Discover ———— */
+
+  function fmtTime12(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    return (h % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + (h >= 12 ? ' PM' : ' AM');
+  }
+
+  function fmtDateShort(d) {
+    if (!d) return '';
+    return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  function renderStaySummary() {
+    const el = document.getElementById('stay-summary');
+    if (!el) return;
+    const stay = state.stay;
+    if (!stay?.name && !stay?.checkinDate) { el.hidden = true; return; }
+    const ci = stay.checkinDate ? fmtDateShort(stay.checkinDate) + (stay.checkinTime ? ' · ' + fmtTime12(stay.checkinTime) : '') : '';
+    const co = stay.checkoutDate ? fmtDateShort(stay.checkoutDate) + (stay.checkoutTime ? ' · ' + fmtTime12(stay.checkoutTime) : '') : '';
+    el.hidden = false;
+    el.innerHTML = `<span class="stay-summary-name">🏨 ${esc(stay.name || 'Your Stay')}</span>
+      <div class="stay-summary-rows">
+        ${ci ? `<span class="stay-summary-row"><strong>In:</strong> ${esc(ci)}</span>` : ''}
+        ${co ? `<span class="stay-summary-row"><strong>Out:</strong> ${esc(co)}</span>` : ''}
+      </div>
+      <button class="stay-summary-edit" id="stay-edit-btn">Edit</button>`;
+    el.querySelector('#stay-edit-btn')?.addEventListener('click', () => {
+      document.getElementById('planner').classList.remove('active');
+      document.getElementById('landing').classList.add('active');
+    });
+  }
+
+  function renderTripOverview() {
+    const daysEl = document.getElementById('trip-days');
+    const stayCardEl = document.getElementById('trip-stay-card');
+    const countEl = document.getElementById('trip-day-count');
+    if (!daysEl) return;
+    if (countEl) countEl.textContent = (state.days?.length || 0) + ' days';
+    const stay = state.stay;
+    if (stayCardEl) {
+      if (stay?.name || stay?.checkinDate) {
+        const ci = stay.checkinDate ? fmtDateShort(stay.checkinDate) + (stay.checkinTime ? ' · ' + fmtTime12(stay.checkinTime) : '') : '—';
+        const co = stay.checkoutDate ? fmtDateShort(stay.checkoutDate) + (stay.checkoutTime ? ' · ' + fmtTime12(stay.checkoutTime) : '') : '—';
+        stayCardEl.innerHTML = `<div class="trip-stay-card">
+          <div class="trip-stay-header">🏨 ${esc(stay.name || 'Your Stay')}
+            <button class="stay-summary-edit" id="trip-stay-edit">Edit</button>
+          </div>
+          <div class="trip-stay-rows">
+            <div class="trip-stay-row"><span class="trip-stay-row-label">Check-in</span><span>${esc(ci)}</span></div>
+            <div class="trip-stay-row"><span class="trip-stay-row-label">Check-out</span><span>${esc(co)}</span></div>
+          </div>
+        </div>`;
+        stayCardEl.querySelector('#trip-stay-edit')?.addEventListener('click', () => {
+          document.getElementById('planner').classList.remove('active');
+          document.getElementById('landing').classList.add('active');
+        });
+      } else {
+        stayCardEl.innerHTML = '';
+      }
+    }
+    const html = (state.days || []).map(day => {
+      const blocks = day.blocks || [];
+      const dateLabel = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const chips = [];
+      if (stay?.checkinDate === day.date)
+        chips.push(`<span class="mini-chip mc-stay">🏨 In${stay.checkinTime ? ' ' + fmtTime12(stay.checkinTime) : ''}</span>`);
+      if (stay?.checkoutDate === day.date)
+        chips.push(`<span class="mini-chip mc-stay">🏨 Out${stay.checkoutTime ? ' ' + fmtTime12(stay.checkoutTime) : ''}</span>`);
+      sortBlocksForDay(blocks).forEach(b => {
+        const place = getActivity(b.placeId);
+        const cat = getCategory(place) || 'other';
+        const timePfx = b.hour != null ? formatHour(b.hour) + ' · ' : '';
+        chips.push(`<span class="mini-chip mc-${cat}" title="${attr(place?.name || '')}">${catEmoji(place) || '📌'} ${esc(timePfx + (place?.name?.slice(0, 18) || 'Activity'))}</span>`);
+      });
+      const chipsHtml = chips.length ? chips.join('') : `<span style="font-size:0.65rem;color:var(--muted)">No activities — tap to plan</span>`;
+      return `<div class="trip-day-card" data-trip-day="${attr(day.id)}">
+        <div class="trip-day-head">
+          <div class="trip-day-name">${esc(dateLabel)}</div>
+          <div class="trip-day-right">${blocks.length} planned <span>›</span></div>
+        </div>
+        <div class="trip-chips-row">${chipsHtml}</div>
+      </div>`;
+    }).join('');
+    daysEl.innerHTML = html;
+    daysEl.querySelectorAll('[data-trip-day]').forEach(card => {
+      card.addEventListener('click', () => {
+        selectedDayId = card.dataset.tripDay;
+        expandedDayId = card.dataset.tripDay;
+        showPlannerPage('day');
+      });
+    });
+  }
+
+  async function fetchNearbyPlaces(lat, lng) {
+    const key = state.googlePlacesKey;
+    if (!key || !lat || !lng) return [];
+    const cacheKey = `dna-nearby-${Math.round(lat * 100)}-${Math.round(lng * 100)}`;
+    try {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached);
+    } catch (e) { /* ignore */ }
+    try {
+      const res = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': key,
+          'X-Goog-FieldMask': 'places.displayName,places.location,places.primaryType,places.rating,places.formattedAddress,places.id',
+        },
+        body: JSON.stringify({
+          includedTypes: ['restaurant', 'cafe', 'museum', 'park', 'tourist_attraction', 'art_gallery', 'shopping_mall', 'bakery'],
+          maxResultCount: 10,
+          locationRestriction: { circle: { center: { latitude: lat, longitude: lng }, radius: 800 } },
+        }),
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      const places = (data.places || []).map(p => ({
+        name: p.displayName?.text || 'Unknown',
+        lat: p.location?.latitude,
+        lng: p.location?.longitude,
+        address: p.formattedAddress || '',
+        primaryType: p.primaryType || '',
+        rating: p.rating,
+        googlePlaceId: p.id,
+      }));
+      try { sessionStorage.setItem(cacheKey, JSON.stringify(places)); } catch (e) { /* ignore */ }
+      return places;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function googleTypeToCategory(type) {
+    if (/restaurant|food|bakery|cafe|bar/.test(type)) return 'restaurant';
+    if (/cafe|coffee/.test(type)) return 'coffee';
+    if (/museum|gallery|art/.test(type)) return 'museum';
+    if (/park|garden|nature/.test(type)) return 'park';
+    if (/shopping|mall|store/.test(type)) return 'shopping';
+    if (/tourist|attraction|landmark/.test(type)) return 'destination';
+    return 'other';
+  }
+
+  function renderDiscover() {
+    const container = document.getElementById('discover-scroll');
+    const labelEl = document.getElementById('discover-day-label');
+    if (!container) return;
+    const day = state.days.find(d => d.id === selectedDayId) || state.days[0];
+    if (!day) { container.innerHTML = '<p class="empty-msg">Set up your trip to see suggestions.</p>'; return; }
+    if (labelEl) labelEl.textContent = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+    const scheduled = scheduledIds();
+    const never = neverAgainIds();
+    const dayBlocks = day.blocks || [];
+    const scheduledPlaces = dayBlocks.map(b => getActivity(b.placeId)).filter(Boolean);
+    let centerLat, centerLng;
+    if (scheduledPlaces.length) {
+      centerLat = scheduledPlaces.reduce((s, p) => s + (p.lat || 0), 0) / scheduledPlaces.length;
+      centerLng = scheduledPlaces.reduce((s, p) => s + (p.lng || 0), 0) / scheduledPlaces.length;
+    } else {
+      const home = getHome();
+      centerLat = home?.lat; centerLng = home?.lng;
+    }
+    const center = { lat: centerLat, lng: centerLng };
+
+    const timed = dayBlocks.filter(b => b.hour != null).sort((a, b) => a.hour - b.hour);
+    const dayStart = parseTimeToHour(state.dayStartTime || DEFAULT_DAY_START_TIME);
+    const dayEnd = parseTimeToHour(state.dayEndTime || DEFAULT_DAY_END_TIME);
+    let gapText = 'Full day open';
+    if (timed.length) {
+      const gaps = []; let prev = dayStart;
+      timed.forEach(b => {
+        if (b.hour > prev + 1) gaps.push(formatHour(prev) + '–' + formatHour(b.hour));
+        prev = b.hour + Math.ceil((b.duration || 60) / 60);
+      });
+      if (prev < dayEnd - 1) gaps.push(formatHour(prev) + '+');
+      gapText = gaps.length ? 'Free: ' + gaps.slice(0, 2).join(', ') : 'Fully scheduled';
+    }
+
+    const myList = allActivities()
+      .filter(p => !scheduled.has(activityId(p)) && !never.has(activityId(p)))
+      .map(p => ({ ...p, _dist: distMi(p, center) }))
+      .sort((a, b) => a._dist - b._dist).slice(0, 8);
+
+    const myListIds = new Set(allActivities().map(p => p.name.toLowerCase()));
+
+    const dayStrip = state.days.map(d => {
+      const lbl = new Date(d.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
+      return `<button class="discover-day-btn${d.id === day.id ? ' active' : ''}" data-did="${attr(d.id)}">${esc(lbl)}</button>`;
+    }).join('');
+
+    function listItemHtml(p, isNew) {
+      const emoji = catEmoji(p) || '📌';
+      const distStr = (p._dist != null && p._dist < 99) ? p._dist + ' mi' : '';
+      const badge = isNew ? '<span class="discover-new-badge">✨ new</span>' : '';
+      const ratStr = p.rating ? ' · ★' + p.rating : '';
+      const isOnDay = dayBlocks.some(b => b.placeId === activityId(p));
+      return `<div class="discover-item">
+        <div class="discover-emoji">${emoji}</div>
+        <div class="discover-info">
+          <div class="discover-name">${esc(p.name)}${badge}</div>
+          <div class="discover-meta">${esc(p.neighborhood || p.address?.split(',')[0] || '')}${distStr ? ' · ' + distStr : ''}${ratStr} · ${durationLabel(p.duration || 60)}</div>
+        </div>
+        <button class="discover-add" data-pid="${attr(activityId(p))}" data-did="${attr(day.id)}"${isOnDay ? ' disabled' : ''}>${isOnDay ? '✓' : '+ Add'}</button>
+      </div>`;
+    }
+
+    const hasKey = !!state.googlePlacesKey;
+    const dayDateLabel = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+
+    container.innerHTML = `
+      <div class="discover-day-strip">${dayStrip}</div>
+      <div class="discover-context"><strong>${esc(dayDateLabel)}</strong> · ${esc(gapText)}</div>
+      <div class="discover-section">
+        <div class="discover-section-title">📋 From your list — not yet scheduled</div>
+        ${myList.length ? myList.map(p => listItemHtml(p, false)).join('') : '<div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">Everything on your list is already scheduled!</div>'}
+      </div>
+      <div class="discover-section" id="discover-new-section">
+        <div class="discover-section-title new">✨ Discover — not in your list</div>
+        ${hasKey ? '<div class="discover-loading" id="discover-loading">Loading nearby places…</div>' : '<div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">Add your Google Places API key in Plan settings to discover new places.</div>'}
+      </div>`;
+
+    container.querySelectorAll('.discover-day-btn').forEach(btn => {
+      btn.addEventListener('click', () => { selectedDayId = btn.dataset.did; renderDiscover(); });
+    });
+
+    bindDiscoverAddButtons(container, dayBlocks, day);
+
+    if (hasKey && centerLat && centerLng) {
+      fetchNearbyPlaces(centerLat, centerLng).then(googlePlaces => {
+        const newSection = container.querySelector('#discover-new-section');
+        if (!newSection) return;
+        const filtered = googlePlaces.filter(p => !myListIds.has(p.name.toLowerCase()));
+        const withDist = filtered.map(p => ({ ...p, _dist: distMi(p, center), neighborhood: '' }));
+        const withCat = withDist.map(p => ({ ...p, category: googleTypeToCategory(p.primaryType) }));
+        const getGCategory = p => p.category || 'other';
+        const getGEmoji = p => CAT_EMOJIS[getGCategory(p)] || '📌';
+        if (!withCat.length) {
+          newSection.innerHTML = '<div class="discover-section-title new">✨ Discover — not in your list</div><div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">No new places found nearby right now.</div>';
+          return;
+        }
+        const itemsHtml = withCat.map(p => {
+          const emoji = getGEmoji(p);
+          const distStr = p._dist < 99 ? p._dist + ' mi' : '';
+          const ratStr = p.rating ? ' · ★' + p.rating : '';
+          return `<div class="discover-item">
+            <div class="discover-emoji">${emoji}</div>
+            <div class="discover-info">
+              <div class="discover-name">${esc(p.name)}<span class="discover-new-badge">✨ new</span></div>
+              <div class="discover-meta">${esc(p.address?.split(',')[0] || '')}${distStr ? ' · ' + distStr : ''}${ratStr}</div>
+            </div>
+            <button class="discover-add" data-gpid="${attr(p.googlePlaceId)}" data-gname="${attr(p.name)}" data-glat="${p.lat}" data-glng="${p.lng}" data-gcat="${attr(getGCategory(p))}" data-did="${attr(day.id)}">+ Add</button>
+          </div>`;
+        }).join('');
+        newSection.innerHTML = '<div class="discover-section-title new">✨ Discover — not in your list</div>' + itemsHtml;
+        newSection.querySelectorAll('.discover-add').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const d = state.days.find(x => x.id === btn.dataset.did);
+            if (!d) return;
+            const newPlace = {
+              id: 'gp-' + Date.now(),
+              placeId: 'gp-' + btn.dataset.gpid,
+              name: btn.dataset.gname,
+              lat: parseFloat(btn.dataset.glat) || null,
+              lng: parseFloat(btn.dataset.glng) || null,
+              neighborhood: '',
+              duration: 60,
+              category: btn.dataset.gcat,
+            };
+            if (!state.customPlaces.find(p => p.placeId === newPlace.placeId)) {
+              state.customPlaces.push(newPlace);
+            }
+            if (!d.blocks.some(b => b.placeId === newPlace.placeId)) {
+              d.blocks.push({ id: 'b-' + Date.now(), placeId: newPlace.placeId, hour: null, duration: 60 });
+            }
+            saveState();
+            toast('Added ' + newPlace.name);
+            btn.textContent = '✓'; btn.disabled = true;
+          });
+        });
+      });
+    }
+  }
+
+  function bindDiscoverAddButtons(container, dayBlocks, day) {
+    container.querySelectorAll('.discover-add[data-pid]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const placeId = btn.dataset.pid;
+        const d = state.days.find(x => x.id === btn.dataset.did);
+        if (!d || d.blocks.some(b => b.placeId === placeId)) { toast('Already on this day'); return; }
+        d.blocks.push({ id: 'b-' + Date.now(), placeId, hour: null, duration: getDuration(placeId) });
+        saveState();
+        toast('Added to ' + dayLabel(d));
+        btn.textContent = '✓'; btn.disabled = true;
+      });
+    });
+  }
+
+  /* ———— End Stay / Trip / Discover ———— */
+
   function renderAll() {
     renderCalendar();
     renderBacklog();
     renderFlightSummary();
-    if (plannerPage === 'schedule') renderSchedulePage();
+    renderStaySummary();
+    if (plannerPage === 'schedule' || plannerPage === 'day') renderSchedulePage();
+    if (plannerPage === 'trip') renderTripOverview();
+    if (plannerPage === 'discover') renderDiscover();
     updateTripLabel();
     updateHomeLabel();
     updateMapsLink();
@@ -2109,6 +2455,12 @@
     bindDropZones(panel);
     bindDragSources(panel);
     bindBlockActions(panel);
+    panel.querySelectorAll('[data-edit-block]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        showEditDurationDialog(btn.dataset.editBlock, btn.dataset.day);
+      });
+    });
   }
 
   function addToDay(placeId, dayId, hour = null) {

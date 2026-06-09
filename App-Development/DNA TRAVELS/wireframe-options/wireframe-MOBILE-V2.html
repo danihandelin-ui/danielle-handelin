@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNA TRAVELS — Mobile Wireframe V2</title>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fff; --muted: #888; --line: #e5e5e5;
+    --teal: #2d6a6a; --teal-soft: #f0f7f7; --accent: #2d6a6a;
+    --stay: #7c5c2d; --stay-soft: #fdf3e3; --stay-line: #e8d5b0;
+    --cat-restaurant: #dbeafe; --cat-coffee: #ede9fe; --cat-park: #fef9c3;
+    --cat-museum: #fce7f3; --cat-destination: #d1fae5; --cat-shopping: #dcfce7;
+    --cat-other: #ffedd5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 2rem;
+    color: var(--ink);
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .page-title { max-width: 1200px; margin: 0 auto 2rem; }
+  .page-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+  .section-label {
+    max-width: 1200px; margin: 0 auto 1rem; font-size: 0.75rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  }
+  .row {
+    display: flex; gap: 2rem; max-width: 1200px; margin: 0 auto 3rem;
+    flex-wrap: wrap; align-items: flex-start;
+  }
+  .frame-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+  .frame-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted);
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 320px; height: 640px; background: var(--paper);
+    border-radius: 36px; border: 6px solid #1a1a1a;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    display: flex; flex-direction: column; overflow: hidden;
+    position: relative;
+  }
+  .phone-notch {
+    height: 28px; background: #1a1a1a; border-radius: 0 0 14px 14px;
+    width: 100px; align-self: center; flex-shrink: 0;
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    z-index: 10;
+  }
+  .phone-body {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    padding-top: 28px;
+  }
+
+  /* Top bar */
+  .top-bar {
+    height: 40px; background: var(--paper); border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; padding: 0 12px; gap: 6px;
+    flex-shrink: 0;
+  }
+  .brand { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; flex: 1; }
+  .top-btn {
+    font-size: 0.55rem; font-weight: 700; padding: 0.2rem 0.45rem;
+    border: 1px solid var(--line); border-radius: 5px; color: var(--muted);
+  }
+
+  /* Content scroll */
+  .content {
+    flex: 1; overflow: hidden; display: flex; flex-direction: column;
+    background: #f7f7f7;
+  }
+  .content-inner {
+    flex: 1; overflow: auto; padding: 10px 10px 4px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pane-head-inner {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 4px 0 2px; flex-shrink: 0;
+  }
+  .pane-head-inner h2 { font-size: 0.9rem; font-weight: 800; }
+  .pane-head-inner p { font-size: 0.6rem; color: var(--muted); }
+
+  /* Bottom nav */
+  .nav {
+    height: 56px; background: var(--paper); border-top: 1px solid var(--line);
+    display: flex; align-items: stretch; flex-shrink: 0;
+  }
+  .nav-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 2px; font-size: 0.52rem; font-weight: 700;
+    color: var(--muted); border: none; background: none; cursor: pointer;
+    padding: 0;
+  }
+  .nav-tab.active { color: var(--teal); }
+  .nav-tab .icon { font-size: 1rem; line-height: 1; }
+  .nav-tab.active .icon { transform: scale(1.1); }
+
+  /* Cards */
+  .stay-card {
+    background: linear-gradient(135deg, var(--stay-soft) 0%, #fff 100%);
+    border: 1.5px solid var(--stay-line); border-radius: 10px; padding: 8px 10px;
+    flex-shrink: 0;
+  }
+  .stay-card-head {
+    font-size: 0.68rem; font-weight: 800; color: var(--stay);
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 5px;
+  }
+  .stay-edit-link { font-size: 0.55rem; color: var(--teal); text-decoration: underline; }
+  .stay-card-rows { display: flex; flex-direction: column; gap: 3px; }
+  .stay-card-row { display: flex; justify-content: space-between; font-size: 0.65rem; }
+  .stay-card-row-label { font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+
+  .day-card {
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 10px;
+    padding: 8px 10px; cursor: pointer; flex-shrink: 0;
+  }
+  .day-card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 5px;
+  }
+  .day-card-head strong { font-size: 0.72rem; font-weight: 800; }
+  .day-card-head span { font-size: 0.58rem; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 3px; }
+  .chip {
+    font-size: 0.52rem; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .chip-stay { background: var(--stay-soft); color: var(--stay); border: 1px solid var(--stay-line); }
+  .chip-restaurant { background: var(--cat-restaurant); color: #1e40af; }
+  .chip-coffee { background: var(--cat-coffee); color: #5b21b6; }
+  .chip-destination { background: var(--cat-destination); color: #065f46; }
+  .chip-park { background: var(--cat-park); color: #854d0e; }
+  .chip-shopping { background: var(--cat-shopping); color: #166534; }
+  .chip-museum { background: var(--cat-museum); color: #9d174d; }
+  .chip-empty { font-size: 0.58rem; color: var(--muted); }
+
+  /* Discover */
+  .discover-strip {
+    display: flex; gap: 5px; overflow-x: auto; flex-shrink: 0;
+    padding-bottom: 2px; scrollbar-width: none;
+  }
+  .discover-strip::-webkit-scrollbar { display: none; }
+  .dday-btn {
+    font-size: 0.58rem; font-weight: 700; padding: 3px 8px;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: var(--paper); color: var(--muted); white-space: nowrap;
+  }
+  .dday-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .discover-context {
+    font-size: 0.6rem; color: var(--muted); line-height: 1.4; flex-shrink: 0;
+  }
+  .discover-context strong { color: var(--ink); }
+  .discover-section {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .dsec-title {
+    padding: 5px 9px; font-size: 0.58rem; font-weight: 800; color: var(--teal);
+    background: var(--teal-soft); border-bottom: 1px solid var(--line);
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .ditem {
+    display: flex; align-items: center; gap: 7px; padding: 6px 9px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ditem:last-child { border-bottom: none; }
+  .ditem-emoji { font-size: 0.9rem; flex-shrink: 0; }
+  .ditem-info { flex: 1; min-width: 0; }
+  .ditem-name { font-size: 0.65rem; font-weight: 700; }
+  .ditem-meta { font-size: 0.55rem; color: var(--muted); }
+  .ditem-add {
+    font-size: 0.55rem; font-weight: 700; background: var(--teal); color: #fff;
+    border: none; border-radius: 5px; padding: 3px 7px; cursor: pointer; flex-shrink: 0;
+  }
+  .new-badge {
+    font-size: 0.5rem; font-weight: 800; background: #fef3c7; color: #92400e;
+    border: 1px solid #fcd34d; border-radius: 3px; padding: 1px 4px;
+    margin-left: 3px; vertical-align: middle;
+  }
+  .ditem-added {
+    font-size: 0.55rem; font-weight: 700; color: var(--muted);
+    background: var(--line); border: none; border-radius: 5px; padding: 3px 7px;
+    flex-shrink: 0;
+  }
+
+  /* Landing / Plan form */
+  .form-section {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .form-section-title {
+    padding: 5px 9px; font-size: 0.62rem; font-weight: 800; color: var(--ink);
+    background: #f7f7f7; border-bottom: 1px solid var(--line);
+  }
+  .form-row { padding: 6px 9px; border-bottom: 1px solid var(--line); }
+  .form-row:last-child { border-bottom: none; }
+  .form-label { font-size: 0.55rem; font-weight: 700; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .form-input {
+    width: 100%; font-size: 0.65rem; color: var(--ink); background: #f7f7f7;
+    border: 1px solid var(--line); border-radius: 5px; padding: 4px 7px;
+  }
+  .form-input-row { display: flex; gap: 5px; }
+  .form-input-row .form-input { flex: 1; }
+  .submit-btn {
+    background: var(--teal); color: #fff; font-size: 0.72rem; font-weight: 700;
+    border: none; border-radius: 8px; padding: 8px; width: 100%; cursor: pointer;
+  }
+
+  /* Backlog item */
+  .backlog-search {
+    background: #f7f7f7; border: 1px solid var(--line); border-radius: 6px;
+    padding: 5px 9px; font-size: 0.65rem; width: 100%; color: var(--muted);
+    flex-shrink: 0;
+  }
+  .backlog-item {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    padding: 7px 9px; display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+  }
+  .backlog-emoji { font-size: 0.9rem; flex-shrink: 0; }
+  .backlog-info { flex: 1; min-width: 0; }
+  .backlog-name { font-size: 0.65rem; font-weight: 700; }
+  .backlog-meta { font-size: 0.55rem; color: var(--muted); }
+  .backlog-add {
+    font-size: 0.55rem; font-weight: 700; background: var(--teal); color: #fff;
+    border: none; border-radius: 5px; padding: 3px 7px; flex-shrink: 0;
+  }
+  .hood-label {
+    font-size: 0.6rem; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 0;
+    flex-shrink: 0;
+  }
+
+  /* Hours / Day schedule */
+  .schedule-header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+    padding: 6px 10px; flex-shrink: 0;
+  }
+  .schedule-header-inner .back { font-size: 0.58rem; color: var(--teal); font-weight: 700; }
+  .schedule-header-inner h2 { font-size: 0.7rem; font-weight: 800; }
+  .schedule-header-inner .auto { font-size: 0.6rem; background: var(--line); border: none; border-radius: 5px; padding: 3px 7px; font-weight: 700; }
+  .hour-row {
+    display: flex; gap: 5px; align-items: flex-start; flex-shrink: 0;
+  }
+  .hour-label { font-size: 0.55rem; color: var(--muted); width: 28px; text-align: right; padding-top: 2px; flex-shrink: 0; }
+  .hour-block {
+    flex: 1; min-height: 20px; border-radius: 5px; padding: 3px 7px;
+    font-size: 0.6rem; font-weight: 700;
+  }
+  .hour-block.empty { background: #f7f7f7; border: 1px dashed var(--line); color: var(--muted); font-weight: 400; }
+  .hour-block.filled-rest { background: var(--cat-restaurant); color: #1e40af; }
+  .hour-block.filled-coffee { background: var(--cat-coffee); color: #5b21b6; }
+  .hour-block.filled-dest { background: var(--cat-destination); color: #065f46; }
+  .hour-block.filled-stay { background: var(--stay-soft); color: var(--stay); border: 1px solid var(--stay-line); }
+
+  /* Annotation callouts */
+  .callout {
+    background: #fffbea; border: 1.5px solid #f6e05e; border-radius: 8px;
+    padding: 8px 12px; font-size: 0.72rem; line-height: 1.5; max-width: 220px;
+  }
+  .callout strong { color: var(--ink); }
+  .callout ul { padding-left: 1rem; margin-top: 4px; }
+  .callout li { margin-bottom: 2px; }
+
+  .annotation { font-size: 0.72rem; color: #7c5c2d; max-width: 200px; line-height: 1.45; }
+
+  .hr-section {
+    max-width: 1200px; margin: 0 auto 3rem;
+    border-top: 2px dashed var(--line); padding-top: 2rem;
+  }
+  .hr-section-title {
+    font-size: 1rem; font-weight: 800; margin-bottom: 1.5rem;
+    color: var(--teal);
+  }
+  .diff-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: 800;
+    background: var(--teal); color: #fff; border-radius: 4px;
+    padding: 2px 7px; margin-left: 6px; vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>DNA TRAVELS — Mobile Wireframe V2</h1>
+  <p>Proposed changes: 4-tab nav · Stay card · Discover (your list + new places via Google Places API) · Trip overview · Desktop card styling</p>
+</div>
+
+<!-- ===== SECTION 1: PLAN FORM — STAY FIELDSET ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">1. New "Stay" section in the Plan form <span class="diff-badge">NEW</span></div>
+  <div class="row">
+
+    <div class="frame-wrap">
+      <div class="frame-label">Plan form — Stay fieldset</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+          </div>
+          <div class="content">
+            <div class="content-inner">
+              <div style="font-size:0.8rem;font-weight:800;padding:4px 0 2px;">Plan your trip</div>
+
+              <div class="form-section">
+                <div class="form-section-title">✈️ Flights <span style="font-size:0.5rem;color:var(--muted);font-weight:400">(already exists)</span></div>
+                <div class="form-row"><div class="form-label">Arrival / departure</div><div class="form-input" style="color:var(--muted)">JFK · May 15 · …</div></div>
+              </div>
+
+              <div class="form-section" style="border: 1.5px solid var(--stay-line);">
+                <div class="form-section-title" style="background: var(--stay-soft); color: var(--stay);">🏨 Stay <span style="font-size:0.5rem;color:var(--muted);font-weight:400">optional</span></div>
+                <div class="form-row">
+                  <div class="form-label">Accommodation name</div>
+                  <div class="form-input">Pod Brooklyn Hotel</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label">Check-in</div>
+                  <div class="form-input-row">
+                    <div class="form-input">May 15</div>
+                    <div class="form-input">3:00 PM</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label">Check-out</div>
+                  <div class="form-input-row">
+                    <div class="form-input">May 20</div>
+                    <div class="form-input">11:00 AM</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">⏰ Day schedule <span style="font-size:0.5rem;color:var(--muted);font-weight:400">(already exists)</span></div>
+                <div class="form-row"><div class="form-input-row"><div class="form-input">8:00 AM</div><div class="form-input">10:00 PM</div></div></div>
+              </div>
+
+              <button class="submit-btn">Continue planning</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>What's new</strong>
+      <ul>
+        <li>New "Stay" section in the Plan form between Flights and Day Schedule</li>
+        <li>Accommodation name (your hotel / Airbnb / etc.)</li>
+        <li>Check-in: date + time</li>
+        <li>Check-out: date + time</li>
+      </ul>
+      <br>
+      <strong>Where it shows up</strong>
+      <ul>
+        <li>Stay card at the top of the Trip tab</li>
+        <li>Check-in/out chips on the correct day cards</li>
+        <li>Small summary bar inside the Calendar pane on desktop</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 2: BOTTOM NAV ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">2. Bottom nav: 2 tabs → 4 tabs <span class="diff-badge">CHANGE</span></div>
+  <div class="row">
+
+    <div class="frame-wrap">
+      <div class="frame-label">Before (current)</div>
+      <div class="phone" style="height:80px;border-radius:0 0 36px 36px;">
+        <div class="phone-body" style="padding-top:0;">
+          <div class="nav">
+            <button class="nav-tab active"><span class="icon">📅</span>Calendar</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="frame-label">After (proposed)</div>
+      <div class="phone" style="height:80px;border-radius:0 0 36px 36px;">
+        <div class="phone-body" style="padding-top:0;">
+          <div class="nav">
+            <button class="nav-tab active"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Tab changes</strong>
+      <ul>
+        <li><strong>Trip</strong> — new: full trip overview (stay card + day cards)</li>
+        <li><strong>Day</strong> — was hidden behind day header tap; now a direct nav tab</li>
+        <li><strong>Backlog</strong> — same as now</li>
+        <li><strong>Nearby ✨</strong> — new: your list + discover new places</li>
+      </ul>
+      <br>
+      <strong>Desktop behavior:</strong> "Trip" tab = same as current Calendar+Backlog side-by-side. The 4-tab nav only applies on mobile. Desktop keeps its existing layout.
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 3: TRIP TAB ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">3. Trip tab — full trip overview <span class="diff-badge">NEW</span></div>
+  <div class="row">
+
+    <div class="frame-wrap">
+      <div class="frame-label">Trip tab (with stay)</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+            <div class="top-btn">Save</div>
+            <div class="top-btn">Plan</div>
+          </div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="pane-head-inner"><h2>📅 Trip</h2><p>5 days</p></div>
+
+              <div class="stay-card">
+                <div class="stay-card-head">🏨 Pod Brooklyn Hotel <span class="stay-edit-link">Edit</span></div>
+                <div class="stay-card-rows">
+                  <div class="stay-card-row"><span class="stay-card-row-label">Check-in</span><span>Thu, May 15 · 3:00 PM</span></div>
+                  <div class="stay-card-row"><span class="stay-card-row-label">Check-out</span><span>Tue, May 20 · 11:00 AM</span></div>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Thu, May 15</strong><span>3 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-stay">🏨 In 3:00 PM</span>
+                  <span class="chip chip-coffee">☕ 9am · Devotion</span>
+                  <span class="chip chip-restaurant">🍽 7pm · Le Croc</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Fri, May 16</strong><span>4 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-destination">✨ 10am · High Line</span>
+                  <span class="chip chip-museum">🎨 2pm · Whitney</span>
+                  <span class="chip chip-restaurant">🍽 7pm · Palma</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Sat, May 17</strong><span>0 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip-empty">No activities yet — tap to plan</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Sun, May 18</strong><span>2 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-park">🌳 Morning · Prospect Park</span>
+                  <span class="chip chip-shopping">🛍 Noon · Books</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Mon, May 19 → Tue 20</strong><span>1 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-stay">🏨 Out 11:00 AM</span>
+                  <span class="chip chip-restaurant">🍽 Farewell brunch</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="nav">
+            <button class="nav-tab active"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="frame-label">Trip tab (no stay set)</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+            <div class="top-btn">Save</div>
+            <div class="top-btn">Plan</div>
+          </div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="pane-head-inner"><h2>📅 Trip</h2><p>5 days</p></div>
+
+              <div class="day-card">
+                <div class="day-card-head"><strong>Thu, May 15</strong><span>2 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-coffee">☕ 9am · Devotion</span>
+                  <span class="chip chip-restaurant">🍽 7pm · Le Croc</span>
+                </div>
+              </div>
+              <div class="day-card">
+                <div class="day-card-head"><strong>Fri, May 16</strong><span>0 planned ›</span></div>
+                <div class="chips"><span class="chip-empty">No activities yet — tap to plan</span></div>
+              </div>
+              <div class="day-card">
+                <div class="day-card-head"><strong>Sat, May 17</strong><span>3 planned ›</span></div>
+                <div class="chips">
+                  <span class="chip chip-destination">✨ High Line</span>
+                  <span class="chip chip-museum">🎨 Whitney</span>
+                  <span class="chip chip-restaurant">🍽 Palma</span>
+                </div>
+              </div>
+
+              <div style="font-size:0.6rem;color:var(--muted);text-align:center;padding:4px;">
+                Tap any day card to open its schedule
+              </div>
+
+            </div>
+          </div>
+          <div class="nav">
+            <button class="nav-tab active"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Trip tab behavior</strong>
+      <ul>
+        <li>Stay card at top (amber style) — only shows if you've added stay info</li>
+        <li>"Edit" link → back to Plan form</li>
+        <li>One card per day, sorted chronologically</li>
+        <li>Chips = check-in/out + scheduled activities with time + category color</li>
+        <li>Tap any day card → jumps to Day tab (hourly schedule) for that day</li>
+        <li>Empty day = "No activities yet — tap to plan" message</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 4: DAY TAB ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">4. Day tab — hourly schedule, now accessible from nav <span class="diff-badge">CHANGE</span></div>
+  <div class="row">
+
+    <div class="frame-wrap">
+      <div class="frame-label">Day tab</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+          </div>
+          <div class="content" style="background:var(--paper);">
+            <div class="schedule-header-inner">
+              <span class="back">← Trip</span>
+              <h2>Friday, May 16</h2>
+              <button class="auto">Auto day</button>
+            </div>
+            <div class="content-inner" style="background:var(--paper); gap:4px;">
+              <div class="hour-row"><span class="hour-label">8 AM</span><div class="hour-block empty">drop here</div></div>
+              <div class="hour-row"><span class="hour-label">9 AM</span><div class="hour-block filled-coffee">☕ Devotión</div></div>
+              <div class="hour-row"><span class="hour-label">10 AM</span><div class="hour-block empty">drop here</div></div>
+              <div class="hour-row"><span class="hour-label">11 AM</span><div class="hour-block empty">drop here</div></div>
+              <div class="hour-row"><span class="hour-label">12 PM</span><div class="hour-block filled-dest">✨ High Line (2 hr)</div></div>
+              <div class="hour-row"><span class="hour-label">1 PM</span><div class="hour-block empty">↑ cont'd</div></div>
+              <div class="hour-row"><span class="hour-label">2 PM</span><div class="hour-block filled-rest">🎨 Whitney Museum</div></div>
+              <div class="hour-row"><span class="hour-label">3 PM</span><div class="hour-block empty">drop here</div></div>
+              <div class="hour-row"><span class="hour-label">7 PM</span><div class="hour-block filled-rest">🍽 Palma</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="nav-tab"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab active"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Day tab changes</strong>
+      <ul>
+        <li>This is the same hourly schedule that currently exists</li>
+        <li>The only change: it's now reachable directly from the bottom nav (Day tab) instead of requiring a tap on a day header first</li>
+        <li>Tap Trip → Day card to land on a specific day's schedule</li>
+        <li>The "← Trip" back button replaces the old "← Calendar" button</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 5: NEARBY TAB ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">5. Nearby / Discover tab — your list + new places <span class="diff-badge">NEW</span></div>
+  <div class="row">
+
+    <div class="frame-wrap">
+      <div class="frame-label">Nearby — from your list</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+          </div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="pane-head-inner"><h2>✨ Nearby</h2><p>Fri, May 16</p></div>
+
+              <div class="discover-strip">
+                <button class="dday-btn">May 15</button>
+                <button class="dday-btn active">May 16</button>
+                <button class="dday-btn">May 17</button>
+                <button class="dday-btn">May 18</button>
+                <button class="dday-btn">May 19</button>
+              </div>
+
+              <div class="discover-context"><strong>Friday, May 16</strong> · Free: 10–12, 3 PM+ · Chelsea, High Line area</div>
+
+              <div class="discover-section">
+                <div class="dsec-title">📋 From your list — not yet scheduled</div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🌳</div>
+                  <div class="ditem-info"><div class="ditem-name">Little Island</div><div class="ditem-meta">Chelsea · 0.4 mi · 1.5 hr</div></div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🛍️</div>
+                  <div class="ditem-info"><div class="ditem-name">Pier 57 Rooftop</div><div class="ditem-meta">Chelsea · 0.5 mi · 1 hr</div></div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">☕</div>
+                  <div class="ditem-info"><div class="ditem-name">Moonrise Bagels</div><div class="ditem-meta">Chelsea · 0.6 mi · 45 min</div></div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🍽️</div>
+                  <div class="ditem-info"><div class="ditem-name">Or'esh</div><div class="ditem-meta">SoHo · 0.8 mi · 1 hr</div></div>
+                  <div class="ditem-added">✓ On day</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="nav">
+            <button class="nav-tab"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab active"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame-wrap">
+      <div class="frame-label">Nearby — discover new places (Google Places API)</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="top-bar">
+            <div class="brand">DNA <em>Travels</em></div>
+          </div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="pane-head-inner"><h2>✨ Nearby</h2><p>Fri, May 16</p></div>
+
+              <div class="discover-strip">
+                <button class="dday-btn">May 15</button>
+                <button class="dday-btn active">May 16</button>
+                <button class="dday-btn">May 17</button>
+              </div>
+              <div class="discover-context"><strong>Friday, May 16</strong> · Free: 10–12, 3 PM+ · Chelsea area</div>
+
+              <div class="discover-section">
+                <div class="dsec-title">📋 From your list</div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🌳</div>
+                  <div class="ditem-info"><div class="ditem-name">Little Island</div><div class="ditem-meta">Chelsea · 0.4 mi</div></div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+              </div>
+
+              <div class="discover-section">
+                <div class="dsec-title" style="background:#fef9c3;color:#92400e;border-color:#fcd34d;">✨ Discover — not in your list</div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🎨</div>
+                  <div class="ditem-info">
+                    <div class="ditem-name">Pace Gallery Chelsea <span class="new-badge">✨ new</span></div>
+                    <div class="ditem-meta">Chelsea · 0.2 mi · Free</div>
+                  </div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">☕</div>
+                  <div class="ditem-info">
+                    <div class="ditem-name">Stumptown Coffee <span class="new-badge">✨ new</span></div>
+                    <div class="ditem-meta">Chelsea · 0.3 mi · ~30 min</div>
+                  </div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🌳</div>
+                  <div class="ditem-info">
+                    <div class="ditem-name">Hudson River Greenway <span class="new-badge">✨ new</span></div>
+                    <div class="ditem-meta">Chelsea · 0.5 mi · Outdoor</div>
+                  </div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+                <div class="ditem">
+                  <div class="ditem-emoji">🍽️</div>
+                  <div class="ditem-info">
+                    <div class="ditem-name">Untitled Restaurant <span class="new-badge">✨ new</span></div>
+                    <div class="ditem-meta">Chelsea · 0.6 mi · ★ 4.5</div>
+                  </div>
+                  <button class="ditem-add">+ Add</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="nav">
+            <button class="nav-tab"><span class="icon">📅</span>Trip</button>
+            <button class="nav-tab"><span class="icon">🗓</span>Day</button>
+            <button class="nav-tab"><span class="icon">📋</span>Backlog</button>
+            <button class="nav-tab active"><span class="icon">✨</span>Nearby</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:240px;">
+      <div class="callout">
+        <strong>Section 1 — Your List</strong><br>
+        Places from your Google Maps save that are <em>not yet scheduled</em> on this day, sorted by distance from that day's planned area.
+        <br><br>
+        Places already on this day show <em>✓ On day</em>.
+      </div>
+      <div class="callout" style="border-color:#fcd34d; background:#fffbea;">
+        <strong>Section 2 — Discover New ✨</strong><br>
+        Uses <strong>Google Places API</strong> to pull real nearby places that are <em>not in your Google Maps list at all</em>. Filtered by: proximity to that day's neighborhood, open hours, and rating.
+        <br><br>
+        <strong>Requires API key setup</strong> (see below).
+      </div>
+      <div class="callout">
+        <strong>What "+ Add" does</strong><br>
+        Adds the place to that day's unscheduled block list (like adding from the backlog). You can then drag it to a time slot in the Day tab.
+        <br><br>
+        Places added from "Discover New" also get saved to your app's local catalog so they show up in the backlog.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 6: GOOGLE PLACES API SETUP ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">6. Google Places API — setup required before "Discover New" works</div>
+  <div class="row">
+    <div class="callout" style="max-width:560px;font-size:0.8rem;line-height:1.6;">
+      <strong>How to get your API key (it's free to start):</strong>
+      <ol style="padding-left:1.2rem;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <li>Go to <strong>console.cloud.google.com</strong></li>
+        <li>Create a new project (or pick an existing one) — name it "DNA TRAVELS"</li>
+        <li>Click <strong>APIs &amp; Services → Library</strong> and enable <strong>"Places API (New)"</strong></li>
+        <li>Click <strong>APIs &amp; Services → Credentials → Create Credentials → API key</strong></li>
+        <li>Copy the key — paste it into the app's Plan form (we'll add an "API key" field)</li>
+        <li>Optional but recommended: restrict the key to your device's IP and to the Places API only</li>
+      </ol>
+      <br>
+      <strong>Cost:</strong> Google gives $200/month free credit. Each "Nearby Search" call costs ~$0.032. For personal trip planning use, this will cost you literally $0.
+      <br><br>
+      <strong>What Claude can do:</strong> Once you have the key, I'll wire up the API call in app.js — searching for places within 0.5 mi of that day's neighborhood, filtered by category (restaurant/coffee/museum/park), sorted by rating.
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: DESKTOP IMPROVEMENTS ===== -->
+<div class="hr-section">
+  <div class="hr-section-title">7. Desktop — stay card added to Calendar pane <span class="diff-badge">CHANGE</span></div>
+  <div class="row">
+    <div style="width:480px; background:var(--paper); border: 1px solid var(--line); border-radius:12px; overflow:hidden;">
+      <div style="background:#f7f7f7;border-bottom:1px solid var(--line);padding:8px 14px;font-size:0.75rem;font-weight:700;">Calendar pane (desktop, left side)</div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="background:linear-gradient(135deg,var(--stay-soft) 0%, #fff 100%);border:1px solid var(--stay-line);border-radius:8px;padding:8px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:0.78rem;font-weight:800;color:var(--stay);">🏨 Pod Brooklyn Hotel</span>
+          <div style="display:flex;gap:12px;flex:1;flex-wrap:wrap;">
+            <span style="font-size:0.7rem;color:var(--muted)"><strong style="color:var(--ink)">In:</strong> Thu May 15 · 3 PM</span>
+            <span style="font-size:0.7rem;color:var(--muted)"><strong style="color:var(--ink)">Out:</strong> Tue May 20 · 11 AM</span>
+          </div>
+          <button style="font-size:0.65rem;font-weight:700;color:var(--teal);background:none;border:none;cursor:pointer;text-decoration:underline;">Edit</button>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);padding:4px 0;">← then the day columns continue as normal below this banner</div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Desktop change</strong><br>
+      A small stay banner appears between the Calendar pane header and the day columns — only when stay info is set. Everything else on desktop stays the same.
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto 3rem;padding:1.5rem;background:#f0f7f7;border:1.5px solid var(--teal);border-radius:10px;font-size:0.82rem;line-height:1.6;">
+  <strong style="font-size:0.9rem;">Summary of all proposed changes</strong>
+  <table style="width:100%;margin-top:10px;border-collapse:collapse;font-size:0.78rem;">
+    <tr style="border-bottom:1px solid var(--line);">
+      <th style="text-align:left;padding:5px 8px;color:var(--muted)">Change</th>
+      <th style="text-align:left;padding:5px 8px;color:var(--muted)">Where</th>
+      <th style="text-align:left;padding:5px 8px;color:var(--muted)">Needs</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">Stay fieldset (name + check-in/out)</td>
+      <td style="padding:5px 8px;">Plan form</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">4-tab bottom nav</td>
+      <td style="padding:5px 8px;">Mobile nav</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">Trip tab (stay card + day cards)</td>
+      <td style="padding:5px 8px;">New tab</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">Day tab reachable from nav</td>
+      <td style="padding:5px 8px;">Existing schedule view</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">Nearby: "Your List" section</td>
+      <td style="padding:5px 8px;">New Nearby tab</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:5px 8px;">Nearby: "Discover New" section</td>
+      <td style="padding:5px 8px;">New Nearby tab</td>
+      <td style="padding:5px 8px;color:#d97706;font-weight:700;">Google Places API key</td>
+    </tr>
+    <tr>
+      <td style="padding:5px 8px;">Stay banner on desktop calendar pane</td>
+      <td style="padding:5px 8px;">Desktop</td>
+      <td style="padding:5px 8px;">—</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNA TRAVELS — Mobile Wireframe Options</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #fffdf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e0d6;
+      --accent: #b4534b;
+      --accent-soft: #f5e8e6;
+      --teal: #2d6a6a;
+      --teal-soft: #e8f2f2;
+      --stay: #7c5c2d;
+      --stay-soft: #fdf3e3;
+      --stay-line: #e8d5b0;
+      --cat-restaurant: rgba(147,197,253,0.35);
+      --cat-museum: rgba(255,192,210,0.42);
+      --cat-park: rgba(253,224,71,0.35);
+      --cat-shopping: rgba(134,239,172,0.35);
+      --cat-coffee: rgba(199,184,252,0.38);
+      --cat-destination: rgba(153,246,228,0.42);
+      --cat-other: rgba(253,186,116,0.35);
+      --cat-restaurant-b: rgba(147,197,253,0.6);
+      --cat-coffee-b: rgba(167,139,250,0.6);
+      --cat-destination-b: rgba(13,148,136,0.5);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 2.5rem 1.5rem 4rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Page header */
+    .page-title {
+      text-align: center;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      margin-bottom: 0.3rem;
+    }
+    .page-title span { color: var(--accent); }
+    .page-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    .new-features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem auto 2.5rem;
+      max-width: 700px;
+    }
+    .feat-chip {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .feat-chip.new { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+    .feat-chip.exist { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal); }
+
+    /* Option grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .option-col { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+    .option-label {
+      text-align: center;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .option-desc {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 280px;
+    }
+    .option-desc strong { color: var(--ink); }
+    .screen-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+
+    /* Phone frame */
+    .phone {
+      width: 260px;
+      background: var(--paper);
+      border-radius: 36px;
+      border: 3px solid var(--ink);
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(28,25,23,0.14);
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-notch {
+      background: var(--ink);
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .notch-pill {
+      width: 70px;
+      height: 10px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+    }
+    .phone-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      min-height: 480px;
+      max-height: 480px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* —— Shared inner components —— */
+    .bar {
+      flex-shrink: 0;
+      height: 44px;
+      background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+    }
+    .bar-brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--paper);
+      flex: 1;
+    }
+    .bar-btn {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--paper);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      padding: 3px 7px;
+    }
+    .bar-icon { font-size: 1rem; color: var(--paper); opacity: 0.85; cursor: pointer; }
+
+    .bottom-nav {
+      flex-shrink: 0;
+      height: 52px;
+      background: var(--paper);
+      border-top: 1.5px solid var(--line);
+      display: flex;
+    }
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      color: var(--muted);
+      border-top: 2px solid transparent;
+      cursor: pointer;
+    }
+    .nav-tab.active { color: var(--teal); border-top-color: var(--teal); background: var(--teal-soft); }
+    .nav-icon { font-size: 1.1rem; line-height: 1; }
+
+    .scroll-content {
+      flex: 1;
+      overflow: hidden;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Stay / accommodation card */
+    .stay-card {
+      background: var(--stay-soft);
+      border: 1px solid var(--stay-line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      flex-shrink: 0;
+    }
+    .stay-card-header {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--stay);
+      margin-bottom: 5px;
+    }
+    .stay-card-rows { display: flex; flex-direction: column; gap: 3px; }
+    .stay-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.62rem;
+      color: var(--ink);
+    }
+    .stay-row span:first-child { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.58rem; }
+    .stay-edit { font-size: 0.6rem; color: var(--teal); font-weight: 600; margin-top: 5px; display: inline-block; }
+
+    /* Day summary chip */
+    .day-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      flex-shrink: 0;
+    }
+    .day-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .day-card-name { font-size: 0.72rem; font-weight: 700; color: var(--ink); }
+    .day-card-count { font-size: 0.6rem; color: var(--muted); }
+    .day-chips-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .mini-chip {
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+    .mc-coffee { background: var(--cat-coffee); color: #5b21b6; }
+    .mc-restaurant { background: var(--cat-restaurant); color: #1e40af; }
+    .mc-destination { background: var(--cat-destination); color: #0f766e; }
+    .mc-museum { background: var(--cat-museum); color: #be185d; }
+    .mc-park { background: var(--cat-park); color: #854d0e; }
+    .mc-shopping { background: var(--cat-shopping); color: #166534; }
+    .mc-stay { background: var(--stay-soft); color: var(--stay); border: 1px solid var(--stay-line); }
+    .day-card-arrow { font-size: 0.7rem; color: var(--muted); }
+
+    /* Hour block */
+    .hour-row { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 6px; flex-shrink: 0; }
+    .hour-label { font-size: 0.58rem; font-weight: 700; color: var(--muted); width: 32px; text-align: right; padding-top: 6px; flex-shrink: 0; }
+    .hour-block {
+      flex: 1;
+      border-radius: 7px;
+      padding: 5px 7px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--ink);
+      border-left: 3px solid transparent;
+      min-height: 28px;
+    }
+    .hour-empty {
+      flex: 1;
+      min-height: 28px;
+      border-radius: 7px;
+      border: 1px dashed var(--line);
+      background: transparent;
+    }
+    .hb-coffee { background: var(--cat-coffee); border-left-color: var(--cat-coffee-b); }
+    .hb-restaurant { background: var(--cat-restaurant); border-left-color: var(--cat-restaurant-b); }
+    .hb-destination { background: var(--cat-destination); border-left-color: var(--cat-destination-b); }
+    .hb-stay { background: var(--stay-soft); border-left-color: var(--stay-line); color: var(--stay); }
+    .hb-sub { font-size: 0.55rem; font-weight: 500; opacity: 0.8; display: block; margin-top: 1px; }
+
+    /* Suggestion cards */
+    .suggest-section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .suggest-header {
+      padding: 6px 10px;
+      background: linear-gradient(90deg, var(--teal-soft), var(--paper));
+      border-bottom: 1px solid var(--line);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .suggest-context {
+      font-size: 0.58rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 4px 10px 5px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    .suggest-item {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .suggest-item:last-child { border-bottom: none; }
+    .suggest-emoji { font-size: 1rem; flex-shrink: 0; }
+    .suggest-info { flex: 1; min-width: 0; }
+    .suggest-name { font-size: 0.65rem; font-weight: 700; color: var(--ink); }
+    .suggest-meta { font-size: 0.58rem; color: var(--muted); }
+    .suggest-add { font-size: 0.58rem; font-weight: 700; color: var(--paper); background: var(--teal); border-radius: 5px; padding: 3px 6px; flex-shrink: 0; }
+    .new-badge { font-size: 0.5rem; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 1px 4px; margin-left: 3px; vertical-align: middle; }
+
+    /* Backlog spot card */
+    .backlog-spot {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      flex-shrink: 0;
+    }
+    .backlog-spot-head { display: flex; justify-content: space-between; align-items: flex-start; }
+    .backlog-spot-name { font-size: 0.72rem; font-weight: 700; color: var(--ink); flex: 1; line-height: 1.3; }
+    .backlog-spot-meta { font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
+    .backlog-spot-actions { display: flex; gap: 4px; margin-top: 5px; align-items: center; }
+    .tag-dur { font-size: 0.6rem; font-weight: 600; color: var(--teal); background: var(--teal-soft); padding: 2px 6px; border-radius: 4px; }
+    .btn-sched { font-size: 0.6rem; font-weight: 700; color: var(--paper); background: var(--ink); border-radius: 5px; padding: 3px 7px; }
+    .btn-maps { font-size: 0.6rem; font-weight: 600; color: var(--teal); border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px; }
+
+    /* Search bar */
+    .search-row {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+    .toggle-group { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+    .tog { font-size: 0.58rem; font-weight: 600; padding: 5px 7px; color: var(--muted); background: var(--paper); }
+    .tog.on { background: var(--ink); color: var(--paper); }
+
+    /* Section heading */
+    .sec-head {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      padding: 2px 0;
+      flex-shrink: 0;
+    }
+
+    /* Swipe day header (Option C) */
+    .swipe-day-header {
+      flex-shrink: 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+    }
+    .swipe-arrow { font-size: 1rem; color: var(--muted); }
+    .swipe-date { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+    .swipe-sub { font-size: 0.6rem; color: var(--muted); display: block; text-align: center; }
+
+    /* Check-in alert strip */
+    .checkin-strip {
+      flex-shrink: 0;
+      background: var(--stay-soft);
+      border-bottom: 1px solid var(--stay-line);
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--stay);
+    }
+
+    /* Suggestion pill (Option C) */
+    .suggest-pill {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    /* FAB */
+    .fab {
+      position: absolute;
+      bottom: 62px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      background: var(--accent);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--paper);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    /* Bottom sheet (Option C) */
+    .bottom-sheet {
+      position: absolute;
+      bottom: 52px;
+      left: 0;
+      right: 0;
+      height: 260px;
+      background: var(--paper);
+      border-radius: 18px 18px 0 0;
+      border-top: 1.5px solid var(--line);
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.1);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      z-index: 9;
+    }
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--line);
+      border-radius: 999px;
+      margin: 0 auto 5px;
+      flex-shrink: 0;
+    }
+
+    /* Discover tab sections */
+    .discover-toggle {
+      display: flex;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .dtog { flex: 1; font-size: 0.6rem; font-weight: 600; padding: 5px; text-align: center; color: var(--muted); background: var(--paper); }
+    .dtog.on { background: var(--teal); color: var(--paper); }
+
+    /* Calendar expand (Option B) */
+    .day-expanded {
+      background: var(--teal-soft);
+      border: 1.5px solid var(--teal);
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .day-expanded-head {
+      padding: 7px 10px;
+      background: var(--teal);
+      color: var(--paper);
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+    .day-expanded-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+
+    /* Feature callout labels */
+    .callout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.62rem;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 5px 9px;
+    }
+    .callout-dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; }
+    .dot-new { background: var(--accent); }
+    .dot-exist { background: var(--teal); }
+
+    /* Comparison table */
+    .comparison {
+      max-width: 900px;
+      margin: 3.5rem auto 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .comparison-title {
+      padding: 1rem 1.25rem;
+      border-bottom: 2px solid var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: var(--bg);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+    td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink); line-height: 1.4; }
+    tr:last-child td { border-bottom: none; }
+    .check { color: var(--teal); font-weight: 700; }
+    .partial { color: #ca8a04; font-weight: 700; }
+    .no { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">D<span>·</span>N<span>·</span>A <span style="color:var(--ink)">MOBILE</span></p>
+  <p class="page-sub">Three layout options for the mobile experience</p>
+  <div class="new-features">
+    <span class="feat-chip new">✦ New: Stay / Check-in + Checkout</span>
+    <span class="feat-chip new">✦ New: Smart Suggestions (beyond your list)</span>
+    <span class="feat-chip exist">✓ Trip Overview</span>
+    <span class="feat-chip exist">✓ Daily View</span>
+    <span class="feat-chip exist">✓ Backlog</span>
+  </div>
+
+  <div class="options-grid">
+
+    <!-- ═══════════════════════════════════════ OPTION A ═══ -->
+    <div class="option-col">
+      <div class="option-label">Option A — 4-Tab Nav</div>
+      <p class="option-desc"><strong>Every view gets its own tab.</strong> Trip overview, Day detail, Backlog, and Nearby/Discover are all first-class screens. Most features visible, nothing buried.</p>
+
+      <!-- A1: Trip Overview -->
+      <div>
+        <p class="screen-label">Trip Overview tab</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand">DNA <em style="font-style:italic;font-family:'Cormorant Garamond',serif">Travels</em></div>
+              <span class="bar-btn">Save</span>
+              <span class="bar-btn">Export</span>
+            </div>
+            <div class="scroll-content">
+
+              <!-- Stay card -->
+              <div class="stay-card">
+                <div class="stay-card-header">🏨 Pod Brooklyn Hotel</div>
+                <div class="stay-card-rows">
+                  <div class="stay-row"><span>Check-in</span><span>Thu May 1 · 3:00 PM</span></div>
+                  <div class="stay-row"><span>Check-out</span><span>Mon May 5 · 11:00 AM</span></div>
+                </div>
+                <div class="stay-edit">✏ Edit stay details</div>
+              </div>
+
+              <!-- Days -->
+              <div class="sec-head">5 days · NYC</div>
+
+              <div class="day-card">
+                <div class="day-card-head">
+                  <div class="day-card-name">Thu, May 1</div>
+                  <div style="display:flex;align-items:center;gap:4px">
+                    <div class="day-card-count">2 planned</div>
+                    <div class="day-card-arrow">›</div>
+                  </div>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-stay">🏨 Check-in 3pm</span>
+                  <span class="mini-chip mc-coffee">☕ Coffee</span>
+                  <span class="mini-chip mc-destination">✨ Dest.</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head">
+                  <div class="day-card-name">Fri, May 2</div>
+                  <div style="display:flex;align-items:center;gap:4px">
+                    <div class="day-card-count">4 planned</div>
+                    <div class="day-card-arrow">›</div>
+                  </div>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-coffee">☕ Coffee</span>
+                  <span class="mini-chip mc-restaurant">🍽 Lunch</span>
+                  <span class="mini-chip mc-museum">🎨 Museum</span>
+                  <span class="mini-chip mc-restaurant">🍽 Dinner</span>
+                </div>
+              </div>
+
+              <div class="day-card">
+                <div class="day-card-head">
+                  <div class="day-card-name">Sat, May 3</div>
+                  <div style="display:flex;align-items:center;gap:4px">
+                    <div class="day-card-count">3 planned</div>
+                    <div class="day-card-arrow">›</div>
+                  </div>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-coffee">☕</span>
+                  <span class="mini-chip mc-park">🌳 Park</span>
+                  <span class="mini-chip mc-restaurant">🍽</span>
+                </div>
+              </div>
+
+              <div class="day-card" style="opacity:0.6">
+                <div class="day-card-head">
+                  <div class="day-card-name">Mon, May 5</div>
+                  <div style="display:flex;align-items:center;gap:4px">
+                    <div class="day-card-count">1 planned</div>
+                    <div class="day-card-arrow">›</div>
+                  </div>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-stay">🏨 Checkout 11am</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab active"><div class="nav-icon">📅</div>Trip</div>
+              <div class="nav-tab"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab"><div class="nav-icon">✨</div>Nearby</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A2: Day View -->
+      <div>
+        <p class="screen-label">Day tab (hourly view)</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand" style="font-size:0.85rem">Fri, May 2</div>
+              <span class="bar-btn">Auto Day</span>
+            </div>
+            <div class="scroll-content" style="gap:0">
+              <div class="hour-row">
+                <div class="hour-label">8am</div>
+                <div class="hour-block hb-coffee">☕ Devoción<span class="hb-sub">45 min · Williamsburg</span></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">9am</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">10am</div>
+                <div class="hour-block hb-destination">✨ Strand Book Store<span class="hb-sub">45 min · NoHo</span></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">11am</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">12pm</div>
+                <div class="hour-block hb-restaurant">🍽 A Pasta Bar<span class="hb-sub">60 min · Tribeca</span></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">2pm</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">3pm</div>
+                <div class="hour-empty"></div>
+              </div>
+              <!-- Suggestion panel inline -->
+              <div class="suggest-section" style="margin-top:4px">
+                <div class="suggest-header">✨ 2pm gap · NoHo area</div>
+                <div class="suggest-context">You're near Strand at 10am — these fit your 2pm gap</div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">📸</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">AUTOPHOTO Museum <span class="new-badge">not in list</span></div>
+                    <div class="suggest-meta">Lower East Side · 90 min · 0.4 mi away</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">☕</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Caffe Panna</div>
+                    <div class="suggest-meta">Saved · 60 min · 0.2 mi away</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab"><div class="nav-icon">📅</div>Trip</div>
+              <div class="nav-tab active"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab"><div class="nav-icon">✨</div>Nearby</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A3: Nearby/Discover -->
+      <div>
+        <p class="screen-label">Nearby / Discover tab</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand">Discover</div>
+              <span class="bar-btn">Fri May 2</span>
+            </div>
+            <div class="scroll-content">
+              <div class="discover-toggle">
+                <div class="dtog on">Today's Route</div>
+                <div class="dtog">Full Trip</div>
+                <div class="dtog">Explore Map</div>
+              </div>
+              <div class="suggest-section">
+                <div class="suggest-header">✨ Based on your Friday plans</div>
+                <div class="suggest-context">NoHo 10am → Tribeca 12pm → gap 2–4pm → open evening</div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">📸</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">AUTOPHOTO Museum <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">Lower East Side · 90 min · fits 2pm gap</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🌳</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Greenacre Park <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">Midtown East · 90 min · fits 3pm gap</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+              </div>
+              <div class="sec-head" style="margin-top:4px">From your backlog in these neighborhoods</div>
+              <div class="suggest-section">
+                <div class="suggest-item">
+                  <div class="suggest-emoji">☕</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Caffe Panna</div>
+                    <div class="suggest-meta">NoHo · Saved · 0.2 mi from Strand</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🎨</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">The Morgan Library</div>
+                    <div class="suggest-meta">Midtown · Saved · 90 min</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab"><div class="nav-icon">📅</div>Trip</div>
+              <div class="nav-tab"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab active"><div class="nav-icon">✨</div>Nearby</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /Option A -->
+
+
+    <!-- ═══════════════════════════════════════ OPTION B ═══ -->
+    <div class="option-col">
+      <div class="option-label">Option B — 3-Tab + Expand</div>
+      <p class="option-desc"><strong>Fewer tabs, more depth.</strong> Calendar tab shows all days; tap any day to expand its hourly timeline inline. Discover tab is context-aware to your current day.</p>
+
+      <!-- B1: Calendar with stay + collapsed days -->
+      <div>
+        <p class="screen-label">Calendar tab (collapsed days)</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand">DNA <em style="font-style:italic;font-family:'Cormorant Garamond',serif">Travels</em></div>
+              <span class="bar-btn">Save</span>
+            </div>
+            <div class="scroll-content">
+
+              <div class="stay-card">
+                <div class="stay-card-header">🏨 Pod Brooklyn · Stay Details</div>
+                <div class="stay-card-rows">
+                  <div class="stay-row"><span>Check-in</span><span>Thu May 1 · 3:00 PM</span></div>
+                  <div class="stay-row"><span>Check-out</span><span>Mon May 5 · 11:00 AM</span></div>
+                </div>
+              </div>
+
+              <div class="sec-head">May 1 – May 5</div>
+
+              <!-- Collapsed day -->
+              <div class="day-card">
+                <div class="day-card-head">
+                  <div class="day-card-name">Thu, May 1</div>
+                  <div style="display:flex;gap:5px;align-items:center">
+                    <span style="font-size:0.6rem;color:var(--teal);font-weight:600">Tap to expand ›</span>
+                  </div>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-stay">🏨 3pm</span>
+                  <span class="mini-chip mc-coffee">☕</span>
+                </div>
+              </div>
+
+              <!-- Expanded day (Fri May 2) -->
+              <div class="day-expanded">
+                <div class="day-expanded-head">
+                  <span>Fri, May 2 — 4 activities</span>
+                  <span style="font-size:0.65rem;opacity:0.8">∧ Collapse</span>
+                </div>
+                <div class="day-expanded-body">
+                  <div class="hour-row" style="margin:0">
+                    <div class="hour-label">8am</div>
+                    <div class="hour-block hb-coffee" style="font-size:0.6rem">☕ Devoción <span class="hb-sub">45 min</span></div>
+                  </div>
+                  <div class="hour-row" style="margin:0">
+                    <div class="hour-label">10am</div>
+                    <div class="hour-block hb-destination" style="font-size:0.6rem">✨ Strand <span class="hb-sub">45 min</span></div>
+                  </div>
+                  <div class="hour-row" style="margin:0">
+                    <div class="hour-label">12pm</div>
+                    <div class="hour-block hb-restaurant" style="font-size:0.6rem">🍽 A Pasta Bar <span class="hb-sub">60 min</span></div>
+                  </div>
+                  <div style="display:flex;gap:4px;margin-top:3px">
+                    <div style="font-size:0.58rem;font-weight:600;color:var(--teal);background:var(--paper);border:1px solid var(--teal);border-radius:5px;padding:3px 7px">+ Add from backlog</div>
+                    <div style="font-size:0.58rem;font-weight:600;color:var(--paper);background:var(--teal);border-radius:5px;padding:3px 7px">Auto Day</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Collapsed -->
+              <div class="day-card">
+                <div class="day-card-head">
+                  <div class="day-card-name">Sat, May 3</div>
+                  <span style="font-size:0.6rem;color:var(--teal);font-weight:600">Tap to expand ›</span>
+                </div>
+                <div class="day-chips-row">
+                  <span class="mini-chip mc-coffee">☕</span>
+                  <span class="mini-chip mc-park">🌳</span>
+                  <span class="mini-chip mc-restaurant">🍽</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab active"><div class="nav-icon">📅</div>Calendar</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab"><div class="nav-icon">✨</div>Discover</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B2: Backlog tab -->
+      <div>
+        <p class="screen-label">Backlog tab</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand">Backlog</div>
+              <span class="bar-btn" style="font-size:0.55rem">48 spots</span>
+            </div>
+            <div class="scroll-content">
+              <div class="search-row">
+                <div class="search-input">🔍  Search backlog…</div>
+                <div class="toggle-group">
+                  <div class="tog on">All</div>
+                  <div class="tog">Area</div>
+                  <div class="tog">Type</div>
+                </div>
+              </div>
+
+              <div class="sec-head">West Village · 4 spots</div>
+
+              <div class="backlog-spot">
+                <div class="backlog-spot-head">
+                  <div>
+                    <div class="backlog-spot-name">Palma Restaurant</div>
+                    <div class="backlog-spot-meta">West Village / Greenwich Village</div>
+                  </div>
+                  <div style="font-size:1.2rem">🍽</div>
+                </div>
+                <div class="backlog-spot-actions">
+                  <span class="tag-dur">60 min</span>
+                  <span class="btn-sched">Schedule</span>
+                  <span class="btn-maps">Maps</span>
+                </div>
+              </div>
+
+              <div class="backlog-spot">
+                <div class="backlog-spot-head">
+                  <div>
+                    <div class="backlog-spot-name">Salt Hank's</div>
+                    <div class="backlog-spot-meta">West Village / Greenwich Village</div>
+                  </div>
+                  <div style="font-size:1.2rem">🌮</div>
+                </div>
+                <div class="backlog-spot-actions">
+                  <span class="tag-dur">60 min</span>
+                  <span class="btn-sched">Schedule</span>
+                  <span class="btn-maps">Maps</span>
+                </div>
+              </div>
+
+              <div class="sec-head">NoHo · 6 spots</div>
+
+              <div class="backlog-spot">
+                <div class="backlog-spot-head">
+                  <div>
+                    <div class="backlog-spot-name">Papa d'Amour</div>
+                    <div class="backlog-spot-meta">NoHo / Nolita / SoHo</div>
+                  </div>
+                  <div style="font-size:1.2rem">🥐</div>
+                </div>
+                <div class="backlog-spot-actions">
+                  <span class="tag-dur">60 min</span>
+                  <span class="btn-sched">Schedule</span>
+                  <span class="btn-maps">Maps</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab"><div class="nav-icon">📅</div>Calendar</div>
+              <div class="nav-tab active"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab"><div class="nav-icon">✨</div>Discover</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B3: Discover tab -->
+      <div>
+        <p class="screen-label">Discover tab</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="bar">
+              <div class="bar-brand">Discover</div>
+            </div>
+            <div class="scroll-content">
+              <div class="discover-toggle">
+                <div class="dtog on">By Day</div>
+                <div class="dtog">By Hood</div>
+                <div class="dtog">Random</div>
+              </div>
+              <div style="display:flex;gap:5px;flex-shrink:0;overflow-x:auto;padding-bottom:2px">
+                <div style="font-size:0.6rem;font-weight:700;background:var(--ink);color:var(--paper);border-radius:999px;padding:4px 10px;white-space:nowrap;flex-shrink:0">Fri May 2</div>
+                <div style="font-size:0.6rem;font-weight:700;background:var(--paper);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap;flex-shrink:0">Sat May 3</div>
+                <div style="font-size:0.6rem;font-weight:700;background:var(--paper);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap;flex-shrink:0">Sun May 4</div>
+              </div>
+
+              <div class="suggest-section">
+                <div class="suggest-header">✨ Suggestions for Friday</div>
+                <div class="suggest-context">Planned route: Williamsburg → NoHo → Tribeca → open 2pm+</div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">📸</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">AUTOPHOTO Museum <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">LES · 90 min · 0.4 mi from Pasta Bar</div>
+                  </div>
+                  <div class="suggest-add">+Fri</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🌳</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Little Island <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">Chelsea · 90 min · 1.2 mi west</div>
+                  </div>
+                  <div class="suggest-add">+Fri</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">☕</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Caffe Panna</div>
+                    <div class="suggest-meta">Saved · NoHo · near Strand</div>
+                  </div>
+                  <div class="suggest-add">+Fri</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab"><div class="nav-icon">📅</div>Calendar</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>Backlog</div>
+              <div class="nav-tab active"><div class="nav-icon">✨</div>Discover</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /Option B -->
+
+
+    <!-- ═══════════════════════════════════════ OPTION C ═══ -->
+    <div class="option-col">
+      <div class="option-label">Option C — Swipe + Sheet</div>
+      <p class="option-desc"><strong>Content-first, minimal chrome.</strong> Swipe left/right between days. Pull up a bottom sheet for backlog. Suggestions appear as a contextual pill inside the day view.</p>
+
+      <!-- C1: Day swipe + check-in strip -->
+      <div>
+        <p class="screen-label">Day swipe view (with check-in alert)</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen" style="position:relative">
+            <div class="bar">
+              <div class="bar-brand">DNA <em style="font-style:italic;font-family:'Cormorant Garamond',serif">Travels</em></div>
+              <span class="bar-icon">📅</span>
+              <span class="bar-icon">⋯</span>
+            </div>
+            <div class="swipe-day-header">
+              <div class="swipe-arrow">‹</div>
+              <div style="text-align:center">
+                <div class="swipe-date">Thu, May 1</div>
+                <div class="swipe-sub">Day 1 of 5 · swipe to change day</div>
+              </div>
+              <div class="swipe-arrow">›</div>
+            </div>
+            <div class="checkin-strip">
+              🏨 Check-in today at 3:00 PM · Pod Brooklyn
+            </div>
+            <div class="scroll-content" style="gap:0;padding-bottom:80px">
+              <div class="hour-row">
+                <div class="hour-label">8am</div>
+                <div class="hour-block hb-coffee">☕ Devocíon <span class="hb-sub">45 min</span></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">9am</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">10am</div>
+                <div class="hour-block hb-destination">✨ Radio Bakery<span class="hb-sub">45 min</span></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">11am</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">12pm</div>
+                <div class="hour-empty"></div>
+              </div>
+              <div class="hour-row">
+                <div class="hour-label">3pm</div>
+                <div class="hour-block hb-stay">🏨 Hotel Check-in<span class="hb-sub">Pod Brooklyn · 3:00 PM</span></div>
+              </div>
+            </div>
+
+            <!-- Suggestion pill floating above nav -->
+            <div class="suggest-pill">✨ 3 suggestions for your 11am gap</div>
+
+            <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0">
+              <div class="nav-tab active"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>All Days</div>
+              <div class="nav-tab"><div class="nav-icon">⋯</div>More</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C2: Bottom sheet backlog -->
+      <div>
+        <p class="screen-label">Backlog as bottom sheet (slides up)</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen" style="position:relative">
+            <div class="bar">
+              <div class="bar-brand" style="font-size:0.85rem">Fri, May 2</div>
+              <span class="swipe-arrow" style="color:var(--paper);font-size:1rem">‹</span>
+              <span class="swipe-arrow" style="color:var(--paper);font-size:1rem">›</span>
+            </div>
+            <!-- Day behind sheet, dimmed -->
+            <div style="flex:1;padding:10px;opacity:0.3">
+              <div class="hour-row"><div class="hour-label">8am</div><div class="hour-block hb-coffee">☕ Devoción</div></div>
+              <div class="hour-row"><div class="hour-label">9am</div><div class="hour-empty"></div></div>
+              <div class="hour-row"><div class="hour-label">10am</div><div class="hour-block hb-destination">✨ Strand</div></div>
+            </div>
+            <!-- Sheet -->
+            <div class="bottom-sheet">
+              <div class="sheet-handle"></div>
+              <div style="font-size:0.72rem;font-weight:700;color:var(--ink);flex-shrink:0">Backlog · 48 spots</div>
+              <div class="search-row">
+                <div class="search-input" style="font-size:0.6rem">🔍  Search…</div>
+                <div class="toggle-group">
+                  <div class="tog on">All</div>
+                  <div class="tog">Area</div>
+                </div>
+              </div>
+              <div style="font-size:0.6rem;color:var(--muted);font-weight:600;flex-shrink:0">💡 Swipe right on a card to schedule on Fri May 2</div>
+              <div class="backlog-spot" style="flex-shrink:0">
+                <div class="backlog-spot-head">
+                  <div>
+                    <div class="backlog-spot-name">Caffe Panna</div>
+                    <div class="backlog-spot-meta">NoHo · 60 min</div>
+                  </div>
+                  <div style="font-size:1.1rem">☕</div>
+                </div>
+              </div>
+              <div class="backlog-spot" style="flex-shrink:0">
+                <div class="backlog-spot-head">
+                  <div>
+                    <div class="backlog-spot-name">AUTOPHOTO Museum <span class="new-badge">new</span></div>
+                    <div class="backlog-spot-meta">LES · 90 min</div>
+                  </div>
+                  <div style="font-size:1.1rem">📸</div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0">
+              <div class="nav-tab active"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>All Days</div>
+              <div class="nav-tab"><div class="nav-icon">⋯</div>More</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C3: Suggestions expanded -->
+      <div>
+        <p class="screen-label">Suggestion pill expanded</p>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-screen" style="position:relative">
+            <div class="bar">
+              <div class="bar-brand" style="font-size:0.85rem">Thu, May 1 · 11am gap</div>
+            </div>
+            <div class="scroll-content">
+              <div style="font-size:0.65rem;color:var(--muted);flex-shrink:0;line-height:1.4">You have a free block <strong>11am–3pm</strong> before check-in. Based on Devocíon + Radio Bakery (Williamsburg), here's what's nearby:</div>
+              <div class="discover-toggle">
+                <div class="dtog on">Not in list</div>
+                <div class="dtog">From list</div>
+                <div class="dtog">Both</div>
+              </div>
+              <div class="suggest-section">
+                <div class="suggest-header">✨ New discoveries nearby</div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🎨</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Williamsburg Art Market <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">Williamsburg · 60 min · 0.3 mi</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🌊</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">East River Waterfront <span class="new-badge">new</span></div>
+                    <div class="suggest-meta">Williamsburg · 45 min · 0.5 mi</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+              </div>
+              <div class="suggest-section">
+                <div class="suggest-header">📋 From your backlog nearby</div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">☕</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">Qahwah House Coffee</div>
+                    <div class="suggest-meta">Williamsburg · Saved · 0.3 mi</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+                <div class="suggest-item">
+                  <div class="suggest-emoji">🍕</div>
+                  <div class="suggest-info">
+                    <div class="suggest-name">L'industrie Pizzeria</div>
+                    <div class="suggest-meta">Williamsburg · Saved · 0.3 mi</div>
+                  </div>
+                  <div class="suggest-add">+Add</div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-tab active"><div class="nav-icon">🗓</div>Day</div>
+              <div class="nav-tab"><div class="nav-icon">📋</div>All Days</div>
+              <div class="nav-tab"><div class="nav-icon">⋯</div>More</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /Option C -->
+
+  </div><!-- /options-grid -->
+
+
+  <!-- Comparison table -->
+  <div class="comparison">
+    <div class="comparison-title">Feature Comparison</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Option A — 4-Tab</th>
+          <th>Option B — 3-Tab</th>
+          <th>Option C — Swipe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>See entire trip at once</strong></td>
+          <td><span class="check">✓</span> Dedicated Trip tab</td>
+          <td><span class="check">✓</span> Calendar tab, collapsed days</td>
+          <td><span class="partial">~</span> All Days tab (compressed view)</td>
+        </tr>
+        <tr>
+          <td><strong>Daily hourly view</strong></td>
+          <td><span class="check">✓</span> Dedicated Day tab</td>
+          <td><span class="check">✓</span> Expand any day inline</td>
+          <td><span class="check">✓</span> Primary default screen</td>
+        </tr>
+        <tr>
+          <td><strong>Backlog</strong></td>
+          <td><span class="check">✓</span> Dedicated tab, full screen</td>
+          <td><span class="check">✓</span> Dedicated tab, full screen</td>
+          <td><span class="partial">~</span> Bottom sheet (overlay)</td>
+        </tr>
+        <tr>
+          <td><strong>Check-in / Checkout</strong></td>
+          <td><span class="check">✓</span> Stay card on Trip tab + chip on day</td>
+          <td><span class="check">✓</span> Stay card on Calendar tab</td>
+          <td><span class="check">✓</span> Alert strip on check-in day</td>
+        </tr>
+        <tr>
+          <td><strong>Suggestions (your list)</strong></td>
+          <td><span class="check">✓</span> Dedicated Nearby tab</td>
+          <td><span class="check">✓</span> Discover tab, by day</td>
+          <td><span class="check">✓</span> Suggestion pill in day view</td>
+        </tr>
+        <tr>
+          <td><strong>Suggestions (beyond list)</strong></td>
+          <td><span class="check">✓</span> "New" badge on Nearby tab</td>
+          <td><span class="check">✓</span> "New" badge on Discover tab</td>
+          <td><span class="check">✓</span> "Not in list" tab in suggestions</td>
+        </tr>
+        <tr>
+          <td><strong>Navigation clarity</strong></td>
+          <td><span class="check">✓✓</span> Most explicit, 4 clear tabs</td>
+          <td><span class="check">✓</span> Clean, but expand is less obvious</td>
+          <td><span class="partial">~</span> Gesture-heavy, less discoverable</td>
+        </tr>
+        <tr>
+          <td><strong>Screen real estate</strong></td>
+          <td><span class="partial">~</span> Split between 4 tabs</td>
+          <td><span class="check">✓</span> Day view maximized in calendar</td>
+          <td><span class="check">✓✓</span> Most content space per screen</td>
+        </tr>
+        <tr>
+          <td><strong>Easiest for quick use mid-trip</strong></td>
+          <td><span class="partial">~</span> 1 tap to any screen</td>
+          <td><span class="partial">~</span> 1–2 taps to day detail</td>
+          <td><span class="check">✓✓</span> Day view is instant, swipe between days</td>
+        </tr>
+        <tr>
+          <td><strong>Best for planning ahead (at home)</strong></td>
+          <td><span class="check">✓✓</span> Trip overview + backlog side by side</td>
+          <td><span class="check">✓✓</span> Expand-in-place is great for planning</td>
+          <td><span class="partial">~</span> One day at a time</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="text-align:center;color:var(--muted);font-size:0.75rem;margin-top:2.5rem;line-height:1.6">
+    <strong>Recommendation:</strong> Option A or B for pre-trip planning · Option C for mid-trip day-of use<br>
+    These can be combined: Option A's structure + Option C's swipe gesture between days
+  </p>
+
+</body>
+</html>
