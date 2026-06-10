@@ -1,5 +1,8 @@
 /* DNA TRAVELS — NYC */
 (function () {
+  // Paste your Google Places API key here — works on all devices automatically
+  const GOOGLE_PLACES_KEY = 'AIzaSyC4rR3r-s-7evby2AcJbbeAoncARbVKnP4';
+
   const PLACES = window.__PLACES__ || [];
   let catalogFromFile = [];
   const POD_PLACE_ID = '/g/11g9vt9zm3';
@@ -771,17 +774,6 @@
       const hasPlan = state.days?.some(d => d.blocks?.length);
       submitBtn.textContent = hasPlan ? 'Continue planning' : 'Start planning';
     }
-    // Auto-open toggle sections that already have saved data
-    const openToggle = (toggleId, bodyId, hasData) => {
-      if (!hasData) return;
-      document.getElementById(toggleId)?.classList.add('open');
-      const body = document.getElementById(bodyId);
-      if (body) body.hidden = false;
-    };
-    openToggle('toggle-flights', 'flights-body', flights.arrival.airport || flights.departure.airport);
-    openToggle('toggle-stay', 'stay-body', stay.name || stay.checkinDate);
-    openToggle('toggle-schedule', 'schedule-body',
-      state.dayStartTime !== DEFAULT_DAY_START_TIME || state.dayEndTime !== DEFAULT_DAY_END_TIME);
     updateSaveStatus();
   }
 
@@ -1040,9 +1032,13 @@
         showPlannerPage(btn.dataset.nav);
       });
     });
-    document.getElementById('schedule-back').addEventListener('click', () => {
-      expandedDayId = null;
-      showPlannerPage('calendar');
+    document.getElementById('schedule-prev-day').addEventListener('click', () => {
+      const idx = state.days.findIndex(d => d.id === expandedDayId);
+      if (idx > 0) { expandedDayId = state.days[idx - 1].id; renderSchedulePage(); }
+    });
+    document.getElementById('schedule-next-day').addEventListener('click', () => {
+      const idx = state.days.findIndex(d => d.id === expandedDayId);
+      if (idx < state.days.length - 1) { expandedDayId = state.days[idx + 1].id; renderSchedulePage(); }
     });
     document.getElementById('schedule-auto-day').addEventListener('click', () => {
       if (expandedDayId) autoScheduleDay(expandedDayId);
@@ -1590,7 +1586,7 @@
   }
 
   async function fetchNearbyPlaces(lat, lng) {
-    const key = state.googlePlacesKey;
+    const key = GOOGLE_PLACES_KEY || state.googlePlacesKey;
     if (!key || !lat || !lng) return [];
     const cacheKey = `dna-nearby-${Math.round(lat * 100)}-${Math.round(lng * 100)}`;
     try {
@@ -1693,28 +1689,32 @@
       const badge = isNew ? '<span class="discover-new-badge">✨ new</span>' : '';
       const ratStr = p.rating ? ' · ★' + p.rating : '';
       const isOnDay = dayBlocks.some(b => b.placeId === activityId(p));
+      const btnHtml = isOnDay
+        ? `<span class="discover-add on-list-day">✓ On day</span>`
+        : `<button class="discover-add" data-pid="${attr(activityId(p))}" data-did="${attr(day.id)}">+ Add</button>`;
       return `<div class="discover-item">
         <div class="discover-emoji">${emoji}</div>
         <div class="discover-info">
           <div class="discover-name">${esc(p.name)}${badge}</div>
           <div class="discover-meta">${esc(p.neighborhood || p.address?.split(',')[0] || '')}${distStr ? ' · ' + distStr : ''}${ratStr} · ${durationLabel(p.duration || 60)}</div>
         </div>
-        <button class="discover-add" data-pid="${attr(activityId(p))}" data-did="${attr(day.id)}"${isOnDay ? ' disabled' : ''}>${isOnDay ? '✓' : '+ Add'}</button>
+        ${btnHtml}
       </div>`;
     }
 
-    const hasKey = !!state.googlePlacesKey;
+    const hasKey = !!(GOOGLE_PLACES_KEY || state.googlePlacesKey);
     const dayDateLabel = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
     container.innerHTML = `
       <div class="discover-day-strip">${dayStrip}</div>
       <div class="discover-context"><strong>${esc(dayDateLabel)}</strong> · ${esc(gapText)}</div>
       <div class="discover-section">
-        <div class="discover-section-title">📋 From your list — not yet scheduled</div>
+        <div class="discover-section-title">📋 On your list — not yet scheduled</div>
         ${myList.length ? myList.map(p => listItemHtml(p, false)).join('') : '<div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">Everything on your list is already scheduled!</div>'}
       </div>
+      <div class="discover-divider"><span class="discover-divider-label">New suggestions from Google</span></div>
       <div class="discover-section" id="discover-new-section">
-        <div class="discover-section-title new">✨ Discover — not in your list${hasKey ? ' <button type="button" class="api-connected-gear" id="discover-key-reset" title="Change API key">⚙</button>' : ''}</div>
+        <div class="discover-section-title new">✨ Discover — not in your list${hasKey && !GOOGLE_PLACES_KEY ? ' <button type="button" class="api-connected-gear" id="discover-key-reset" title="Change API key">⚙</button>' : ''}</div>
         ${hasKey
           ? '<div class="discover-loading" id="discover-loading">Loading nearby places…</div>'
           : `<div style="padding:0.65rem">
@@ -1954,15 +1954,24 @@
     const dayId = expandedDayId;
     const day = state.days.find(d => d.id === dayId);
     const labelEl = document.getElementById('schedule-day-label');
+    const hintEl = document.getElementById('schedule-hint');
     const content = document.getElementById('schedule-content');
     if (!day || !content) return;
+    const idx = state.days.findIndex(d => d.id === dayId);
+    const total = state.days.length;
     if (labelEl) {
       labelEl.textContent = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
+        weekday: 'short', month: 'short', day: 'numeric',
       });
     }
+    if (hintEl) {
+      const count = (day.blocks || []).length;
+      hintEl.textContent = `Day ${idx + 1} of ${total} · ${count} stop${count !== 1 ? 's' : ''}`;
+    }
+    const prevBtn = document.getElementById('schedule-prev-day');
+    const nextBtn = document.getElementById('schedule-next-day');
+    if (prevBtn) prevBtn.disabled = idx === 0;
+    if (nextBtn) nextBtn.disabled = idx === total - 1;
     content.innerHTML = renderHoursPanel(dayId) + renderExcursionsPanel(day);
     bindHoursPanel(content);
     bindCalendarInteractions(content);

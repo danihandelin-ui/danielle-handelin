@@ -364,9 +364,19 @@
       color: var(--teal);
       white-space: nowrap;
     }
-    .schedule-title-wrap { flex: 1; min-width: 0; }
-    .schedule-title-wrap h2 { margin: 0; font-size: 0.95rem; font-weight: 600; }
-    .schedule-title-wrap p { margin: 0.15rem 0 0; font-size: 0.72rem; color: var(--muted); }
+    .day-nav-arrow {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border: 1px solid var(--line); border-radius: 8px;
+      background: var(--bg); cursor: pointer;
+      font-size: 1.15rem; color: var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; font-family: inherit;
+    }
+    .day-nav-arrow:disabled { opacity: 0.25; cursor: default; }
+    .day-nav-arrow:not(:disabled):hover { background: var(--teal-soft); }
+    .schedule-title-wrap { flex: 1; min-width: 0; text-align: center; }
+    .schedule-title-wrap h2 { margin: 0; font-size: 0.88rem; font-weight: 700; }
+    .schedule-title-wrap p { margin: 0.1rem 0 0; font-size: 0.68rem; color: var(--muted); }
     #schedule-content { flex: 1; min-height: 0; overflow: auto; padding: 0.75rem 1rem 1.25rem; }
     .cat-badge {
       display: inline-block;
@@ -1546,7 +1556,12 @@
     .discover-context strong { color:var(--ink); }
     .discover-section { background:var(--paper); border:1px solid var(--line); border-radius:10px; overflow:hidden; flex-shrink:0; }
     .discover-section-title { padding:0.5rem 0.85rem; font-size:0.65rem; font-weight:700; color:var(--teal); background:var(--teal-soft); border-bottom:1px solid var(--line); letter-spacing:0.04em; text-transform:uppercase; }
-    .discover-section-title.new { background:#fef9c3; color:#92400e; }
+    .discover-section-title.new { background:#fef9c3; color:#92400e; border-bottom-color:#fde68a; }
+    .discover-divider { display:flex; align-items:center; gap:0.65rem; flex-shrink:0; padding:0 0.25rem; }
+    .discover-divider::before, .discover-divider::after { content:''; flex:1; height:1px; background:var(--line); }
+    .discover-divider-label { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); white-space:nowrap; }
+    .discover-add.on-list { background:var(--teal-soft); color:var(--teal); border:1px solid var(--teal); border-radius:999px; font:inherit; font-size:0.62rem; font-weight:600; padding:0.18rem 0.5rem; cursor:default; }
+    .discover-add.on-list-day { background:var(--teal); color:#fff; border:none; border-radius:999px; font:inherit; font-size:0.62rem; font-weight:600; padding:0.18rem 0.5rem; cursor:default; }
     .discover-item { display:flex; align-items:center; gap:0.55rem; padding:0.6rem 0.85rem; border-bottom:1px solid var(--line); }
     .discover-item:last-child { border-bottom:none; }
     .discover-emoji { font-size:1.05rem; flex-shrink:0; line-height:1; }
@@ -1879,12 +1894,13 @@
 
       <div id="page-schedule" class="planner-page">
         <div class="schedule-header">
-          <button type="button" class="btn-back" id="schedule-back">← Calendar</button>
+          <button type="button" class="day-nav-arrow" id="schedule-prev-day" title="Previous day">‹</button>
           <div class="schedule-title-wrap">
             <h2 id="schedule-day-label"></h2>
-            <p id="schedule-hint">Drag stops onto hours, or tap Auto day</p>
+            <p id="schedule-hint"></p>
           </div>
-          <button type="button" class="btn-mini" id="schedule-auto-day">Auto day</button>
+          <button type="button" class="day-nav-arrow" id="schedule-next-day" title="Next day">›</button>
+          <button type="button" class="btn-mini" id="schedule-auto-day">⚡ Auto</button>
         </div>
         <div id="schedule-content"></div>
       </div>

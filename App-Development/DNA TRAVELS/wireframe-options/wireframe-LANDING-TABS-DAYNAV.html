@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Landing Tabs + Day Navigation</title>
+<style>
+  :root {
+    --bg: #f7f4ef; --paper: #fffdf9; --ink: #1c1917; --muted: #78716c;
+    --line: #e7e0d6; --accent: #b4534b; --accent-soft: #f5e8e6;
+    --teal: #2d6a6a; --teal-soft: #e8f2f2;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Outfit", system-ui, sans-serif; background: #e8e4de; margin: 0; padding: 1rem; color: var(--ink); }
+  .section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin: 1.5rem 0 0.5rem; padding: 0 0.5rem; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  @media (max-width: 700px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+  .frame { background: var(--paper); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .frame-label { background: var(--ink); color: var(--paper); font-size: 0.65rem; font-weight: 600; padding: 0.35rem 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; }
+  .frame-inner { padding: 1.25rem; }
+  h1 { font-size: 1.35rem; font-weight: 700; margin: 0 0 0.35rem; color: var(--ink); }
+  p.desc { font-size: 0.82rem; color: var(--muted); margin: 0 0 1.5rem; }
+
+  /* Landing card */
+  .dna-mark { font-size: 1.8rem; font-weight: 700; letter-spacing: 0.25em; margin: 0 0 0.1rem; }
+  .dna-mark span { color: var(--accent); }
+  .landing-sub { font-size: 0.75rem; color: var(--muted); margin: 0 0 1.1rem; }
+  .field { margin-bottom: 0.65rem; text-align: left; }
+  .field label { display: block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.25rem; }
+  .field input { width: 100%; padding: 0.55rem 0.65rem; border: 1.5px solid var(--line); border-radius: 8px; font: inherit; font-size: 0.9rem; background: var(--bg); }
+  .field-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.35rem; align-items: end; }
+  .field-row .sep { font-size: 0.7rem; color: var(--muted); text-align: center; padding-bottom: 0.6rem; }
+
+  /* OLD accordion style */
+  .old-toggle { border: 1.5px solid var(--line); border-radius: 8px; margin-bottom: 0.4rem; overflow: hidden; }
+  .old-toggle-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.75rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; background: var(--bg); }
+  .old-toggle-head .arrow { margin-left: auto; color: var(--muted); }
+  .old-toggle-head .icon { font-size: 0.95rem; }
+  .old-tag { font-size: 0.58rem; color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+
+  /* NEW tab style */
+  .opt-tabs-row { display: flex; border: 1.5px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 0.85rem; }
+  .opt-tab { flex: 1; padding: 0.55rem 0.25rem; font-size: 0.72rem; font-weight: 600; text-align: center; border: none; background: var(--bg); color: var(--muted); cursor: pointer; border-right: 1px solid var(--line); line-height: 1.25; }
+  .opt-tab:last-child { border-right: none; }
+  .opt-tab.active { background: var(--teal); color: white; }
+  .opt-tab.has-data { color: var(--teal); background: var(--teal-soft); }
+  .opt-tab .tab-icon { display: block; font-size: 1rem; margin-bottom: 0.1rem; }
+  .opt-tab-body { border: 1.5px solid var(--teal); border-radius: 8px; padding: 0.75rem; background: var(--paper); margin-bottom: 0.65rem; }
+  .opt-tab-body-none { border: 1.5px dashed var(--line); border-radius: 8px; padding: 0.75rem; background: var(--bg); margin-bottom: 0.65rem; text-align: center; font-size: 0.75rem; color: var(--muted); }
+  .mini-field { margin-bottom: 0.45rem; }
+  .mini-field label { display: block; font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.15rem; }
+  .mini-field input, .mini-field select { width: 100%; padding: 0.45rem 0.5rem; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 0.82rem; background: var(--bg); }
+  .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; }
+
+  .btn-main { width: 100%; padding: 0.75rem; border: none; border-radius: 8px; background: var(--ink); color: white; font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.4rem; }
+
+  /* Day nav */
+  .schedule-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border-bottom: 1.5px solid var(--line); background: var(--paper); }
+  .btn-back { font: inherit; font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.55rem; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); cursor: pointer; color: var(--teal); white-space: nowrap; }
+  .day-nav-wrap { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; min-width: 0; }
+  .day-nav-btn { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; color: var(--teal); flex-shrink: 0; }
+  .day-nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .day-nav-title { text-align: center; min-width: 0; }
+  .day-nav-title strong { display: block; font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+  .day-nav-title span { font-size: 0.62rem; color: var(--muted); }
+  .auto-btn { font: inherit; font-size: 0.7rem; font-weight: 600; padding: 0.35rem 0.55rem; border: 1px solid var(--teal); border-radius: 7px; background: var(--teal-soft); cursor: pointer; color: var(--teal); white-space: nowrap; flex-shrink: 0; }
+
+  /* Day select dropdown variant */
+  .day-select-wrap { flex: 1; min-width: 0; }
+  .day-select { width: 100%; padding: 0.35rem 0.5rem; border: 1.5px solid var(--teal); border-radius: 7px; font: inherit; font-size: 0.82rem; font-weight: 600; background: var(--teal-soft); color: var(--teal); }
+
+  .mock-timeline { padding: 0.5rem 0.75rem; }
+  .mock-hour { display: flex; gap: 0.5rem; margin-bottom: 0.1rem; align-items: flex-start; }
+  .mock-time { font-size: 0.6rem; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; padding-top: 0.15rem; }
+  .mock-line { flex: 1; border-bottom: 1px dotted var(--line); height: 28px; }
+  .mock-block { flex: 1; background: var(--teal-soft); border-left: 3px solid var(--teal); border-radius: 5px; padding: 0.25rem 0.4rem; font-size: 0.62rem; font-weight: 600; }
+  .mock-block2 { flex: 1; background: rgba(255,192,210,0.42); border-left: 3px solid rgba(244,114,182,0.55); border-radius: 5px; padding: 0.25rem 0.4rem; font-size: 0.62rem; font-weight: 600; }
+
+  /* Nearby tab */
+  .discover-head { padding: 0.65rem 0.85rem; border-bottom: 1.5px solid var(--line); background: var(--paper); }
+  .discover-head h3 { margin: 0 0 0.1rem; font-size: 0.85rem; font-weight: 700; }
+  .discover-head p { margin: 0; font-size: 0.68rem; color: var(--muted); }
+  .discover-filter-row { display: flex; gap: 0.35rem; padding: 0.5rem 0.85rem; overflow-x: auto; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .filter-chip { font: inherit; font-size: 0.68rem; font-weight: 600; padding: 0.25rem 0.55rem; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--muted); white-space: nowrap; cursor: pointer; }
+  .filter-chip.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .nearby-card { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .nearby-card.on-list { background: var(--teal-soft); }
+  .nearby-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--teal-soft); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+  .nearby-info { flex: 1; min-width: 0; }
+  .nearby-name { font-size: 0.78rem; font-weight: 700; margin: 0 0 0.1rem; }
+  .nearby-meta { font-size: 0.62rem; color: var(--muted); margin: 0; }
+  .nearby-badge { font-size: 0.6rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+  .badge-on-list { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal); }
+  .badge-add { background: var(--ink); color: white; border: none; font: inherit; cursor: pointer; border-radius: 999px; }
+  .badge-notyet { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<h1>Wireframe: 3 Changes</h1>
+<p class="desc">Landing page tabs · Day navigation · Nearby on-list badges · (API key is embedded in code — no UI change)</p>
+
+<!-- ===== CHANGE 1: LANDING PAGE ===== -->
+<div class="section-label">Change 1 — Landing Page: Tabs instead of accordions</div>
+<div class="two-col">
+
+  <!-- OLD -->
+  <div class="frame">
+    <div class="frame-label">❌ Current — Accordions</div>
+    <div class="frame-inner" style="text-align:center;">
+      <div class="dna-mark">DN<span>A</span></div>
+      <div class="landing-sub">NYC Trip Planner</div>
+      <div class="field"><label>City</label><input type="text" value="New York" readonly></div>
+      <div class="field"><label>Google Maps list URL</label><input type="text" value="maps.app.goo.gl/…" readonly></div>
+      <div class="field">
+        <label>Dates</label>
+        <div class="field-row">
+          <input type="text" value="Jun 20" readonly>
+          <div class="sep">→</div>
+          <input type="text" value="Jun 24" readonly>
+        </div>
+      </div>
+      <div style="margin-top:0.75rem; text-align:left;">
+        <div class="old-toggle">
+          <div class="old-toggle-head"><span class="icon">✈️</span> Flights <span class="old-tag">optional</span> <span class="arrow">›</span></div>
+        </div>
+        <div class="old-toggle">
+          <div class="old-toggle-head"><span class="icon">🏨</span> Stay <span class="old-tag">optional</span> <span class="arrow">›</span></div>
+        </div>
+        <div class="old-toggle">
+          <div class="old-toggle-head"><span class="icon">⏰</span> Day schedule <span class="old-tag">8am–10pm default</span> <span class="arrow">›</span></div>
+        </div>
+      </div>
+      <button class="btn-main" style="margin-top:0.65rem;">Continue planning</button>
+    </div>
+  </div>
+
+  <!-- NEW -->
+  <div class="frame">
+    <div class="frame-label">✅ New — Tabs</div>
+    <div class="frame-inner" style="text-align:center;">
+      <div class="dna-mark">DN<span>A</span></div>
+      <div class="landing-sub">NYC Trip Planner</div>
+      <div class="field"><label>City</label><input type="text" value="New York" readonly></div>
+      <div class="field"><label>Google Maps list URL</label><input type="text" value="maps.app.goo.gl/…" readonly></div>
+      <div class="field">
+        <label>Dates</label>
+        <div class="field-row">
+          <input type="text" value="Jun 20" readonly>
+          <div class="sep">→</div>
+          <input type="text" value="Jun 24" readonly>
+        </div>
+      </div>
+      <!-- Tab row -->
+      <div style="margin-top:0.75rem; text-align:left;">
+        <div style="font-size:0.62rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:0.35rem;">Optional details</div>
+        <div class="opt-tabs-row">
+          <button class="opt-tab active"><span class="tab-icon">✈️</span>Flights</button>
+          <button class="opt-tab"><span class="tab-icon">🏨</span>Stay</button>
+          <button class="opt-tab"><span class="tab-icon">⏰</span>Schedule</button>
+        </div>
+        <!-- Active tab body — Flights is selected -->
+        <div class="opt-tab-body">
+          <div class="mini-row">
+            <div class="mini-field"><label>Arrives</label><select><option>JFK (Kennedy)</option></select></div>
+            <div class="mini-field"><label>Date</label><input type="date"></div>
+          </div>
+          <div class="mini-row" style="margin-top:0.35rem;">
+            <div class="mini-field"><label>Departs</label><select><option>JFK (Kennedy)</option></select></div>
+            <div class="mini-field"><label>Date</label><input type="date"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-main">Continue planning</button>
+    </div>
+  </div>
+</div>
+
+<div style="background:#fff8f0; border:1.5px solid #e8d5b0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.5rem; font-size:0.8rem;">
+  <strong>How tabs work:</strong> Tap a tab (✈️ Flights / 🏨 Stay / ⏰ Schedule) to reveal its fields. Only one open at a time. If data was previously saved, that tab highlights in teal. Tap the same tab again to close it. Required fields (city, Maps URL, dates) always stay visible.
+</div>
+
+<!-- ===== CHANGE 2: DAY NAVIGATION ===== -->
+<div class="section-label">Change 2 — Day Tab: Navigation between days</div>
+<div class="two-col">
+
+  <!-- Option A: Prev/Next arrows -->
+  <div class="frame">
+    <div class="frame-label">Option A — Prev / Next arrows</div>
+    <div class="frame-inner" style="padding:0;">
+      <div class="schedule-header">
+        <button class="day-nav-btn">‹</button>
+        <div class="day-nav-title">
+          <strong>Saturday, June 21</strong>
+          <span>Day 2 of 5 · 4 activities</span>
+        </div>
+        <button class="day-nav-btn">›</button>
+        <button class="auto-btn">⚡ Auto</button>
+      </div>
+      <div class="mock-timeline">
+        <div class="mock-hour"><div class="mock-time">9 AM</div><div class="mock-block">Russ & Daughters · 1 hr</div></div>
+        <div class="mock-hour"><div class="mock-time">10</div><div class="mock-line"></div></div>
+        <div class="mock-hour"><div class="mock-time">11</div><div class="mock-block2">The Met · 2.5 hrs</div></div>
+        <div class="mock-hour"><div class="mock-time">1 PM</div><div class="mock-line"></div></div>
+        <div style="font-size:0.62rem; color:var(--muted); text-align:center; padding:0.35rem;">…scroll for full day…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Dropdown selector -->
+  <div class="frame">
+    <div class="frame-label">Option B — Dropdown day selector</div>
+    <div class="frame-inner" style="padding:0;">
+      <div class="schedule-header">
+        <div class="day-select-wrap">
+          <select class="day-select">
+            <option>🗓 Day 1 — Fri Jun 20 (Arrival)</option>
+            <option selected>🗓 Day 2 — Sat Jun 21 · 4 stops</option>
+            <option>🗓 Day 3 — Sun Jun 22 · 3 stops</option>
+            <option>🗓 Day 4 — Mon Jun 23 · 5 stops</option>
+            <option>🗓 Day 5 — Tue Jun 24 (Departure)</option>
+          </select>
+        </div>
+        <button class="auto-btn">⚡ Auto</button>
+      </div>
+      <div class="mock-timeline">
+        <div class="mock-hour"><div class="mock-time">9 AM</div><div class="mock-block">Russ & Daughters · 1 hr</div></div>
+        <div class="mock-hour"><div class="mock-time">10</div><div class="mock-line"></div></div>
+        <div class="mock-hour"><div class="mock-time">11</div><div class="mock-block2">The Met · 2.5 hrs</div></div>
+        <div class="mock-hour"><div class="mock-time">1 PM</div><div class="mock-line"></div></div>
+        <div style="font-size:0.62rem; color:var(--muted); text-align:center; padding:0.35rem;">…scroll for full day…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHANGE 3: NEARBY TAB ===== -->
+<div class="section-label">Change 3 — Nearby Tab: On-list badges</div>
+<div class="two-col">
+
+  <div class="frame">
+    <div class="frame-label">Nearby — "On your list" badge</div>
+    <div class="frame-inner" style="padding:0;">
+      <div class="discover-head">
+        <h3>✨ Nearby</h3>
+        <p>Places near your home base</p>
+      </div>
+      <div class="discover-filter-row">
+        <button class="filter-chip active">All</button>
+        <button class="filter-chip">☕ Coffee</button>
+        <button class="filter-chip">🍽️ Food</button>
+        <button class="filter-chip">🎨 Museum</button>
+      </div>
+      <div class="nearby-card on-list">
+        <div class="nearby-icon">☕</div>
+        <div class="nearby-info">
+          <div class="nearby-name">Blue Bottle Coffee</div>
+          <div class="nearby-meta">0.3 mi · Coffee</div>
+        </div>
+        <span class="nearby-badge badge-on-list">✓ On list</span>
+      </div>
+      <div class="nearby-card">
+        <div class="nearby-icon">🍽️</div>
+        <div class="nearby-info">
+          <div class="nearby-name">Balthazar</div>
+          <div class="nearby-meta">0.5 mi · Restaurant</div>
+        </div>
+        <button class="nearby-badge badge-add">+ Add</button>
+      </div>
+      <div class="nearby-card on-list">
+        <div class="nearby-icon">🎨</div>
+        <div class="nearby-info">
+          <div class="nearby-name">MoMA</div>
+          <div class="nearby-meta">1.2 mi · Museum</div>
+        </div>
+        <span class="nearby-badge badge-on-list">✓ On list</span>
+      </div>
+      <div class="nearby-card">
+        <div class="nearby-icon">🌳</div>
+        <div class="nearby-info">
+          <div class="nearby-name">Central Park</div>
+          <div class="nearby-meta">0.8 mi · Park</div>
+        </div>
+        <button class="nearby-badge badge-add">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-label">API key — embedded in code (no UI change)</div>
+    <div class="frame-inner">
+      <p style="font-size:0.82rem; color:var(--muted); margin:0 0 0.75rem;">You paste your Google Places API key <strong>once</strong> at the top of <code>app.js</code>. No prompt, no settings. Works on every device automatically since the key is in the code, not localStorage.</p>
+      <div style="background:#1c1917; color:#a3e635; border-radius:8px; padding:0.75rem; font-family:monospace; font-size:0.78rem; margin-bottom:0.75rem;">
+        <span style="color:#64748b;">// Line 2 of app.js — paste key here once</span><br>
+        const GOOGLE_PLACES_KEY = '<span style="color:#f97316;">AIzaSy…your-key…</span>';
+      </div>
+      <p style="font-size:0.75rem; color:var(--muted); margin:0;">⚠️ Since the key is in the code, it will be visible in the GitHub repo. Make sure your key has HTTP referrer restrictions set in Google Cloud Console to <code>localhost/*</code> and <code>https://danihandelin-ui.github.io/*</code> only — so it can't be abused if someone finds it.</p>
+    </div>
+  </div>
+</div>
+
+<div style="background:#e8f2f2; border:1.5px solid var(--teal); border-radius:10px; padding:0.85rem 1rem; font-size:0.82rem; color:var(--ink);">
+  <strong>Your choices:</strong><br>
+  1. Landing tabs → looks good? yes/no<br>
+  2. Day navigation → <strong>Option A</strong> (arrows) or <strong>Option B</strong> (dropdown)?<br>
+  3. API key embedded in code → confirm yes (will be visible on GitHub)<br>
+  4. Nearby on-list badges → looks good? yes/no
+</div>
+
+</body>
+</html>
