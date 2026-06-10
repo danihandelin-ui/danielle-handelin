@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Shelf Life — Wireframe v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #12081e; color: #e0d9c8; font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 24px; }
+h1  { font-size: 13px; color: #f5c842; margin-bottom: 4px; }
+.sub { font-size: 7px; color: #555; margin-bottom: 24px; }
+h2  { font-size: 10px; color: #d898f0; margin-bottom: 12px; margin-top: 8px; }
+h3  { font-size: 8px;  color: #f5c842; margin-bottom: 8px; }
+hr  { border: 1px solid #2a1a3e; margin: 28px 0; }
+.row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+.note { font-size: 6px; color: #666; border-left: 2px solid #3a1a5a; padding-left: 8px; margin-top: 8px; line-height: 2.2; }
+.note.g { border-color:#27ae60; color:#7ec897; }
+.note.y { border-color:#f5c842; color:#c8a832; }
+.note.p { border-color:#9b59b6; color:#c090e0; }
+.note.r { border-color:#e05252; color:#c87878; }
+
+/* ── GLOWS ── */
+@keyframes gGlow { 0%,100%{filter:drop-shadow(0 0 6px rgba(80,220,100,.8)) drop-shadow(0 0 14px rgba(80,220,100,.3));}50%{filter:drop-shadow(0 0 12px rgba(80,220,100,1)) drop-shadow(0 0 26px rgba(80,220,100,.55));} }
+@keyframes rGlow  { 0%,100%{filter:drop-shadow(0 0 8px rgba(220,50,50,.9)) drop-shadow(0 0 20px rgba(220,50,50,.4));}50%{filter:drop-shadow(0 0 16px rgba(220,50,50,1)) drop-shadow(0 0 36px rgba(220,50,50,.7));} }
+@keyframes oPulse { 0%,100%{box-shadow:0 0 6px 3px rgba(230,120,0,.6);}50%{box-shadow:0 0 14px 7px rgba(230,120,0,.95);} }
+@keyframes bkPulse { 0%,100%{filter:drop-shadow(0 0 2px rgba(230,120,0,.7));}50%{filter:drop-shadow(0 0 5px rgba(230,120,0,1)) drop-shadow(0 0 9px rgba(230,120,0,.5));} }
+.bk-mis { animation:bkPulse 1s ease-in-out infinite; }
+@keyframes noiseR { 0%{width:24px;height:24px;opacity:.8;transform:translate(-50%,-50%) scale(.3);}100%{width:72px;height:72px;opacity:0;transform:translate(-50%,-50%) scale(1);} }
+.gg { animation: gGlow 1.2s ease-in-out infinite; }
+.rg { animation: rGlow  .8s ease-in-out infinite; }
+.op { animation: oPulse  1s ease-in-out infinite; }
+.nr { position:absolute;border-radius:50%;border:2px dashed rgba(255,80,80,.55);animation:noiseR 1s infinite;pointer-events:none; }
+
+/* ── TITLE SCREEN ── */
+.title-screen {
+  width: 380px; height: 260px;
+  background: #0d1b0d;
+  border: 3px solid #3a8a3a;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+  font-family: 'Press Start 2P', monospace;
+}
+.game-title {
+  font-size: 26px; color: #f5c842;
+  text-shadow: 4px 4px 0 #8b6914, -1px -1px 0 #a07810;
+  text-align: center; line-height: 1.3;
+  letter-spacing: 2px;
+}
+.title-sub { font-size: 7px; color: #a8d8a8; letter-spacing: 1px; }
+.title-menu { display: flex; flex-direction: column; gap: 5px; width: 220px; }
+.t-btn { font-family:'Press Start 2P',monospace; font-size: 7px; padding: 6px 12px; background: #1a3a1a; border: 1px solid #3a8a3a; color: #e0d9c8; text-align: center; }
+.t-btn.sel { background: #3a8a3a; color: #fff; }
+.title-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(100,200,100,.4)); }
+/* Scanline effect on title */
+.title-screen::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px); pointer-events:none; }
+.title-screen { position:relative; overflow:hidden; }
+
+/* ── GAME SCREEN ── */
+.game-screen { width:600px; background:#12081e; border:3px solid #9b59b6; border-radius:3px; overflow:hidden; }
+.hud { height:44px; background:linear-gradient(90deg,#5a0a8a,#380870); border-bottom:2px solid #9b59b6; display:flex; align-items:center; padding:0 12px; gap:14px; }
+.hi { display:flex;flex-direction:column;gap:2px; }
+.hk { font-size:5px;color:rgba(255,255,255,.55);font-family:'Fredoka One',sans-serif; }
+.hv { font-size:15px;color:#fff;font-family:'Fredoka One',sans-serif;line-height:1; }
+.hv.red { color:#ff5a5a; }
+.bar-track { height:9px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;margin-top:3px; }
+.bar-fill { height:100%;border-radius:5px; }
+.stars { display:flex;gap:1px; }
+.st.on  { font-size:14px;color:#ffd700;filter:drop-shadow(0 0 4px rgba(255,215,0,.5)); }
+.st.off { font-size:14px;color:rgba(255,255,255,.15); }
+
+/* MAZE FLOOR */
+.maze-floor { position:relative;height:310px;background-color:#1a0a2e;overflow:hidden; }
+.maze-floor::before { content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(155,89,182,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(155,89,182,.05) 1px,transparent 1px);background-size:26px 26px;pointer-events:none; }
+
+/* Shelf elements */
+.sh { position:absolute;background:#5a3010;border:2px solid #9b6a3a;overflow:hidden; }
+.sh::before { content:'';position:absolute;top:0;left:0;right:0;height:8px;background:#4a2808; }
+.sh-label { position:absolute;bottom:2px;left:0;right:0;text-align:center;font-family:'Fredoka One',sans-serif;font-size:6px;color:#f5c842;z-index:2;white-space:nowrap; }
+.sh-ns .sh-label { writing-mode:vertical-rl;text-orientation:mixed;top:0;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center; }
+/* Books on east-west shelves */
+.sh-books { position:absolute;bottom:2px;left:4px;right:72px;height:20px;display:flex;align-items:flex-end;gap:1px;overflow:hidden;z-index:2; }
+.bk { flex-shrink:0;border-radius:0 1px 1px 0;position:relative; }
+.bk::after { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.3); }
+/* Endcap */
+.ec { position:absolute;right:0;top:0;bottom:0;width:70px;background:#3a1a00;border-left:2px solid #5a3010;display:flex;align-items:center;justify-content:center;z-index:3; }
+.ec-sign { background:#f5c842;color:#1a0800;font-size:5px;padding:2px 4px;text-align:center;line-height:1.5;white-space:nowrap; }
+
+/* MINIMAP */
+.minimap-corner {
+  position:absolute;bottom:8px;right:8px;
+  background:rgba(10,5,24,.88);
+  border:2px solid #9b59b6;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  z-index:20;
+  box-shadow:0 0 8px rgba(155,89,182,.35);
+}
+.minimap-collapsed { width:22px;height:22px;display:flex;align-items:center;justify-content:center; }
+.minimap-expanded  { width:72px;height:72px; }
+.mm-icon { font-size:9px;opacity:.7; }
+
+/* Bottom bar */
+.bot-bar { height:68px;background:linear-gradient(90deg,#330858,#220640);border-top:2px solid #9b59b6;padding:8px 12px;display:flex;gap:12px;align-items:flex-start; }
+.nbc { background:rgba(255,255,255,.06);border:1px solid #9b59b6;border-radius:4px;padding:5px 8px;min-width:120px; }
+.nbc-t { font-family:'Fredoka One',sans-serif;font-size:9px;color:#d898f0;margin-bottom:2px; }
+.nbc-i { font-family:'Fredoka One',sans-serif;font-size:8px;color:rgba(255,255,255,.65);line-height:1.7; }
+.nbc-b { display:inline-block;background:#9b59b6;font-size:5px;color:#fff;padding:1px 5px;border-radius:3px;font-family:'Fredoka One',sans-serif;margin-top:2px; }
+.ctrl { font-size:5px;color:rgba(255,255,255,.45);line-height:2.4; }
+.ck { display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:0 4px;border-radius:2px;color:rgba(255,255,255,.75);font-size:5px; }
+
+/* ── SPACE MECHANIC DIAGRAM ── */
+.mech-box { background:#1e0e30;border:2px solid #4a2a6a;padding:12px;width:280px; }
+.mech-step { display:flex;gap:8px;align-items:flex-start;margin-bottom:8px; }
+.mech-num { width:18px;height:18px;border-radius:50%;background:#9b59b6;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:10px;color:#fff;flex-shrink:0;margin-top:1px; }
+.mech-text { font-size:6px;color:#888;line-height:2.2; }
+.mech-text strong { color:#d898f0; }
+.mech-text .ok  { color:#27ae60; }
+.mech-text .bad { color:#e05252; }
+
+/* ── MINIMAP STATES ── */
+.mm-state-box { background:#1e0e30;border:2px solid #4a2a6a;padding:10px;display:inline-block; }
+</style>
+</head>
+<body>
+
+<h1>Shelf Life — Wireframe v5</h1>
+<p class="sub">Pixel title · elaborate maze mini-map (collapsible) · SPACE pick-up/put-down · confirmed mechanics</p>
+
+<hr/>
+
+<!-- ══════════════════════
+     SECTION 1 — TITLE SCREEN
+══════════════════════ -->
+<h2>1. Title Screen — "Shelf Life" in Press Start 2P (pixel font)</h2>
+<div class="row">
+  <div>
+    <div class="title-screen">
+      <div class="title-icon">📚</div>
+      <div class="game-title">SHELF<br/>LIFE</div>
+      <div class="title-sub">A Library Survival Game</div>
+      <div class="title-menu">
+        <div class="t-btn sel">▶  START GAME</div>
+        <div class="t-btn">   HOW TO PLAY</div>
+        <div class="t-btn">   HIGH SCORES</div>
+      </div>
+    </div>
+    <div class="note g">
+      Press Start 2P font — same pixel style as "Read Hard" mockup<br/>
+      Gold with brown drop-shadow (same as original)<br/>
+      Dark forest green background + scanlines<br/>
+      Subtitle in small pixel text below
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;">
+    <div style="font-size:7px;color:#888;max-width:220px;line-height:2.2;">
+      <span style="color:#f5c842;">Font:</span> Press Start 2P (same as Read Hard)<br/>
+      <span style="color:#f5c842;">Color:</span> Gold #f5c842 + brown shadow<br/>
+      <span style="color:#f5c842;">BG:</span> Dark library green #0d1b0d<br/>
+      <span style="color:#f5c842;">Border:</span> Forest green #3a8a3a<br/>
+      <span style="color:#f5c842;">Menu:</span> Same pixel button style
+    </div>
+    <div class="note y">
+      "SHELF LIFE" hits differently than "READ HARD"<br/>
+      in this font — two short words, big impact,<br/>
+      the shadow makes it feel engraved like a plaque
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ══════════════════════
+     SECTION 2 — ELABORATE MAZE + MINI-MAP
+══════════════════════ -->
+<h2>2. Elaborate Maze Layout + Mini-Map (bottom-right corner)</h2>
+<div class="row">
+
+  <!-- FULL MAZE OVERVIEW -->
+  <div>
+    <h3>Full Library Maze Map</h3>
+    <div style="background:#0a0518;border:2px solid #4a2a6a;padding:6px;display:inline-block;">
+      <div style="font-size:5px;color:#555;margin-bottom:4px;">Full map · not all visible at once · camera follows Dewey</div>
+      <svg width="300" height="380" viewBox="0 0 300 380">
+        <defs>
+          <pattern id="fp" width="10" height="10" patternUnits="userSpaceOnUse">
+            <rect width="10" height="10" fill="#1a0a2e"/>
+            <rect width="5" height="5" fill="#1e0d36"/>
+            <rect x="5" y="5" width="5" height="5" fill="#1e0d36"/>
+          </pattern>
+        </defs>
+
+        <!-- FLOOR -->
+        <rect width="300" height="380" fill="url(#fp)"/>
+
+        <!-- OUTER WALLS -->
+        <rect x="0"   y="0"   width="300" height="10" fill="#080514"/>
+        <rect x="0"   y="0"   width="10"  height="380" fill="#080514"/>
+        <rect x="290" y="0"   width="10"  height="380" fill="#080514"/>
+        <!-- Bottom wall with entrance gap (x=118-182) -->
+        <rect x="0"   y="368" width="116" height="12" fill="#080514"/>
+        <rect x="184" y="368" width="116" height="12" fill="#080514"/>
+
+        <!-- ════ SHELF UNITS ════ -->
+
+        <!-- ── TOP SECTION ── -->
+
+        <!-- Reference dead-end alcove (top-left) — 3-walled room -->
+        <rect x="10" y="10" width="70" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="68" y="10" width="10" height="68" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="10" y="66" width="68" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="40" y="22" text-anchor="middle" font-family="Fredoka One" font-size="7" fill="#f5c842">Reference</text>
+        <text x="40" y="52" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#666">◀ dead end</text>
+
+        <!-- Fiction A–L (horizontal shelf, top center-left) -->
+        <rect x="86" y="10" width="76" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="124" y="20" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">Fiction A–L</text>
+
+        <!-- Gap at x=162–178: passage between Fiction A-L and M-Z -->
+
+        <!-- Fiction M–Z (horizontal shelf, top right) -->
+        <rect x="178" y="10" width="112" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="234" y="20" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">Fiction M–Z</text>
+
+        <!-- Left vertical spine (bounds left corridor) -->
+        <rect x="78" y="22" width="10" height="60" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+
+        <!-- Right vertical spine (bounds right corridor, creates asymmetry) -->
+        <rect x="174" y="22" width="10" height="44" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+
+        <!-- Top right dead-end nook (Graphic Novels / oversized) -->
+        <rect x="246" y="10" width="10" height="60" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="246" y="58" width="44" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="273" y="42" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">Graphic<br/>Novels</text>
+
+        <!-- ── MIDDLE SECTION ── -->
+
+        <!-- 100–299 shelf (left side, horizontal) -->
+        <rect x="10" y="110" width="80" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="50" y="119" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">100–299</text>
+
+        <!-- Center diagonal blocker (L-shaped, creates forced detour) -->
+        <rect x="100" y="90" width="60" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="148" y="90" width="10" height="56" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="100" y="134" width="58" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="125" y="115" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#888">300–499</text>
+
+        <!-- 700–999 shelf (right side) -->
+        <rect x="200" y="110" width="80" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="240" y="119" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">700–999</text>
+
+        <!-- Right vertical blocker (creates right-side passage) -->
+        <rect x="194" y="66" width="10" height="56" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+
+        <!-- 500–699 shelf (horizontal, right-center) -->
+        <rect x="168" y="166" width="112" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="224" y="175" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">500–699</text>
+
+        <!-- Left vertical creating squeeze passage -->
+        <rect x="88" y="146" width="10" height="46" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+
+        <!-- 300–499 continuation (lower) -->
+        <rect x="10" y="162" width="80" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="50" y="171" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="#f5c842">300–499</text>
+
+        <!-- Center U-turn shelf (forces players to loop back) -->
+        <rect x="100" y="192" width="12" height="60" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="100" y="192" width="60" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="148" y="192" width="12" height="60" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="130" y="228" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">Biographies<br/>↓ dead end</text>
+
+        <!-- ── LOWER SECTION ── -->
+
+        <!-- Lower right horizontal -->
+        <rect x="174" y="228" width="116" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="232" y="237" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">Large Print</text>
+
+        <!-- Lower right vertical (creates pocket) -->
+        <rect x="246" y="240" width="10" height="50" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="246" y="278" width="44" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="273" y="265" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">AV<br/>Media</text>
+
+        <!-- Asymmetric center divider (different from v4 — creates unpredictable path) -->
+        <rect x="116" y="274" width="12" height="54" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="116" y="274" width="52" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+
+        <!-- Lower left section -->
+        <rect x="10" y="240" width="80" height="12" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="50" y="249" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">Children's</text>
+        <rect x="78" y="252" width="10" height="60" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <rect x="10" y="300" width="78" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="44" y="280" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">← dead end</text>
+
+        <!-- Periodicals (bottom-right-ish) -->
+        <rect x="190" y="330" width="100" height="10" fill="#5a3010" stroke="#9b6a3a" stroke-width=".8"/>
+        <text x="240" y="339" text-anchor="middle" font-family="Fredoka One" font-size="5" fill="#888">Periodicals</text>
+
+        <!-- Desk area -->
+        <rect x="10" y="342" width="70" height="18" fill="#4a2808" stroke="#9b6a3a" stroke-width="1"/>
+        <text x="45" y="353" text-anchor="middle" font-family="Fredoka One" font-size="7" fill="#c89050">CHECK-OUT</text>
+        <rect x="220" y="342" width="70" height="18" fill="#4a2808" stroke="#9b6a3a" stroke-width="1"/>
+        <text x="255" y="353" text-anchor="middle" font-family="Fredoka One" font-size="7" fill="#c89050">RETURNS</text>
+
+        <!-- Entrance label -->
+        <text x="150" y="376" text-anchor="middle" font-family="Fredoka One" font-size="8" fill="#27ae60">▲ ENTRANCE</text>
+
+        <!-- ════ CHARACTERS ════ -->
+
+        <!-- Dewey (blue dot) -->
+        <circle cx="130" cy="204" r="7" fill="#4a90d9" stroke="white" stroke-width="1.5"/>
+        <text x="130" y="207" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="white">D</text>
+        <!-- Cart next to Dewey with green glow -->
+        <rect x="138" y="199" width="12" height="10" rx="1.5" fill="#8b6914" stroke="#50dc64" stroke-width="1.5"/>
+
+        <!-- Librarian (warm dot) -->
+        <circle cx="224" cy="80" r="7" fill="#8a6030" stroke="white" stroke-width="1.5"/>
+        <text x="224" y="83" text-anchor="middle" font-family="Fredoka One" font-size="6" fill="white">L</text>
+
+        <!-- Librarian patrol path (irregular, winding) -->
+        <path d="M 224 80 L 224 66 L 184 66 L 184 22 L 162 22 L 162 66 L 100 66 L 88 66 L 88 90 L 100 90 L 100 80 L 100 66" stroke="#e05252" stroke-width="1.5" stroke-dasharray="4,3" fill="none" opacity=".55"/>
+        <!-- Second loop of patrol -->
+        <path d="M 224 80 L 224 122 L 200 122 L 200 166 L 184 166 L 168 166 L 168 192 L 158 192 L 158 248" stroke="#e05252" stroke-width="1.5" stroke-dasharray="4,3" fill="none" opacity=".35"/>
+
+        <!-- Misplaced book indicator on 500-699 shelf -->
+        <rect x="210" y="160" width="8" height="12" rx="1" fill="#e67e22"/>
+        <text x="214" y="157" text-anchor="middle" font-size="8" fill="#e67e22">!</text>
+
+        <!-- Legend -->
+        <rect x="10" y="314" width="8" height="8" rx="1" fill="#4a90d9"/>
+        <text x="22" y="320" font-family="Fredoka One" font-size="6" fill="#888">You (Dewey)</text>
+        <rect x="10" y="325" width="8" height="8" rx="1" fill="#8a6030"/>
+        <text x="22" y="331" font-family="Fredoka One" font-size="6" fill="#888">Librarian</text>
+        <line x1="10" y1="339" x2="18" y2="339" stroke="#e05252" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="22" y="342" font-family="Fredoka One" font-size="6" fill="#888">Patrol route</text>
+      </svg>
+    </div>
+    <div class="note p">
+      Reference: top-left dead end (safe — librarian rarely goes there)<br/>
+      Graphic Novels: top-right pocket<br/>
+      Biographies: center U-turn — forces backtrack!<br/>
+      Children's: bottom-left dead end<br/>
+      AV Media: bottom-right pocket<br/>
+      Librarian has a winding two-loop patrol — unpredictable!<br/>
+      Asymmetric layout — no easy mental grid to memorize
+    </div>
+  </div>
+
+  <!-- GAME SCREEN WITH MINIMAP -->
+  <div>
+    <h3>Game Screen — Mini-Map Expanded (bottom-right corner)</h3>
+    <div class="game-screen">
+
+      <!-- HUD -->
+      <div class="hud">
+        <div class="hi"><div class="hk">Time</div><div class="hv">2:14</div></div>
+        <div class="hi"><div class="hk">Books</div><div class="hv">8</div></div>
+        <div class="hi" style="flex:1;"><div class="hk">Progress</div><div class="bar-track" style="width:100%;"><div class="bar-fill" style="width:28%;background:linear-gradient(90deg,#27ae60,#2ecc71);"></div></div></div>
+        <div class="hi"><div class="hk">Lvl 2</div><div class="stars"><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div></div>
+        <div style="display:flex;gap:3px;margin-left:4px;">
+          <div style="width:9px;height:9px;border-radius:50%;background:#333;border:1px solid #555;"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#333;border:1px solid #555;"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#333;border:1px solid #555;"></div>
+        </div>
+      </div>
+
+      <!-- MAZE FLOOR (zoomed-in view: narrow corridors with T-junction) -->
+      <div class="maze-floor">
+
+        <!-- TOP SHELF (runs almost full width, gap at right = passage to Fiction) -->
+        <div class="sh" style="left:0;top:0;width:440px;height:38px;">
+          <div style="position:absolute;top:0;left:0;right:70px;height:8px;background:#4a2808;"></div>
+          <!-- Books (SVG-rendered with binding, highlight, call number label) -->
+          <div id="books-t" style="position:absolute;bottom:0;left:4px;right:74px;height:26px;overflow:visible;z-index:2;"></div>
+          <div class="ec"><div class="ec-sign">Fiction<br/>A – L</div></div>
+        </div>
+
+        <!-- PASSAGE GAP (x=440-600) - leads to Fiction M-Z / top-right section -->
+        <div style="position:absolute;top:0;left:440px;right:0;height:38px;background:#1a0a2e;border-bottom:1px solid rgba(155,89,182,.15);">
+          <div style="position:absolute;bottom:3px;left:4px;font-size:4px;color:rgba(245,200,66,.35);">Fiction M–Z →</div>
+        </div>
+
+        <!-- LEFT WALL (vertical shelf, 100-299) -->
+        <div class="sh sh-ns" style="left:0;top:38px;width:38px;height:272px;">
+          <div style="position:absolute;top:14px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+            <div style="writing-mode:vertical-rl;font-family:'Fredoka One',sans-serif;font-size:7px;color:#f5c842;white-space:nowrap;">100 – 299</div>
+          </div>
+        </div>
+
+        <!-- T-JUNCTION CENTER SHELF (vertical, creates the fork in this view) -->
+        <div class="sh sh-ns" style="left:264px;top:38px;width:36px;height:150px;">
+          <div style="position:absolute;top:14px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+            <div style="writing-mode:vertical-rl;font-family:'Fredoka One',sans-serif;font-size:6px;color:#888;white-space:nowrap;">300–499 ↓</div>
+          </div>
+        </div>
+
+        <!-- HORIZONTAL CROSS-SHELF mid-left (creates the L-turn) -->
+        <div class="sh" style="left:38px;top:188px;width:226px;height:34px;">
+          <div style="position:absolute;top:0;left:0;right:70px;height:8px;background:#4a2808;"></div>
+          <!-- Books (SVG-rendered) -->
+          <div id="books-m" style="position:absolute;bottom:0;left:4px;right:74px;height:24px;overflow:visible;z-index:2;"></div>
+          <div class="ec"><div class="ec-sign">300–499<br/>Social Sci</div></div>
+        </div>
+
+        <!-- RIGHT SIDE SHELF (horizontal, lower right) -->
+        <div class="sh" style="left:300px;top:188px;width:300px;height:34px;">
+          <div style="position:absolute;top:0;left:0;right:70px;height:8px;background:#4a2808;"></div>
+          <!-- Books (SVG-rendered) -->
+          <div id="books-r" style="position:absolute;bottom:0;left:4px;right:74px;height:24px;overflow:visible;z-index:2;"></div>
+          <div class="ec"><div class="ec-sign">500–699<br/>Science</div></div>
+        </div>
+
+        <!-- RIGHT WALL (vertical) -->
+        <div class="sh sh-ns" style="right:0;top:38px;width:38px;height:272px;">
+          <div style="position:absolute;top:14px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+            <div style="writing-mode:vertical-rl;font-family:'Fredoka One',sans-serif;font-size:7px;color:#f5c842;white-space:nowrap;">700 – 999</div>
+          </div>
+        </div>
+
+        <!-- DEWEY — green glow (near 300-499 shelf) -->
+        <div class="gg" style="position:absolute;left:160px;top:104px;display:flex;align-items:flex-end;gap:5px;z-index:10;">
+          <svg width="30" height="42" viewBox="0 0 58 82">
+            <rect x="15" y="44" width="28" height="21" rx="8" fill="#4a90d9"/>
+            <path d="M 24 44 L 29 50 L 34 44" fill="rgba(255,255,255,.25)"/>
+            <rect x="23" y="41" width="12" height="7" fill="#f4c2a1"/>
+            <ellipse cx="29" cy="24" rx="23" ry="21" fill="#f4c2a1"/>
+            <ellipse cx="29" cy="10" rx="22" ry="14" fill="#6a3810"/>
+            <ellipse cx="8" cy="20" rx="8" ry="11" fill="#6a3810"/>
+            <ellipse cx="50" cy="20" rx="8" ry="11" fill="#6a3810"/>
+            <ellipse cx="20" cy="6" rx="8" ry="6" fill="#5a2e0c"/>
+            <ellipse cx="38" cy="5" rx="7" ry="5" fill="#5a2e0c"/>
+            <ellipse cx="18" cy="23" rx="7.5" ry="8.5" fill="white"/>
+            <ellipse cx="18" cy="24" rx="5.5" ry="6.5" fill="#3a2a6a"/>
+            <ellipse cx="18" cy="25" rx="4" ry="5" fill="#111"/>
+            <circle cx="21.5" cy="20.5" r="2.2" fill="white"/>
+            <circle cx="16" cy="23" r="1" fill="rgba(255,255,255,.7)"/>
+            <ellipse cx="40" cy="23" rx="7.5" ry="8.5" fill="white"/>
+            <ellipse cx="40" cy="24" rx="5.5" ry="6.5" fill="#3a2a6a"/>
+            <ellipse cx="40" cy="25" rx="4" ry="5" fill="#111"/>
+            <circle cx="43.5" cy="20.5" r="2.2" fill="white"/>
+            <path d="M 11 14 Q 18 11 25 14" stroke="#6a3810" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M 33 14 Q 40 11 47 14" stroke="#6a3810" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="7" cy="32" rx="8" ry="5" fill="rgba(255,140,140,.4)"/>
+            <ellipse cx="51" cy="32" rx="8" ry="5" fill="rgba(255,140,140,.4)"/>
+            <path d="M 22 37 Q 29 41 36 37" stroke="#c87060" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="16" y="63" width="10" height="14" rx="5" fill="#2a2070"/>
+            <rect x="32" y="63" width="10" height="14" rx="5" fill="#2a2070"/>
+            <ellipse cx="21" cy="76" rx="8" ry="5" fill="#1a1040"/>
+            <ellipse cx="37" cy="76" rx="8" ry="5" fill="#1a1040"/>
+          </svg>
+          <!-- Cart (green glow) -->
+          <div class="gg">
+            <svg width="38" height="26" viewBox="0 0 44 28">
+              <rect x="0" y="0" width="44" height="22" rx="3" fill="#8b6914"/>
+              <rect x="2" y="2" width="38" height="18" rx="2" fill="#9b7920"/>
+              <line x1="0" y1="11" x2="44" y2="11" stroke="#7a5810" stroke-width="1.5"/>
+              <rect x="3" y="3" width="7" height="8" rx="1" fill="#ff6b9d"/>
+              <rect x="11" y="4" width="7" height="7" rx="1" fill="#00e5ff"/>
+              <rect x="19" y="3" width="7" height="8" rx="1" fill="#ffd700"/>
+              <rect x="3" y="12" width="7" height="7" rx="1" fill="#a8ff78"/>
+              <circle cx="7" cy="26" r="4" fill="#333"/>
+              <circle cx="37" cy="26" r="4" fill="#333"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- MINI-MAP (circular, 72px, EXPANDED state shown) -->
+        <div class="minimap-corner minimap-expanded">
+          <svg width="72" height="72" viewBox="0 0 300 380" style="display:block;">
+            <!-- Simplified maze overlay -->
+            <rect width="300" height="380" fill="rgba(10,5,24,.85)"/>
+            <!-- Outer walls -->
+            <rect width="300" height="10" fill="#2a1a3e"/>
+            <rect width="10" height="380" fill="#2a1a3e"/>
+            <rect x="290" width="10" height="380" fill="#2a1a3e"/>
+            <rect y="368" width="116" height="12" fill="#2a1a3e"/>
+            <rect x="184" y="368" width="116" height="12" fill="#2a1a3e"/>
+            <!-- Shelves (simplified for minimap) -->
+            <rect x="10" y="10" width="70" height="10" fill="#3a2010" opacity=".9"/>
+            <rect x="68" y="10" width="10" height="68" fill="#3a2010" opacity=".9"/>
+            <rect x="10" y="66" width="68" height="10" fill="#3a2010" opacity=".9"/>
+            <rect x="86" y="10" width="76" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="178" y="10" width="112" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="78" y="22" width="10" height="60" fill="#3a2010" opacity=".9"/>
+            <rect x="174" y="22" width="10" height="44" fill="#3a2010" opacity=".9"/>
+            <rect x="246" y="10" width="10" height="60" fill="#3a2010" opacity=".9"/>
+            <rect x="246" y="58" width="44" height="10" fill="#3a2010" opacity=".9"/>
+            <rect x="10" y="110" width="80" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="100" y="90" width="60" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="148" y="90" width="10" height="56" fill="#3a2010" opacity=".9"/>
+            <rect x="100" y="134" width="58" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="200" y="110" width="80" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="194" y="66" width="10" height="56" fill="#3a2010" opacity=".9"/>
+            <rect x="168" y="166" width="112" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="88" y="146" width="10" height="46" fill="#3a2010" opacity=".9"/>
+            <rect x="10" y="162" width="80" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="100" y="192" width="12" height="60" fill="#3a2010" opacity=".9"/>
+            <rect x="100" y="192" width="60" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="148" y="192" width="12" height="60" fill="#3a2010" opacity=".9"/>
+            <rect x="174" y="228" width="116" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="246" y="240" width="10" height="50" fill="#3a2010" opacity=".9"/>
+            <rect x="246" y="278" width="44" height="10" fill="#3a2010" opacity=".9"/>
+            <rect x="116" y="274" width="12" height="54" fill="#3a2010" opacity=".9"/>
+            <rect x="116" y="274" width="52" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="10" y="240" width="80" height="12" fill="#3a2010" opacity=".9"/>
+            <rect x="78" y="252" width="10" height="60" fill="#3a2010" opacity=".9"/>
+            <rect x="10" y="300" width="78" height="10" fill="#3a2010" opacity=".9"/>
+            <rect x="190" y="330" width="100" height="10" fill="#3a2010" opacity=".9"/>
+            <!-- Fog of war (areas not yet explored) -->
+            <rect x="0" y="0" width="90" height="100" fill="rgba(10,5,24,.6)" rx="2"/>
+            <rect x="200" y="0" width="100" height="100" fill="rgba(10,5,24,.6)" rx="2"/>
+            <rect x="0" y="220" width="100" height="160" fill="rgba(10,5,24,.6)" rx="2"/>
+            <rect x="160" y="250" width="140" height="130" fill="rgba(10,5,24,.6)" rx="2"/>
+            <!-- Dewey position (bigger dots so visible at 72px render size) -->
+            <circle cx="130" cy="204" r="16" fill="#4a90d9" opacity=".95"/>
+            <circle cx="130" cy="204" r="7" fill="white" opacity=".9"/>
+            <!-- Librarian position -->
+            <circle cx="88" cy="80" r="14" fill="#e05252" opacity=".9"/>
+            <circle cx="88" cy="80" r="24" fill="none" stroke="#e05252" stroke-width="4" opacity=".35"/>
+            <!-- Misplaced book dot -->
+            <circle cx="210" cy="170" r="12" fill="#e67e22" opacity=".85"/>
+          </svg>
+        </div>
+
+        <!-- "SPACE hint" above shelf -->
+        <div style="position:absolute;top:172px;left:115px;font-family:'Fredoka One',sans-serif;font-size:8px;color:rgba(80,220,100,.7);">[ SPACE ] near shelf</div>
+
+      </div><!-- end maze-floor -->
+
+      <!-- Bottom bar -->
+      <div class="bot-bar">
+        <div class="nbc">
+          <div class="nbc-t">📖 Holding:</div>
+          <div class="nbc-i">Ocean Deep<br/>551.46 · Non-Fic<br/><span class="nbc-b">→ Aisle: 500–699</span></div>
+        </div>
+        <div class="ctrl">
+          <span class="ck">↑↓←→</span> Walk &nbsp; <span class="ck">SHIFT</span>+arrow Run<br/>
+          <span class="ck">SPACE</span> Pick up / Put down book<br/>
+          <span class="ck">TAB</span> Cart view &nbsp; <span class="ck">M</span> Toggle map
+        </div>
+        <div style="font-size:5px;color:rgba(80,220,100,.6);margin-left:auto;align-self:center;line-height:2.2;text-align:right;">
+          🟢 Cart glowing<br/>You're close!<br/>Press SPACE
+        </div>
+      </div>
+
+    </div><!-- end game-screen -->
+    <div class="note g">
+      Mini-map: tiny 22px circle (collapsed) → 72px circle (expanded) — press M to toggle<br/>
+      Lives in bottom-right corner of the game world, not the HUD bar<br/>
+      Fog of war: unexplored areas stay dark until visited<br/>
+      Blue dot = Dewey · Red pulsing dot = librarian · Orange dot = misplaced book
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ══════════════════════
+     SECTION 3 — MINIMAP STATES
+══════════════════════ -->
+<h2>3. Mini-Map — Collapsed vs Expanded</h2>
+<div class="row">
+
+  <div>
+    <h3>Collapsed (default)</h3>
+    <div class="mm-state-box">
+      <div style="position:relative;width:200px;height:140px;background:#1a0a2e;border:1px solid #3a1a5a;">
+        <!-- Simulated game corner -->
+        <div style="position:absolute;bottom:8px;right:8px;width:22px;height:22px;border-radius:50%;background:rgba(10,5,24,.88);border:2px solid #9b59b6;box-shadow:0 0 6px rgba(155,89,182,.5);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <div style="width:7px;height:7px;border-radius:50%;background:#9b59b6;opacity:.7;"></div>
+        </div>
+        <!-- Fake corridor content -->
+        <div style="position:absolute;top:0;left:0;right:0;height:24px;background:#4a2808;border-bottom:1px solid #9b6a3a;"></div>
+        <div style="position:absolute;top:0;left:0;width:24px;height:140px;background:#4a2808;border-right:1px solid #9b6a3a;"></div>
+      </div>
+    </div>
+    <div class="note p">Tiny 22px circle · glows purple · barely takes space</div>
+  </div>
+
+  <div>
+    <h3>Expanded (press M to toggle)</h3>
+    <div class="mm-state-box">
+      <div style="position:relative;width:200px;height:200px;background:#1a0a2e;border:1px solid #3a1a5a;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:24px;background:#4a2808;border-bottom:1px solid #9b6a3a;"></div>
+        <div style="position:absolute;top:0;left:0;width:24px;height:200px;background:#4a2808;border-right:1px solid #9b6a3a;"></div>
+        <!-- Expanded map circle in corner -->
+        <div style="position:absolute;bottom:8px;right:8px;width:72px;height:72px;border-radius:50%;overflow:hidden;background:rgba(10,5,24,.88);border:2px solid #9b59b6;box-shadow:0 0 10px rgba(155,89,182,.45);cursor:pointer;">
+          <svg width="72" height="72" viewBox="0 0 300 380" style="display:block;">
+            <rect width="300" height="380" fill="rgba(10,5,24,.8)"/>
+            <rect width="300" height="10" fill="#2a1a3e"/><rect width="10" height="380" fill="#2a1a3e"/><rect x="290" width="10" height="380" fill="#2a1a3e"/>
+            <rect y="368" width="116" height="12" fill="#2a1a3e"/><rect x="184" y="368" width="116" height="12" fill="#2a1a3e"/>
+            <rect x="10" y="10" width="70" height="10" fill="#3a2010"/><rect x="68" y="10" width="10" height="68" fill="#3a2010"/><rect x="10" y="66" width="68" height="10" fill="#3a2010"/>
+            <rect x="86" y="10" width="76" height="12" fill="#3a2010"/><rect x="178" y="10" width="112" height="12" fill="#3a2010"/>
+            <rect x="78" y="22" width="10" height="60" fill="#3a2010"/><rect x="174" y="22" width="10" height="44" fill="#3a2010"/>
+            <rect x="246" y="10" width="10" height="60" fill="#3a2010"/><rect x="246" y="58" width="44" height="10" fill="#3a2010"/>
+            <rect x="10" y="110" width="80" height="12" fill="#3a2010"/><rect x="100" y="90" width="60" height="12" fill="#3a2010"/>
+            <rect x="148" y="90" width="10" height="56" fill="#3a2010"/><rect x="100" y="134" width="58" height="12" fill="#3a2010"/>
+            <rect x="200" y="110" width="80" height="12" fill="#3a2010"/><rect x="194" y="66" width="10" height="56" fill="#3a2010"/>
+            <rect x="168" y="166" width="112" height="12" fill="#3a2010"/><rect x="88" y="146" width="10" height="46" fill="#3a2010"/>
+            <rect x="10" y="162" width="80" height="12" fill="#3a2010"/>
+            <rect x="100" y="192" width="12" height="60" fill="#3a2010"/><rect x="100" y="192" width="60" height="12" fill="#3a2010"/><rect x="148" y="192" width="12" height="60" fill="#3a2010"/>
+            <rect x="174" y="228" width="116" height="12" fill="#3a2010"/>
+            <rect x="116" y="274" width="12" height="54" fill="#3a2010"/><rect x="116" y="274" width="52" height="12" fill="#3a2010"/>
+            <rect x="10" y="240" width="80" height="12" fill="#3a2010"/><rect x="78" y="252" width="10" height="60" fill="#3a2010"/>
+            <!-- Fog of war -->
+            <rect x="0" y="0" width="90" height="100" fill="rgba(10,5,24,.65)"/>
+            <rect x="200" y="0" width="100" height="100" fill="rgba(10,5,24,.65)"/>
+            <rect x="0" y="220" width="100" height="160" fill="rgba(10,5,24,.65)"/>
+            <rect x="160" y="250" width="140" height="130" fill="rgba(10,5,24,.65)"/>
+            <!-- Dewey -->
+            <circle cx="130" cy="204" r="16" fill="#4a90d9"/>
+            <circle cx="130" cy="204" r="7" fill="white"/>
+            <!-- Librarian -->
+            <circle cx="88" cy="80" r="14" fill="#e05252"/>
+            <circle cx="88" cy="80" r="24" fill="none" stroke="#e05252" stroke-width="4" opacity=".35"/>
+            <!-- Misplaced book -->
+            <circle cx="210" cy="170" r="12" fill="#e67e22"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="note y">
+      72px circle · semi-transparent<br/>
+      Fog of war hides unexplored areas<br/>
+      Press M or tap the circle to collapse back
+    </div>
+  </div>
+
+  <!-- SPACE MECHANIC -->
+  <div>
+    <h3>SPACE — Pick Up / Put Down</h3>
+    <div class="mech-box">
+      <div class="mech-step">
+        <div class="mech-num">1</div>
+        <div class="mech-text">Walk Dewey near a shelf.<br/>Cart glows <strong>green</strong> = you have a book for here.</div>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num">2</div>
+        <div class="mech-text">Press <strong>SPACE</strong> → Dewey reaches into cart,<br/>picks up the book. A small card flashes<br/>the title + call number for 1 second.</div>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num">3</div>
+        <div class="mech-text">Walk to the exact shelf section.<br/>Press <strong>SPACE</strong> again → Dewey places it.</div>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num" style="background:#27ae60;">✓</div>
+        <div class="mech-text"><span class="ok">Right shelf → book snaps in, green flash, score!</span><br/>Book disappears from your hand + cart.</div>
+      </div>
+      <div class="mech-step">
+        <div class="mech-num" style="background:#e05252;">✗</div>
+        <div class="mech-text"><span class="bad">Wrong shelf → red flash, book returns to cart.</span><br/><span class="bad">−2 seconds</span> taken from your timer.</div>
+      </div>
+      <div style="border-top:1px solid #2a1a3e;margin-top:6px;padding-top:6px;font-size:6px;color:#c8a832;line-height:2.2;">
+        Misplaced book on shelf:<br/>
+        Stand near it → <strong>SPACE</strong> to pick it up<br/>
+        Adds to your cart. Deliver to correct section.<br/>
+        <strong>+bonus points</strong> for fixing misplaced books!
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr/>
+
+<!-- ══════════════════════
+     SECTION 4 — BOOK CLOSE-UP
+══════════════════════ -->
+<h2>4. Book Spine — Close-Up (3× scale)</h2>
+<p class="sub">Each detail is visible in the actual game; at in-game size they read as recognizable library books</p>
+<div class="row" style="align-items:flex-end;">
+
+  <!-- Large-scale SVG demo -->
+  <div>
+    <h3>6 representative spines at 3× scale</h3>
+    <div style="background:#2a1200;border:3px solid #9b6a3a;padding:10px 14px 6px;display:inline-block;border-radius:2px;">
+      <!-- Shelf plank top -->
+      <div style="height:10px;background:#4a2808;border-bottom:2px solid #3a1a00;margin:-10px -14px 6px -14px;"></div>
+      <svg width="390" height="78" viewBox="0 0 390 78">
+        <defs>
+          <linearGradient id="chl" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,.28)"/>
+            <stop offset="12%" stop-color="rgba(255,255,255,.07)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,.08)"/>
+          </linearGradient>
+          <linearGradient id="cvg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,.2)"/>
+            <stop offset="35%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,.25)"/>
+          </linearGradient>
+          <!-- Individual book gradients -->
+          <linearGradient id="b1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9030d8"/><stop offset="100%" stop-color="#4a0890"/></linearGradient>
+          <linearGradient id="b2g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0098b8"/><stop offset="100%" stop-color="#004870"/></linearGradient>
+          <linearGradient id="b3g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c82020"/><stop offset="100%" stop-color="#680808"/></linearGradient>
+          <linearGradient id="b4g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a8040"/><stop offset="100%" stop-color="#044020"/></linearGradient>
+          <linearGradient id="b5g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b87000"/><stop offset="100%" stop-color="#603800"/></linearGradient>
+          <linearGradient id="b6g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1448c8"/><stop offset="100%" stop-color="#081870"/></linearGradient>
+        </defs>
+
+        <!-- Book 1: FIC A — "Midnight Call" (thick hardcover, 24w × 74h) -->
+        <g transform="translate(4, 4)">
+          <rect width="24" height="70" fill="url(#b1g)"/>
+          <rect width="24" height="70" fill="url(#chl)"/>
+          <rect width="24" height="70" fill="url(#cvg)"/>
+          <rect width="24" height="3" fill="rgba(0,0,0,.6)"/><!-- top binding -->
+          <rect y="67" width="24" height="3" fill="rgba(0,0,0,.5)"/><!-- bottom binding -->
+          <line x1="0" y1="12" x2="24" y2="12" stroke="rgba(255,255,255,.2)" stroke-width="1"/><!-- groove -->
+          <line x1="0" y1="14" x2="24" y2="14" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+          <text transform="rotate(-90 12 35)" x="12" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="rgba(255,255,255,.9)" letter-spacing=".5">MIDNIGHT CALL</text>
+          <text transform="rotate(-90 12 35)" x="12" y="47" text-anchor="middle" font-family="Arial,sans-serif" font-size="4.5" fill="rgba(255,255,255,.55)">A. MORGAN</text>
+          <!-- Call number label sticker -->
+          <rect x="3" y="53" width="18" height="12" rx="1" fill="#f0ead8"/>
+          <text x="12" y="60" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">FIC</text>
+          <text x="12" y="64" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">MOR</text>
+        </g>
+
+        <!-- Book 2: 551.46 — "Ocean Deep" (thin paperback, 15w × 62h) -->
+        <g transform="translate(32, 12)">
+          <rect width="15" height="62" fill="url(#b2g)"/>
+          <rect width="15" height="62" fill="url(#chl)"/>
+          <rect width="15" height="62" fill="url(#cvg)"/>
+          <rect width="15" height="3" fill="rgba(0,0,0,.6)"/>
+          <rect y="59" width="15" height="3" fill="rgba(0,0,0,.5)"/>
+          <line x1="0" y1="10" x2="15" y2="10" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+          <line x1="0" y1="11.5" x2="15" y2="11.5" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+          <text transform="rotate(-90 7.5 31)" x="7.5" y="34" text-anchor="middle" font-family="Georgia,serif" font-size="5.5" fill="rgba(255,255,255,.9)">OCEAN DEEP</text>
+          <text transform="rotate(-90 7.5 31)" x="7.5" y="41" text-anchor="middle" font-family="Arial" font-size="4" fill="rgba(255,255,255,.55)">NORRIS</text>
+          <rect x="2" y="47" width="11" height="11" rx="1" fill="#f0ead8"/>
+          <text x="7.5" y="53" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">551.46</text>
+          <text x="7.5" y="57" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">NOR</text>
+        </g>
+
+        <!-- Book 3: Biography 921 — "Ada Lovelace" (med, 20w × 68h) -->
+        <g transform="translate(52, 6)">
+          <rect width="20" height="68" fill="url(#b3g)"/>
+          <rect width="20" height="68" fill="url(#chl)"/>
+          <rect width="20" height="68" fill="url(#cvg)"/>
+          <rect width="20" height="3" fill="rgba(0,0,0,.6)"/>
+          <rect y="65" width="20" height="3" fill="rgba(0,0,0,.5)"/>
+          <line x1="0" y1="11" x2="20" y2="11" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+          <line x1="0" y1="12.5" x2="20" y2="12.5" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+          <rect x="2" y="14" width="16" height="2" fill="rgba(255,255,255,.12)"/><!-- decorative stripe -->
+          <text transform="rotate(-90 10 34)" x="10" y="37" text-anchor="middle" font-family="Georgia,serif" font-size="5.5" fill="rgba(255,255,255,.9)">ADA LOVELACE</text>
+          <text transform="rotate(-90 10 34)" x="10" y="45" text-anchor="middle" font-family="Arial" font-size="4" fill="rgba(255,255,255,.5)">BIOGRAPHY</text>
+          <rect x="2" y="52" width="16" height="12" rx="1" fill="#f0ead8"/>
+          <text x="10" y="58" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">921</text>
+          <text x="10" y="62" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">LOV</text>
+        </g>
+
+        <!-- Book 4: FIC G — "The Garden" (wide hardcover, 28w × 74h) -->
+        <g transform="translate(76, 0)">
+          <rect width="28" height="74" fill="url(#b4g)"/>
+          <rect width="28" height="74" fill="url(#chl)"/>
+          <rect width="28" height="74" fill="url(#cvg)"/>
+          <rect width="28" height="3" fill="rgba(0,0,0,.6)"/>
+          <rect y="71" width="28" height="3" fill="rgba(0,0,0,.5)"/>
+          <line x1="0" y1="12" x2="28" y2="12" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+          <line x1="0" y1="13.5" x2="28" y2="13.5" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+          <!-- Decorative element: small rectangle art on spine -->
+          <rect x="8" y="17" width="12" height="18" rx="1" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)" stroke-width=".7"/>
+          <text transform="rotate(-90 14 46)" x="14" y="49" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="rgba(255,255,255,.9)" letter-spacing=".3">THE GARDEN</text>
+          <text transform="rotate(-90 14 46)" x="14" y="57" text-anchor="middle" font-family="Arial" font-size="4.5" fill="rgba(255,255,255,.5)">CHEN</text>
+          <rect x="4" y="58" width="20" height="12" rx="1" fill="#f0ead8"/>
+          <text x="14" y="64" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">FIC</text>
+          <text x="14" y="68" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">CHE</text>
+        </g>
+
+        <!-- Book 5: 745.5 — "Art Forms" (reference, wide 30w × 74h) -->
+        <g transform="translate(108, 0)">
+          <rect width="30" height="74" fill="url(#b5g)"/>
+          <rect width="30" height="74" fill="url(#chl)"/>
+          <rect width="30" height="74" fill="url(#cvg)"/>
+          <rect width="30" height="3" fill="rgba(0,0,0,.6)"/>
+          <rect y="71" width="30" height="3" fill="rgba(0,0,0,.5)"/>
+          <line x1="0" y1="11" x2="30" y2="11" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+          <line x1="0" y1="12.5" x2="30" y2="12.5" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+          <rect x="7" y="15" width="16" height="2" fill="rgba(255,255,255,.15)"/>
+          <text transform="rotate(-90 15 46)" x="15" y="49" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="rgba(255,255,255,.9)" letter-spacing=".2">ART &amp; CRAFT</text>
+          <text transform="rotate(-90 15 46)" x="15" y="57" text-anchor="middle" font-family="Arial" font-size="4.5" fill="rgba(255,255,255,.5)">HANDELN</text>
+          <rect x="4" y="58" width="22" height="12" rx="1" fill="#f0ead8"/>
+          <text x="15" y="64" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">745.5</text>
+          <text x="15" y="68" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">HAN</text>
+        </g>
+
+        <!-- Book 6: 530.1 — "Gravity's Edge" (thin, 16w × 64h) -->
+        <g transform="translate(142, 10)">
+          <rect width="16" height="64" fill="url(#b6g)"/>
+          <rect width="16" height="64" fill="url(#chl)"/>
+          <rect width="16" height="64" fill="url(#cvg)"/>
+          <rect width="16" height="3" fill="rgba(0,0,0,.6)"/>
+          <rect y="61" width="16" height="3" fill="rgba(0,0,0,.5)"/>
+          <line x1="0" y1="10" x2="16" y2="10" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+          <line x1="0" y1="11.5" x2="16" y2="11.5" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+          <text transform="rotate(-90 8 32)" x="8" y="35" text-anchor="middle" font-family="Georgia,serif" font-size="5.5" fill="rgba(255,255,255,.9)">GRAVITY'S</text>
+          <text transform="rotate(-90 8 32)" x="8" y="42" text-anchor="middle" font-family="Georgia,serif" font-size="5.5" fill="rgba(255,255,255,.9)">EDGE</text>
+          <text transform="rotate(-90 8 32)" x="8" y="50" text-anchor="middle" font-family="Arial" font-size="4" fill="rgba(255,255,255,.5)">WEIS</text>
+          <rect x="2" y="49" width="12" height="11" rx="1" fill="#f0ead8"/>
+          <text x="8" y="55" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">530.1</text>
+          <text x="8" y="59" text-anchor="middle" font-family="Courier New,monospace" font-size="3.5" fill="#222">WEI</text>
+        </g>
+
+        <!-- Anatomy callout lines -->
+        <line x1="28" y1="5" x2="190" y2="5" stroke="rgba(155,89,182,.4)" stroke-width=".7" stroke-dasharray="3,2"/>
+        <text x="192" y="8" font-family="Fredoka One" font-size="6" fill="#888">← top binding (dark ridge)</text>
+        <line x1="28" y1="13" x2="190" y2="13" stroke="rgba(155,89,182,.4)" stroke-width=".7" stroke-dasharray="3,2"/>
+        <text x="192" y="16" font-family="Fredoka One" font-size="6" fill="#888">← spine groove line</text>
+        <line x1="5" y1="35" x2="190" y2="35" stroke="rgba(155,89,182,.4)" stroke-width=".7" stroke-dasharray="3,2"/>
+        <text x="192" y="38" font-family="Fredoka One" font-size="6" fill="#888">← left-edge highlight</text>
+        <line x1="28" y1="57" x2="190" y2="57" stroke="rgba(155,89,182,.4)" stroke-width=".7" stroke-dasharray="3,2"/>
+        <text x="192" y="60" font-family="Fredoka One" font-size="6" fill="#888">← call # label sticker</text>
+        <line x1="28" y1="71" x2="190" y2="71" stroke="rgba(155,89,182,.4)" stroke-width=".7" stroke-dasharray="3,2"/>
+        <text x="192" y="74" font-family="Fredoka One" font-size="6" fill="#888">← bottom binding</text>
+      </svg>
+      <!-- Shelf base plank -->
+      <div style="height:8px;background:#4a2808;border-top:2px solid #3a1a00;margin:-4px -14px -6px -14px;"></div>
+    </div>
+    <div class="note g">
+      All details visible in-game — call # label is the key "library book" signal<br/>
+      Spine title + author unreadable at in-game scale but label shape reads clearly<br/>
+      Groove line breaks up the flat spine color for a realistic 3D look
+    </div>
+  </div>
+
+  <!-- Level progression updated -->
+  <div>
+    <h3>Level Progression (updated)</h3>
+    <div style="background:#1e0e30;border:2px solid #4a2a6a;padding:10px;font-size:5px;color:#888;line-height:2.6;">
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:4px;">
+        <span style="color:#f5c842;">LVL</span>
+        <span style="color:#f5c842;">BOOKS</span>
+        <span style="color:#f5c842;">TIME</span>
+        <span style="color:#f5c842;">SECTIONS</span>
+        <span style="color:#f5c842;">LIBRARIANS</span>
+        <span style="color:#f5c842;">MISPLACED</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(80,200,100,.08);padding:2px 0;">
+        <span style="color:#27ae60;">1</span><span>5</span><span style="color:#27ae60;">∞ none</span><span>3</span><span style="color:#27ae60;">0</span><span style="color:#27ae60;">0</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;">
+        <span>2</span><span>7</span><span>TBD</span><span>4</span><span>1</span><span>0</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;">
+        <span>3</span><span>10</span><span>TBD</span><span>5</span><span>1</span><span>0</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(230,120,0,.06);">
+        <span>4</span><span>12</span><span>TBD</span><span>6</span><span>1</span><span>2</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(230,120,0,.06);">
+        <span>5</span><span>14</span><span>TBD</span><span>7</span><span>1</span><span>3</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(220,50,50,.06);">
+        <span>6</span><span>15</span><span>TBD</span><span>8</span><span>2</span><span>3</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(220,50,50,.06);">
+        <span>7</span><span>17</span><span>TBD</span><span>9</span><span>2</span><span>4</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(220,50,50,.09);">
+        <span>8</span><span>20</span><span>TBD</span><span>10</span><span>2</span><span>5</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;margin-bottom:2px;background:rgba(220,50,50,.12);">
+        <span>9</span><span>22</span><span>TBD</span><span>10</span><span>3</span><span>5</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 52px 52px 66px 66px 60px;gap:0;background:rgba(220,50,50,.15);">
+        <span>10</span><span>25</span><span>TBD</span><span>10</span><span>3</span><span>6</span>
+      </div>
+    </div>
+    <div class="note y">
+      Level 1: no timer, no librarian, no misplaced — pure tutorial<br/>
+      Levels 2–10: time limits set during playtesting (TBD)<br/>
+      Misplaced books start appearing at level 4<br/>
+      2nd librarian added at level 6 · 3rd at level 9
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var d = function(id){ return '<defs><linearGradient id="bhl-'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,.24)"/><stop offset="13%" stop-color="rgba(255,255,255,.06)"/><stop offset="100%" stop-color="rgba(0,0,0,.06)"/></linearGradient><linearGradient id="bvg-'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,.18)"/><stop offset="38%" stop-color="rgba(255,255,255,0)"/><stop offset="100%" stop-color="rgba(0,0,0,.22)"/></linearGradient></defs>'; };
+  function bk(b, sh, id){
+    var yo=sh-b.h, lw=Math.max(4,b.w-2), lx=(b.w-lw)/2;
+    var s='<g transform="translate('+b.x+','+yo+')"><rect width="'+b.w+'" height="'+b.h+'" fill="'+b.c+'"'+(b.mis?' class="bk-mis"':'')+'/>';
+    s+='<rect width="'+b.w+'" height="'+b.h+'" fill="url(#bhl-'+id+')"/>';
+    s+='<rect width="'+b.w+'" height="'+b.h+'" fill="url(#bvg-'+id+')"/>';
+    s+='<rect width="'+b.w+'" height="2" fill="rgba(0,0,0,.55)"/>';
+    s+='<rect y="'+(b.h-2)+'" width="'+b.w+'" height="2" fill="rgba(0,0,0,.45)"/>';
+    s+='<rect x="'+lx+'" y="'+(b.h-7)+'" width="'+lw+'" height="6" rx=".5" fill="#ece6d4" opacity=".92"/>';
+    if(b.mis) s+='<text x="'+(b.w/2)+'" y="-2" text-anchor="middle" font-size="8" fill="#e67e22" font-weight="bold">!</text>';
+    s+='</g>';
+    return s;
+  }
+  function render(id, books, w, h){
+    var el=document.getElementById(id); if(!el) return;
+    var sh=h-1, s='<svg width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:0;">'+d(id);
+    for(var i=0;i<books.length;i++) s+=bk(books[i],sh,id);
+    s+='</svg>'; el.innerHTML=s;
+  }
+
+  render('books-t',[
+    {x:0,  w:9, h:22,c:'#7020b8'},{x:10,w:8, h:17,c:'#0088a8'},{x:19,w:11,h:24,c:'#9a6200'},
+    {x:31,w:7, h:15,c:'#1e6018'},{x:39,w:9, h:21,c:'#b81840'},{x:49,w:8, h:18,c:'#a03810'},
+    {x:58,w:10,h:23,c:'#1848b8'},{x:69,w:7, h:14,c:'#a82268'},{x:81,w:11,h:24,c:'#6020b0'},
+    {x:93,w:8, h:17,c:'#006838'},{x:102,w:9,h:22,c:'#8a7000'},{x:112,w:7,h:14,c:'#226818'},
+    {x:120,w:9,h:20,c:'#a82820'},{x:134,w:9,h:23,c:'#1058b8'},{x:144,w:8,h:16,c:'#a82070'},
+    {x:153,w:12,h:24,c:'#a81800'},{x:166,w:8,h:18,c:'#006838'},{x:175,w:9,h:21,c:'#6818b8'},
+    {x:189,w:8,h:15,c:'#886000'},{x:198,w:9,h:22,c:'#005898'},{x:208,w:8,h:19,c:'#306810'},
+    {x:217,w:9,h:22,c:'#a80858'},{x:227,w:7,h:15,c:'#086858'},{x:235,w:9,h:20,c:'#502898'},
+    {x:245,w:8,h:17,c:'#a81018'},{x:258,w:9,h:21,c:'#005880'},{x:268,w:8,h:16,c:'#207848'},
+    {x:277,w:10,h:23,c:'#7028a0'},{x:288,w:7,h:15,c:'#a84018'},{x:296,w:9,h:22,c:'#106080'},
+    {x:310,w:8,h:19,c:'#785808'},{x:319,w:11,h:24,c:'#1030a0'},{x:331,w:9,h:21,c:'#981040'},
+    {x:341,w:8,h:18,c:'#287848'},{x:350,w:8,h:16,c:'#581888'}
+  ],362,26);
+
+  render('books-m',[
+    {x:0,  w:9, h:18,c:'#1858b8'},{x:10,w:8,h:22,c:'#a81848'},{x:19,w:9,h:15,c:'#a87000'},
+    {x:29,w:10,h:21,c:'#1e6018'},{x:40,w:8,h:17,c:'#7018a0'},{x:49,w:9,h:20,c:'#006890'},
+    {x:59,w:9,h:20,c:'#c04010',mis:true},
+    {x:69,w:8,h:16,c:'#206888'},{x:78,w:9,h:21,c:'#a030a0'},{x:88,w:7,h:14,c:'#087860'},
+    {x:96,w:9,h:19,c:'#a82818'},{x:106,w:8,h:17,c:'#0050a0'},{x:115,w:9,h:20,c:'#885808'},
+    {x:125,w:9,h:22,c:'#501888'},{x:135,w:7,h:18,c:'#1e7840'}
+  ],148,24);
+
+  render('books-r',[
+    {x:0,  w:9, h:21,c:'#a01850'},{x:10,w:8,h:16,c:'#007888'},{x:19,w:9,h:23,c:'#9a7000'},
+    {x:29,w:8,h:14,c:'#1860b0'},{x:38,w:10,h:24,c:'#6010b0'},{x:49,w:8,h:17,c:'#a04808'},
+    {x:58,w:9,h:20,c:'#186818'},{x:68,w:8,h:22,c:'#b01818'},{x:77,w:9,h:14,c:'#204890'},
+    {x:87,w:8,h:21,c:'#a020a0'},{x:96,w:9,h:18,c:'#087858'},{x:106,w:8,h:16,c:'#a06018'},
+    {x:115,w:9,h:22,c:'#1040a0'},{x:125,w:8,h:19,c:'#880848'},{x:134,w:10,h:21,c:'#087070'},
+    {x:145,w:8,h:15,c:'#7820a0'},{x:154,w:9,h:23,c:'#a82808'},{x:164,w:8,h:17,c:'#107848'},
+    {x:173,w:9,h:20,c:'#3030a0'},{x:183,w:8,h:22,c:'#981028'},{x:192,w:9,h:16,c:'#007860'},
+    {x:202,w:8,h:21,c:'#7030a0'}
+  ],222,24);
+})();
+</script>
+
+</body>
+</html>
