@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Read Hard — Wireframe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a2e;
+      color: #e0d9c8;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 20px;
+    }
+    h1 { font-size: 14px; color: #f5c842; margin-bottom: 6px; }
+    h2 { font-size: 11px; color: #a8d8a8; margin-bottom: 10px; }
+    .section-label {
+      font-size: 8px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .screens-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .screen-box {
+      border: 2px dashed #444;
+      background: #111;
+      padding: 10px;
+    }
+    .screen-box .label {
+      font-size: 7px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* ── TITLE SCREEN ── */
+    .title-screen {
+      width: 360px;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0d1b0d;
+      border: 3px solid #3a8a3a;
+      gap: 14px;
+    }
+    .game-title {
+      font-size: 22px;
+      color: #f5c842;
+      text-shadow: 3px 3px 0 #8b6914, -1px -1px 0 #a07810;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .subtitle { font-size: 8px; color: #a8d8a8; }
+    .pixel-char {
+      width: 40px; height: 48px;
+      background: #7ec8e3;
+      position: relative;
+      image-rendering: pixelated;
+    }
+    .pixel-char::before {
+      content: '';
+      position: absolute;
+      top: -16px; left: 8px;
+      width: 24px; height: 24px;
+      background: #f4c2a1;
+      border: 2px solid #333;
+    }
+    .pixel-char::after {
+      content: '📚';
+      font-size: 14px;
+      position: absolute;
+      bottom: -18px; left: 50%; transform: translateX(-50%);
+    }
+    .menu-option {
+      font-size: 9px;
+      color: #e0d9c8;
+      padding: 6px 16px;
+      border: 2px solid #3a8a3a;
+      cursor: pointer;
+    }
+    .menu-option.selected { background: #3a8a3a; color: #fff; }
+
+    /* ── GAME SCREEN ── */
+    .game-screen {
+      width: 600px;
+      background: #0d1b0d;
+      border: 3px solid #3a8a3a;
+      overflow: hidden;
+    }
+
+    /* HUD */
+    .hud {
+      background: #0a120a;
+      border-bottom: 2px solid #3a8a3a;
+      padding: 8px 12px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .hud-item { display: flex; flex-direction: column; gap: 3px; }
+    .hud-key { font-size: 6px; color: #888; }
+    .hud-val { font-size: 10px; color: #f5c842; }
+    .hud-val.danger { color: #e05252; }
+    .hud-val.warn { color: #f5a742; }
+    .warnings { display: flex; gap: 4px; }
+    .warning-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #e05252;
+    }
+    .warning-dot.empty { background: #333; border: 1px solid #555; }
+    .hud-title { font-size: 9px; color: #a8d8a8; margin-left: auto; }
+
+    /* LIBRARY MAP */
+    .library {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      grid-template-rows: auto 1fr auto;
+      height: 340px;
+    }
+    .shelf-left, .shelf-right {
+      background: #1a2e1a;
+      border: 1px solid #2a4a2a;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px 4px;
+    }
+    .shelf-section {
+      background: #2a1a0a;
+      border: 1px solid #5a3a1a;
+      padding: 4px;
+      text-align: center;
+      font-size: 6px;
+      color: #c89050;
+      line-height: 1.5;
+    }
+    .shelf-section span {
+      display: block;
+      font-size: 5px;
+      color: #888;
+      margin-top: 2px;
+    }
+    .floor-area {
+      background: #141f14;
+      position: relative;
+      grid-column: 2;
+      grid-row: 1 / 4;
+    }
+    /* Shelf rows in main area */
+    .shelf-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px;
+    }
+    .shelf-row {
+      display: flex;
+      gap: 2px;
+      align-items: stretch;
+    }
+    .shelf-row-label {
+      font-size: 5px;
+      color: #888;
+      writing-mode: vertical-rl;
+      min-width: 12px;
+      padding: 2px;
+      background: #1a2e1a;
+      border: 1px solid #2a4a2a;
+      text-align: center;
+    }
+    .shelf-books {
+      display: flex;
+      gap: 2px;
+      flex: 1;
+      background: #1a2e1a;
+      border: 1px solid #2a4a2a;
+      padding: 4px;
+    }
+    .book {
+      width: 10px;
+      border-radius: 1px;
+      cursor: pointer;
+    }
+    .book.red    { background: #c0392b; height: 30px; }
+    .book.blue   { background: #2980b9; height: 26px; }
+    .book.green  { background: #27ae60; height: 28px; }
+    .book.yellow { background: #d4ac0d; height: 24px; }
+    .book.purple { background: #8e44ad; height: 32px; }
+    .book.orange { background: #e67e22; height: 27px; }
+    .book.teal   { background: #16a085; height: 29px; }
+    .book.grey   { background: #7f8c8d; height: 25px; }
+    .book.wrong  {
+      outline: 2px solid #e05252;
+      animation: pulse 0.8s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { outline-color: #e05252; }
+      50% { outline-color: transparent; }
+    }
+    .book.correct {
+      outline: 2px solid #27ae60;
+    }
+
+    /* Player + NPC */
+    .player {
+      position: absolute;
+      width: 20px;
+      height: 28px;
+      background: #7ec8e3;
+      border: 2px solid #333;
+      bottom: 60px; left: 40%;
+    }
+    .player::before {
+      content: '';
+      position: absolute;
+      top: -16px; left: 2px;
+      width: 14px; height: 14px;
+      background: #f4c2a1;
+      border: 2px solid #333;
+    }
+    .cart {
+      position: absolute;
+      width: 30px; height: 20px;
+      background: #8b6914;
+      border: 2px solid #5a4010;
+      bottom: 44px; left: calc(40% + 18px);
+    }
+    .cart-book {
+      position: absolute;
+      width: 8px; height: 14px;
+      background: #c0392b;
+      top: 2px; left: 2px;
+    }
+    .cart-book2 {
+      position: absolute;
+      width: 8px; height: 12px;
+      background: #2980b9;
+      top: 3px; left: 12px;
+    }
+    .librarian {
+      position: absolute;
+      width: 20px; height: 28px;
+      background: #c0a050;
+      border: 2px solid #333;
+      bottom: 100px; right: 30%;
+    }
+    .librarian::before {
+      content: '';
+      position: absolute;
+      top: -16px; left: 2px;
+      width: 14px; height: 14px;
+      background: #deb887;
+      border: 2px solid #333;
+    }
+    .librarian::after {
+      content: '👓';
+      font-size: 8px;
+      position: absolute;
+      top: -20px; left: 0px;
+    }
+    /* Vision cone */
+    .vision-cone {
+      position: absolute;
+      bottom: 110px; right: calc(30% - 30px);
+      width: 0; height: 0;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-top: 60px solid rgba(255,220,100,0.15);
+      filter: blur(2px);
+    }
+    /* Noise ring */
+    .noise-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,100,100,0.5);
+      animation: expand 1s infinite;
+      pointer-events: none;
+    }
+    @keyframes expand {
+      0% { width: 30px; height: 30px; opacity: 0.8; transform: translate(-50%,-50%) scale(0.5); }
+      100% { width: 80px; height: 80px; opacity: 0; transform: translate(-50%,-50%) scale(1); }
+    }
+
+    /* BOTTOM INFO BAR */
+    .info-bar {
+      background: #0a120a;
+      border-top: 2px solid #3a8a3a;
+      padding: 8px 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .book-card {
+      border: 1px solid #3a8a3a;
+      padding: 6px;
+      min-width: 140px;
+    }
+    .book-card .bk-title { font-size: 7px; color: #f5c842; margin-bottom: 3px; }
+    .book-card .bk-info { font-size: 6px; color: #a8d8a8; line-height: 1.6; }
+    .book-card .bk-badge {
+      display: inline-block;
+      background: #2980b9;
+      padding: 2px 4px;
+      font-size: 5px;
+      color: #fff;
+      margin-top: 3px;
+    }
+    .controls-hint {
+      font-size: 6px;
+      color: #666;
+      line-height: 2;
+    }
+    .key {
+      display: inline-block;
+      background: #333;
+      border: 1px solid #555;
+      padding: 1px 4px;
+      color: #e0d9c8;
+    }
+
+    /* ── BOOK PLACEMENT POPUP ── */
+    .popup-screen {
+      width: 360px;
+      background: #0d1b0d;
+      border: 3px solid #f5c842;
+      padding: 14px;
+    }
+    .popup-title { font-size: 9px; color: #f5c842; margin-bottom: 10px; }
+    .popup-book {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    .book-spine {
+      width: 18px; height: 60px;
+      background: #c0392b;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      font-size: 5px;
+      color: #fff;
+      padding: 2px;
+    }
+    .book-meta { font-size: 6px; line-height: 2; color: #e0d9c8; }
+    .book-meta .em { color: #f5c842; }
+    .sort-options { display: flex; flex-direction: column; gap: 6px; }
+    .sort-btn {
+      background: #1a2e1a;
+      border: 1px solid #3a8a3a;
+      padding: 6px 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #e0d9c8;
+      cursor: pointer;
+      text-align: left;
+    }
+    .sort-btn:hover, .sort-btn.active { background: #3a8a3a; color: #fff; }
+    .sort-btn .hint { font-size: 5px; color: #888; margin-top: 2px; display: block; }
+    .sort-confirm {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-green {
+      background: #3a8a3a; border: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px; color: #fff; padding: 6px 12px; cursor: pointer;
+    }
+    .btn-red {
+      background: #8a3a3a; border: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px; color: #fff; padding: 6px 12px; cursor: pointer;
+    }
+
+    /* ── LEVEL COMPLETE ── */
+    .level-screen {
+      width: 320px;
+      background: #0d1b0d;
+      border: 3px solid #27ae60;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .big-text { font-size: 14px; color: #27ae60; }
+    .score-row { display: flex; justify-content: space-between; width: 100%; font-size: 7px; }
+    .score-val { color: #f5c842; }
+
+    /* ── WARNING POPUP ── */
+    .warn-screen {
+      width: 300px;
+      background: #1a0d0d;
+      border: 3px solid #e05252;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .warn-title { font-size: 11px; color: #e05252; }
+    .warn-body { font-size: 7px; color: #e0d9c8; line-height: 1.8; }
+    .warn-dots { display: flex; gap: 8px; }
+    .warn-dot { width: 16px; height: 16px; border-radius: 50%; background: #e05252; }
+    .warn-dot.empty { background: #333; border: 1px solid #555; }
+
+    /* ── ANNOTATIONS ── */
+    .annotation {
+      font-size: 7px;
+      color: #888;
+      border-left: 2px solid #3a3a5a;
+      padding-left: 8px;
+      margin-top: 6px;
+      line-height: 1.8;
+    }
+    .anno-green { border-color: #27ae60; }
+    .anno-yellow { border-color: #f5c842; }
+    .anno-red { border-color: #e05252; }
+
+    hr { border: 1px solid #333; margin: 24px 0; }
+    .row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; align-items: flex-start; }
+  </style>
+</head>
+<body>
+
+  <h1>READ HARD — Wireframe</h1>
+  <p class="section-label">Game concept mockup · all screens · annotated</p>
+
+  <!-- ── SCREEN 1: TITLE ── -->
+  <h2>Screen 1 — Title / Menu</h2>
+  <div class="screens-row">
+    <div>
+      <div class="screen-box">
+        <div class="label">Title Screen</div>
+        <div class="title-screen">
+          <div class="game-title">READ<br/>HARD</div>
+          <div class="subtitle">A Library Survival Game</div>
+          <div class="pixel-char"></div>
+          <div style="height:20px"></div>
+          <div class="menu-option selected">▶  START GAME</div>
+          <div class="menu-option">   HOW TO PLAY</div>
+          <div class="menu-option">   HIGH SCORES</div>
+        </div>
+      </div>
+      <div class="annotation anno-yellow">
+        • Pixel font + warm library palette (cream, forest green, wood brown)<br/>
+        • Character "Dewey" shown with book cart<br/>
+        • Background: faint bookshelves, warm lamp glow effect
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ── SCREEN 2: MAIN GAME ── -->
+  <h2>Screen 2 — Gameplay (Top-Down View)</h2>
+  <div class="row">
+    <div>
+      <div class="screen-box">
+        <div class="label">Main Game Screen</div>
+        <div class="game-screen">
+
+          <!-- HUD -->
+          <div class="hud">
+            <div class="hud-item">
+              <div class="hud-key">TIME LEFT</div>
+              <div class="hud-val danger">1:42</div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-key">BOOKS LEFT</div>
+              <div class="hud-val">7 / 12</div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-key">WARNINGS</div>
+              <div class="warnings">
+                <div class="warning-dot"></div>
+                <div class="warning-dot empty"></div>
+                <div class="warning-dot empty"></div>
+              </div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-key">LEVEL</div>
+              <div class="hud-val">03</div>
+            </div>
+            <div class="hud-title">READ HARD</div>
+          </div>
+
+          <!-- LIBRARY FLOOR -->
+          <div class="library">
+            <!-- Left wall shelves (Fiction A–L) -->
+            <div class="shelf-left">
+              <div class="shelf-section">FICTION<span>A–L</span></div>
+              <div class="shelf-section">FICTION<span>M–Z</span></div>
+              <div class="shelf-section">NON-FICT<span>000–099</span></div>
+              <div class="shelf-section">NON-FICT<span>100–299</span></div>
+            </div>
+
+            <!-- Main floor area -->
+            <div class="floor-area">
+              <div class="shelf-rows">
+                <div class="shelf-row">
+                  <div class="shelf-row-label">300–499</div>
+                  <div class="shelf-books">
+                    <div class="book red"></div>
+                    <div class="book blue"></div>
+                    <div class="book green"></div>
+                    <div class="book yellow"></div>
+                    <div class="book purple"></div>
+                    <div class="book orange"></div>
+                    <div class="book teal"></div>
+                    <div class="book grey wrong"></div>
+                    <div class="book red"></div>
+                    <div class="book blue correct"></div>
+                    <div class="book green"></div>
+                    <div class="book yellow"></div>
+                    <div class="book purple"></div>
+                    <div class="book orange"></div>
+                  </div>
+                </div>
+                <div class="shelf-row">
+                  <div class="shelf-row-label">500–699</div>
+                  <div class="shelf-books">
+                    <div class="book teal"></div>
+                    <div class="book grey"></div>
+                    <div class="book red"></div>
+                    <div class="book blue"></div>
+                    <div class="book green"></div>
+                    <div class="book yellow"></div>
+                    <div class="book purple"></div>
+                    <div class="book orange"></div>
+                    <div class="book red"></div>
+                    <div class="book blue"></div>
+                    <div class="book green"></div>
+                  </div>
+                </div>
+                <div class="shelf-row">
+                  <div class="shelf-row-label">700–899</div>
+                  <div class="shelf-books">
+                    <div class="book orange"></div>
+                    <div class="book teal"></div>
+                    <div class="book grey"></div>
+                    <div class="book red"></div>
+                    <div class="book blue"></div>
+                    <div class="book green"></div>
+                    <div class="book yellow"></div>
+                    <div class="book purple"></div>
+                    <div class="book orange"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Player + Cart -->
+              <div class="player"></div>
+              <div class="cart">
+                <div class="cart-book"></div>
+                <div class="cart-book2"></div>
+              </div>
+
+              <!-- Librarian + vision cone -->
+              <div class="vision-cone"></div>
+              <div class="librarian"></div>
+
+              <!-- Noise ring (shows when running) -->
+              <div class="noise-ring" style="bottom:80px;left:42%;"></div>
+            </div>
+
+            <!-- Right wall shelves -->
+            <div class="shelf-right">
+              <div class="shelf-section">NON-FICT<span>300–499</span></div>
+              <div class="shelf-section">NON-FICT<span>500–699</span></div>
+              <div class="shelf-section">NON-FICT<span>700–899</span></div>
+              <div class="shelf-section">900–999<span>+ REF</span></div>
+            </div>
+          </div>
+
+          <!-- INFO BAR -->
+          <div class="info-bar">
+            <div class="book-card">
+              <div class="bk-title">Next Book to Shelve:</div>
+              <div class="bk-info">
+                <span class="em">Title:</span> The Ocean Deep<br/>
+                <span class="em">Author:</span> Vasquez, M.<br/>
+                <span class="em">Type:</span> Non-Fiction<br/>
+                <span class="em">Call#:</span> 551.46 VAS
+              </div>
+              <span class="bk-badge">SHELF: 500–699</span>
+            </div>
+            <div class="controls-hint">
+              <span class="key">W A S D</span> Walk (quiet)<br/>
+              <span class="key">SHIFT</span> Run (noisy!)<br/>
+              <span class="key">E</span> Shelve book<br/>
+              <span class="key">TAB</span> View cart<br/>
+              <span class="key">ESC</span> Pause
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="annotation anno-green">
+        • Top-down pixel art — Stardew Valley proportions<br/>
+        • Shelves line left/right walls + run as rows in main area<br/>
+        • Dewey (blue shirt) + wooden cart visible on floor<br/>
+        • Librarian NPC has a yellow vision cone in front<br/>
+        • Red pulsing ring = noise emitted when running<br/>
+        • Misplaced book highlighted with red outline (wrong shelf)<br/>
+        • Correctly placed book gets green outline flash<br/>
+        • HUD: Timer goes red under 30s; warnings = red dots
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ── SCREEN 3: BOOK PLACEMENT ── -->
+  <h2>Screen 3 — Shelving Popup (press E near shelf)</h2>
+  <div class="row">
+    <div>
+      <div class="screen-box">
+        <div class="label">Shelving Interaction</div>
+        <div class="popup-screen">
+          <div class="popup-title">📖  Shelve a Book</div>
+          <div class="popup-book">
+            <div class="book-spine">OCEAN DEEP</div>
+            <div class="book-meta">
+              <span class="em">Title:</span> The Ocean Deep<br/>
+              <span class="em">Author:</span> Vasquez, Maria<br/>
+              <span class="em">Genre:</span> Non-Fiction<br/>
+              <span class="em">Call #:</span> 551.46 VAS<br/>
+              <span class="em">Subject:</span> Earth Sciences
+            </div>
+          </div>
+          <div style="font-size:7px;color:#888;margin-bottom:6px;">Where does this book go?</div>
+          <div class="sort-options">
+            <button class="sort-btn">
+              FICTION  (A–Z by Author)
+              <span class="hint">shelf: left wall · F section</span>
+            </button>
+            <button class="sort-btn active">
+              NON-FICTION  500–699  (Natural Sciences)
+              <span class="hint">call# 551.46 → Earth Sciences · shelf row 2</span>
+            </button>
+            <button class="sort-btn">
+              NON-FICTION  300–499  (Social Sciences)
+              <span class="hint">shelf row 1</span>
+            </button>
+            <button class="sort-btn">
+              REFERENCE  (900–999)
+              <span class="hint">right wall · far end</span>
+            </button>
+          </div>
+          <div class="sort-confirm">
+            <button class="btn-green">✓ SHELVE HERE</button>
+            <button class="btn-red">✗ CANCEL</button>
+          </div>
+        </div>
+      </div>
+      <div class="annotation anno-yellow">
+        • Player walks to target shelf row + presses E<br/>
+        • Popup shows book details + multiple-choice shelf options<br/>
+        • Wrong answer = book goes back on cart + time penalty flash<br/>
+        • Right answer = satisfying "thunk" sound + book disappears from cart<br/>
+        • Later levels: options get more similar/confusing (teaches Dewey Decimal!)
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ── SCREEN 4: WARNING + LEVEL COMPLETE ── -->
+  <h2>Screen 4 — Warning / Level Complete</h2>
+  <div class="row">
+
+    <div>
+      <div class="screen-box">
+        <div class="label">Warning Popup</div>
+        <div class="warn-screen">
+          <div class="warn-title">⚠  SHHHH!</div>
+          <div class="warn-body">
+            The librarian heard you running!<br/>
+            Keep it down or you'll be<br/>
+            EJECTED from the library.
+          </div>
+          <div class="warn-dots">
+            <div class="warn-dot"></div>
+            <div class="warn-dot"></div>
+            <div class="warn-dot empty"></div>
+          </div>
+          <div style="font-size:6px;color:#888;">Warning 2 of 3 · 1 more = game over</div>
+          <button class="btn-green" style="margin-top:4px;">OK (continue)</button>
+        </div>
+      </div>
+      <div class="annotation anno-red">
+        • Triggers when librarian sees you running OR noise ring overlaps NPC<br/>
+        • Screen briefly flashes red border<br/>
+        • 3rd warning = full screen GAME OVER with "Ejected from Library"
+      </div>
+    </div>
+
+    <div>
+      <div class="screen-box">
+        <div class="label">Level Complete</div>
+        <div class="level-screen">
+          <div class="big-text">LEVEL CLEAR!</div>
+          <div style="font-size:8px;color:#a8d8a8;">All books shelved correctly</div>
+          <div style="width:100%;border-top:1px solid #3a8a3a;"></div>
+          <div class="score-row"><span>Time Bonus</span><span class="score-val">+320 pts</span></div>
+          <div class="score-row"><span>No Warnings</span><span class="score-val">+500 pts</span></div>
+          <div class="score-row"><span>Perfect Sort</span><span class="score-val">+200 pts</span></div>
+          <div class="score-row"><span>TOTAL</span><span class="score-val" style="font-size:9px;">1020 pts</span></div>
+          <div style="font-size:7px;color:#888;">Next level: 14 books · 2:00 limit</div>
+          <button class="btn-green" style="margin-top:4px;">NEXT LEVEL ▶</button>
+        </div>
+      </div>
+      <div class="annotation anno-green">
+        • Bonus points for time remaining + zero warnings<br/>
+        • "Perfect Sort" = no incorrect attempts<br/>
+        • Preview of next level difficulty (more books, less time)<br/>
+        • Unlocks new book categories as levels progress
+      </div>
+    </div>
+
+  </div>
+
+  <hr/>
+
+  <!-- ── LEVEL PROGRESSION ── -->
+  <h2>Level Progression</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:7px;">
+    <thead>
+      <tr style="color:#a8d8a8;">
+        <th style="text-align:left;padding:6px;border-bottom:1px solid #333;">LEVEL</th>
+        <th style="text-align:left;padding:6px;border-bottom:1px solid #333;">BOOKS</th>
+        <th style="text-align:left;padding:6px;border-bottom:1px solid #333;">TIME</th>
+        <th style="text-align:left;padding:6px;border-bottom:1px solid #333;">LIBRARIANS</th>
+        <th style="text-align:left;padding:6px;border-bottom:1px solid #333;">SORTING RULES IN PLAY</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">1</td><td style="padding:5px;border-bottom:1px solid #222;">6</td><td style="padding:5px;border-bottom:1px solid #222;">4:00</td><td style="padding:5px;border-bottom:1px solid #222;">0</td><td style="padding:5px;border-bottom:1px solid #222;">Fiction vs Non-Fiction only</td></tr>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">2</td><td style="padding:5px;border-bottom:1px solid #222;">8</td><td style="padding:5px;border-bottom:1px solid #222;">3:30</td><td style="padding:5px;border-bottom:1px solid #222;">1 (stationary)</td><td style="padding:5px;border-bottom:1px solid #222;">+ Fiction A–Z by author last name</td></tr>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">3</td><td style="padding:5px;border-bottom:1px solid #222;">10</td><td style="padding:5px;border-bottom:1px solid #222;">3:00</td><td style="padding:5px;border-bottom:1px solid #222;">1 (patrolling)</td><td style="padding:5px;border-bottom:1px solid #222;">+ Dewey 100–500 ranges</td></tr>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">4</td><td style="padding:5px;border-bottom:1px solid #222;">12</td><td style="padding:5px;border-bottom:1px solid #222;">2:30</td><td style="padding:5px;border-bottom:1px solid #222;">2</td><td style="padding:5px;border-bottom:1px solid #222;">+ Dewey 500–900 + Reference</td></tr>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">5</td><td style="padding:5px;border-bottom:1px solid #222;">14</td><td style="padding:5px;border-bottom:1px solid #222;">2:00</td><td style="padding:5px;border-bottom:1px solid #222;">2 (faster)</td><td style="padding:5px;border-bottom:1px solid #222;">+ Alphabetize within Dewey sections</td></tr>
+      <tr><td style="padding:5px;border-bottom:1px solid #222;">6+</td><td style="padding:5px;border-bottom:1px solid #222;">+2/level</td><td style="padding:5px;border-bottom:1px solid #222;">-15s/level</td><td style="padding:5px;border-bottom:1px solid #222;">+1 every 2 lvls</td><td style="padding:5px;border-bottom:1px solid #222;">Full Dewey + sub-decimal + special sections</td></tr>
+    </tbody>
+  </table>
+
+  <div class="annotation" style="margin-top:12px;">
+    ⚪ All annotations above are suggestions — color palette, fonts, control scheme, and level pacing are all open to change.<br/>
+    🟡 Next step after approval: build the actual HTML5 Canvas game with Phaser.js or vanilla Canvas API.
+  </div>
+
+</body>
+</html>

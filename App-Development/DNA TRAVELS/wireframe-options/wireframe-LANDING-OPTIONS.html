@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA TRAVELS — Landing Page Options</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#e8eaed; padding:2rem 1rem 4rem; }
+  h1 { text-align:center; font-size:1.15rem; font-weight:800; color:#222; margin-bottom:0.3rem; }
+  .subtitle { text-align:center; font-size:0.78rem; color:#888; margin-bottom:0.5rem; }
+  .note { text-align:center; font-size:0.72rem; color:#555; background:#fff8e1; border:1px solid #fcd34d; border-radius:8px; padding:0.5rem 1rem; max-width:700px; margin:0 auto 2.5rem; }
+
+  /* Option title */
+  .option-title {
+    text-align:center; font-size:1rem; font-weight:800; color:#1a2e2e;
+    margin:2.5rem 0 0.3rem;
+  }
+  .option-desc { text-align:center; font-size:0.75rem; color:#666; margin-bottom:1.25rem; max-width:700px; margin-left:auto; margin-right:auto; line-height:1.5; }
+  .option-tag {
+    display:inline-block; font-size:0.62rem; font-weight:700;
+    padding:0.15rem 0.6rem; border-radius:999px; margin-bottom:0.85rem;
+  }
+  .tag-simple { background:#dbeafe; color:#1e40af; }
+  .tag-smart  { background:#f3e8ff; color:#6b21a8; }
+  .tag-visual { background:#dcfce7; color:#166534; }
+
+  /* Layouts */
+  .two-col { display:flex; gap:2.5rem; justify-content:center; flex-wrap:wrap; max-width:900px; margin:0 auto; }
+  .one-col { max-width:420px; margin:0 auto; }
+
+  /* Phone shell */
+  .phone {
+    width:240px; height:480px;
+    background:#fff; border-radius:28px;
+    border:3px solid #222; overflow:hidden;
+    display:flex; flex-direction:column;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18);
+    flex-shrink:0;
+  }
+
+  /* Desktop shell */
+  .desktop {
+    flex:1; min-width:380px; max-width:520px;
+    background:#fff; border-radius:14px;
+    border:2px solid #222; overflow:hidden;
+    box-shadow:0 8px 32px rgba(0,0,0,0.15);
+  }
+
+  /* Shared card */
+  .card-inner {
+    flex:1; overflow:hidden; padding:1.1rem 1.25rem;
+    display:flex; flex-direction:column; gap:0;
+  }
+  .phone .card-inner { padding:0.85rem 0.9rem; }
+
+  /* DNA logo area */
+  .logo-area { text-align:center; margin-bottom:0.85rem; }
+  .dna-mark { font-size:0.7rem; font-weight:800; letter-spacing:0.25em; color:#2d6a6a; }
+  .logo-title { font-family:Georgia,serif; font-size:1.15rem; font-weight:600; color:#1a2e2e; letter-spacing:0.08em; margin-top:0.1rem; }
+  .phone .logo-title { font-size:0.95rem; }
+  .logo-sub { font-size:0.58rem; color:#888; margin-top:0.15rem; }
+
+  /* Section label */
+  .sec-label {
+    font-size:0.58rem; font-weight:800; letter-spacing:0.08em;
+    text-transform:uppercase; color:#2d6a6a;
+    margin-bottom:0.3rem; margin-top:0.7rem;
+  }
+  .sec-label:first-of-type { margin-top:0; }
+
+  /* Field */
+  .f { margin-bottom:0.45rem; }
+  .f label { display:block; font-size:0.6rem; font-weight:700; color:#555; margin-bottom:0.18rem; }
+  .f input, .f select {
+    width:100%; font-size:0.65rem; padding:0.32rem 0.5rem;
+    border:1.5px solid #ddd; border-radius:7px;
+    background:#fafafa; color:#1a2e2e;
+  }
+  .f input:focus { border-color:#2d6a6a; outline:none; background:#fff; }
+  .f-row { display:flex; gap:0.4rem; }
+  .f-row .f { flex:1; }
+
+  /* Hint text */
+  .hint { font-size:0.56rem; color:#aaa; margin-top:0.15rem; line-height:1.4; }
+
+  /* Collapsible section toggle */
+  .toggle-section {
+    border:1.5px solid #e8e8e8; border-radius:10px;
+    margin-bottom:0.4rem; overflow:hidden;
+  }
+  .toggle-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.45rem 0.65rem; background:#fafafa; cursor:pointer;
+  }
+  .toggle-head-left { display:flex; align-items:center; gap:0.35rem; }
+  .toggle-icon { font-size:0.85rem; }
+  .toggle-label { font-size:0.65rem; font-weight:700; color:#1a2e2e; }
+  .toggle-meta { font-size:0.55rem; color:#888; }
+  .toggle-arrow { font-size:0.65rem; color:#bbb; }
+  .toggle-body { padding:0.55rem 0.65rem; border-top:1px solid #e8e8e8; background:#fff; }
+
+  /* Step wizard */
+  .step-bar { display:flex; align-items:center; justify-content:center; gap:0.3rem; margin-bottom:0.85rem; }
+  .step-dot {
+    width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.6rem; font-weight:800;
+  }
+  .step-dot.done { background:#2d6a6a; color:#fff; }
+  .step-dot.active { background:#1a2e2e; color:#fff; border:2px solid #2d6a6a; }
+  .step-dot.future { background:#f0f0f0; color:#bbb; }
+  .step-line { flex:1; height:2px; background:#e8e8e8; max-width:30px; }
+  .step-line.done { background:#2d6a6a; }
+
+  /* Step label */
+  .step-title { font-size:0.78rem; font-weight:800; color:#1a2e2e; margin-bottom:0.1rem; }
+  .phone .step-title { font-size:0.7rem; }
+  .step-sub { font-size:0.58rem; color:#888; margin-bottom:0.65rem; }
+
+  /* Submit button */
+  .btn-submit {
+    width:100%; background:#1a2e2e; color:#fff; border:none;
+    border-radius:10px; padding:0.55rem; font-size:0.72rem;
+    font-weight:700; cursor:pointer; margin-top:0.65rem; letter-spacing:0.03em;
+  }
+  .phone .btn-submit { font-size:0.65rem; padding:0.45rem; }
+  .btn-next {
+    width:100%; background:#2d6a6a; color:#fff; border:none;
+    border-radius:10px; padding:0.45rem; font-size:0.68rem;
+    font-weight:700; cursor:pointer; margin-top:0.5rem;
+  }
+  .btn-back {
+    width:100%; background:#f0f0f0; color:#555; border:none;
+    border-radius:10px; padding:0.4rem; font-size:0.65rem;
+    font-weight:600; cursor:pointer; margin-top:0.3rem;
+  }
+  .btn-row { display:flex; gap:0.4rem; margin-top:0.5rem; }
+  .btn-row .btn-back { flex:1; }
+  .btn-row .btn-next { flex:2; }
+
+  /* Skip link */
+  .skip { text-align:center; font-size:0.58rem; color:#2d6a6a; text-decoration:underline; cursor:pointer; margin-top:0.3rem; }
+
+  /* Required star */
+  .req { color:#e44; font-size:0.55rem; margin-left:2px; }
+
+  /* Divider */
+  .divider { height:1px; background:#f0f0f0; margin:0.55rem 0; }
+
+  /* "Optional details" collapsed area */
+  .optional-summary {
+    border:1.5px dashed #ddd; border-radius:10px;
+    padding:0.45rem 0.7rem; text-align:center;
+    font-size:0.62rem; color:#888; cursor:pointer; margin-top:0.3rem;
+  }
+  .optional-summary:hover { border-color:#2d6a6a; color:#2d6a6a; }
+
+  /* Two-column desktop form */
+  .form-two-col { display:flex; gap:1.25rem; }
+  .form-col { flex:1; }
+  .form-col-label {
+    font-size:0.6rem; font-weight:800; letter-spacing:0.06em;
+    text-transform:uppercase; color:#2d6a6a;
+    padding:0.3rem 0.5rem; background:#eef6f6;
+    border-radius:7px; margin-bottom:0.55rem; display:block;
+  }
+  .optional-col-label {
+    font-size:0.6rem; font-weight:800; letter-spacing:0.06em;
+    text-transform:uppercase; color:#888;
+    padding:0.3rem 0.5rem; background:#f5f5f5;
+    border-radius:7px; margin-bottom:0.55rem; display:block;
+  }
+
+  /* Annotation */
+  .ann {
+    font-size:0.67rem; color:#333; background:#fffde7;
+    border:1.5px solid #fcd34d; border-radius:8px;
+    padding:0.4rem 0.7rem; margin:0.65rem auto 0;
+    max-width:900px; display:flex; gap:0.4rem; align-items:flex-start;
+    line-height:1.45;
+  }
+  .ann.green { background:#f0fdf4; border-color:#86efac; }
+  .ann.purple { background:#f5f3ff; border-color:#c4b5fd; }
+
+  /* Shell label */
+  .shell-label {
+    text-align:center; font-size:0.68rem; font-weight:800;
+    color:#555; text-transform:uppercase; letter-spacing:0.05em;
+    margin-bottom:0.5rem;
+  }
+  .shell-group { display:flex; flex-direction:column; align-items:center; }
+
+  /* Divider between options */
+  .option-divider {
+    max-width:900px; margin:2rem auto 0;
+    border:none; border-top:2px dashed #ddd;
+  }
+
+  /* Pros list */
+  .pros { list-style:none; margin-top:0.5rem; }
+  .pros li { font-size:0.68rem; color:#444; margin-bottom:0.2rem; }
+  .pros li::before { content:'✓ '; color:#2d6a6a; font-weight:700; }
+  .cons li::before { content:'· '; color:#aaa; }
+  .pro-con { display:flex; gap:2rem; max-width:900px; margin:0.65rem auto 0; }
+  .pro-con-col { flex:1; }
+  .pro-con-label { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#888; margin-bottom:0.3rem; }
+</style>
+</head>
+<body>
+
+<h1>DNA TRAVELS — Landing Page Redesign Options</h1>
+<p class="subtitle">3 options · Wireframe for approval · No changes made yet</p>
+<p class="note">⚪ Current page has 10+ fields across 6 sections. All 3 options keep the same data — just presented more cleanly. The Google Places API key moves to the Nearby tab (already planned).</p>
+
+<!-- ======================================= -->
+<!-- OPTION A: MINIMAL + EXPANDABLE SECTIONS -->
+<!-- ======================================= -->
+<div class="option-title">Option A — Minimal required + expandable extras</div>
+<div class="option-desc">Show only the 4 required fields up front. Flights, Stay, and Schedule are collapsed sections you tap to expand. Clean and fast for repeat use.</div>
+<div style="text-align:center;margin-bottom:1rem"><span class="option-tag tag-simple">Simplest to use</span></div>
+
+<div class="two-col">
+
+  <div class="shell-group">
+    <div class="shell-label">Mobile</div>
+    <div class="phone">
+      <div class="card-inner">
+        <div class="logo-area">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+          <div class="logo-sub">Plan your trip</div>
+        </div>
+
+        <div class="sec-label">Where & when <span class="req">*</span></div>
+        <div class="f"><label>City</label><input placeholder="New York"></div>
+        <div class="f-row">
+          <div class="f"><label>Start</label><input type="date" style="font-size:0.55rem"></div>
+          <div class="f"><label>End</label><input type="date" style="font-size:0.55rem"></div>
+        </div>
+
+        <div class="sec-label" style="margin-top:0.55rem">Your saved places <span class="req">*</span></div>
+        <div class="f">
+          <label>Google Maps list URL</label>
+          <input placeholder="maps.app.goo.gl/…">
+          <div class="hint">Paste your saved list link from Google Maps</div>
+        </div>
+
+        <!-- Collapsible extras -->
+        <div class="toggle-section">
+          <div class="toggle-head">
+            <div class="toggle-head-left"><span class="toggle-icon">✈️</span><div><div class="toggle-label">Flights</div><div class="toggle-meta">optional</div></div></div>
+            <span class="toggle-arrow">›</span>
+          </div>
+        </div>
+        <div class="toggle-section">
+          <div class="toggle-head">
+            <div class="toggle-head-left"><span class="toggle-icon">🏨</span><div><div class="toggle-label">Stay</div><div class="toggle-meta">optional</div></div></div>
+            <span class="toggle-arrow">›</span>
+          </div>
+        </div>
+        <div class="toggle-section">
+          <div class="toggle-head">
+            <div class="toggle-head-left"><span class="toggle-icon">⏰</span><div><div class="toggle-label">Day schedule</div><div class="toggle-meta">8am – 10pm default</div></div></div>
+            <span class="toggle-arrow">›</span>
+          </div>
+        </div>
+
+        <button class="btn-submit">Let's go →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell-group">
+    <div class="shell-label">Desktop — with Flights section expanded</div>
+    <div class="desktop">
+      <div class="card-inner">
+        <div class="logo-area" style="margin-bottom:0.65rem">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+          <div class="logo-sub">Plan your trip</div>
+        </div>
+
+        <div class="sec-label">Where & when <span class="req">*</span></div>
+        <div class="f-row">
+          <div class="f" style="flex:2"><label>City</label><input placeholder="New York"></div>
+          <div class="f"><label>Start</label><input type="date"></div>
+          <div class="f"><label>End</label><input type="date"></div>
+        </div>
+
+        <div class="sec-label">Your saved places <span class="req">*</span></div>
+        <div class="f">
+          <label>Google Maps list URL</label>
+          <input placeholder="https://maps.app.goo.gl/…">
+          <div class="hint">Saved → Your list → Share → Copy link</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Flights expanded -->
+        <div class="toggle-section">
+          <div class="toggle-head" style="background:#eef6f6">
+            <div class="toggle-head-left"><span class="toggle-icon">✈️</span><div><div class="toggle-label">Flights</div><div class="toggle-meta">optional</div></div></div>
+            <span class="toggle-arrow" style="color:#2d6a6a">∨</span>
+          </div>
+          <div class="toggle-body">
+            <div class="f-row">
+              <div class="f"><label>Arrival airport</label><select><option>JFK</option><option>LGA</option><option>EWR</option></select></div>
+              <div class="f"><label>Date</label><input type="date"></div>
+              <div class="f"><label>Lands</label><input type="time" value="09:00"></div>
+            </div>
+            <div class="f-row" style="margin-top:0.2rem">
+              <div class="f"><label>Departure airport</label><select><option>JFK</option></select></div>
+              <div class="f"><label>Date</label><input type="date"></div>
+              <div class="f"><label>Takes off</label><input type="time" value="22:00"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggle-section">
+          <div class="toggle-head">
+            <div class="toggle-head-left"><span class="toggle-icon">🏨</span><div><div class="toggle-label">Stay</div><div class="toggle-meta">optional</div></div></div>
+            <span class="toggle-arrow">›</span>
+          </div>
+        </div>
+        <div class="toggle-section">
+          <div class="toggle-head">
+            <div class="toggle-head-left"><span class="toggle-icon">⏰</span><div><div class="toggle-label">Day schedule</div><div class="toggle-meta">8am – 10pm default</div></div></div>
+            <span class="toggle-arrow">›</span>
+          </div>
+        </div>
+
+        <button class="btn-submit">Let's go →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="pro-con">
+  <div class="pro-con-col">
+    <div class="pro-con-label">✓ Pros</div>
+    <ul class="pros">
+      <li>Fastest to fill out — just 4 fields to start</li>
+      <li>Repeat users skip straight to "Let's go"</li>
+      <li>Extras stay out of the way until needed</li>
+    </ul>
+  </div>
+  <div class="pro-con-col">
+    <div class="pro-con-label">· Trade-offs</div>
+    <ul class="pros cons">
+      <li>Easy to forget to add flights/stay</li>
+      <li>Need to tap to expand each section</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="option-divider">
+
+<!-- ======================================= -->
+<!-- OPTION B: STEP-BY-STEP WIZARD           -->
+<!-- ======================================= -->
+<div class="option-title">Option B — Step-by-step wizard</div>
+<div class="option-desc">Breaks the form into 3 short steps. Each step feels light. Great on mobile — like filling out a quick quiz. You can skip optional steps.</div>
+<div style="text-align:center;margin-bottom:1rem"><span class="option-tag tag-smart">Best for mobile</span></div>
+
+<div class="two-col">
+
+  <!-- Step 1 -->
+  <div class="shell-group">
+    <div class="shell-label">Step 1 of 3 — The basics</div>
+    <div class="phone">
+      <div class="card-inner">
+        <div class="logo-area">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+        </div>
+        <div class="step-bar">
+          <div class="step-dot active">1</div>
+          <div class="step-line"></div>
+          <div class="step-dot future">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot future">3</div>
+        </div>
+        <div class="step-title">Where are you going?</div>
+        <div class="step-sub">Just the basics to get started.</div>
+        <div class="f"><label>City <span class="req">*</span></label><input placeholder="New York"></div>
+        <div class="f-row">
+          <div class="f"><label>Trip starts <span class="req">*</span></label><input type="date"></div>
+          <div class="f"><label>Trip ends <span class="req">*</span></label><input type="date"></div>
+        </div>
+        <div class="f">
+          <label>Google Maps list URL <span class="req">*</span></label>
+          <input placeholder="maps.app.goo.gl/…">
+          <div class="hint">Saved → Your list → Share → Copy link</div>
+        </div>
+        <button class="btn-next">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="shell-group">
+    <div class="shell-label">Step 2 of 3 — Flights & Stay</div>
+    <div class="phone">
+      <div class="card-inner">
+        <div class="logo-area">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+        </div>
+        <div class="step-bar">
+          <div class="step-dot done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-dot active">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot future">3</div>
+        </div>
+        <div class="step-title">Flights & Stay</div>
+        <div class="step-sub">Blocks travel time on your calendar. All optional.</div>
+        <div class="sec-label">✈️ Arrival</div>
+        <div class="f-row">
+          <div class="f"><label>Airport</label><select><option>— pick —</option><option>JFK</option><option>LGA</option><option>EWR</option></select></div>
+          <div class="f"><label>Lands</label><input type="time" value="09:00"></div>
+        </div>
+        <div class="sec-label">✈️ Departure</div>
+        <div class="f-row">
+          <div class="f"><label>Airport</label><select><option>— pick —</option><option>JFK</option></select></div>
+          <div class="f"><label>Takes off</label><input type="time" value="22:00"></div>
+        </div>
+        <div class="sec-label">🏨 Stay</div>
+        <div class="f"><label>Accommodation name</label><input placeholder="Pod Brooklyn, Airbnb…"></div>
+        <div class="f-row">
+          <div class="f"><label>Check-in</label><input type="date"></div>
+          <div class="f"><label>Check-out</label><input type="date"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back">← Back</button>
+          <button class="btn-next">Next →</button>
+        </div>
+        <div class="skip">Skip — add later</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="shell-group">
+    <div class="shell-label">Step 3 of 3 — Schedule preferences</div>
+    <div class="phone">
+      <div class="card-inner">
+        <div class="logo-area">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+        </div>
+        <div class="step-bar">
+          <div class="step-dot done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-dot done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-dot active">3</div>
+        </div>
+        <div class="step-title">Your day schedule</div>
+        <div class="step-sub">When do you like to start and end your days?</div>
+        <div class="f-row" style="margin-bottom:0.5rem">
+          <div class="f"><label>⏰ Day starts</label><input type="time" value="08:00"></div>
+          <div class="f"><label>🌙 Day ends</label><input type="time" value="22:00"></div>
+        </div>
+        <div class="hint" style="margin-bottom:0.75rem">Used to set calendar hours. Default is 8am–10pm.</div>
+        <div class="f"><label>🏠 Starting from (home base)</label><select><option>Midtown Manhattan</option><option>Brooklyn</option><option>Downtown</option></select></div>
+        <div class="btn-row" style="margin-top:0.75rem">
+          <button class="btn-back">← Back</button>
+          <button class="btn-next" style="background:#1a2e2e">Let's go 🗽</button>
+        </div>
+        <div class="skip">Skip — use defaults</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="pro-con">
+  <div class="pro-con-col">
+    <div class="pro-con-label">✓ Pros</div>
+    <ul class="pros">
+      <li>Never feels overwhelming — one thing at a time</li>
+      <li>Skip buttons on optional steps</li>
+      <li>Best mobile experience</li>
+      <li>Progress bar feels satisfying</li>
+    </ul>
+  </div>
+  <div class="pro-con-col">
+    <div class="pro-con-label">· Trade-offs</div>
+    <ul class="pros cons">
+      <li>More taps to get through on repeat edits</li>
+      <li>Slightly more code to implement</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="option-divider">
+
+<!-- ======================================= -->
+<!-- OPTION C: TWO-COLUMN DESKTOP CARD       -->
+<!-- ======================================= -->
+<div class="option-title">Option C — Two-column card (desktop) / stacked (mobile)</div>
+<div class="option-desc">Required fields on the left in a highlighted column. Optional details on the right in a softer column. One page, no clicking — everything visible at once.</div>
+<div style="text-align:center;margin-bottom:1rem"><span class="option-tag tag-visual">Best for desktop</span></div>
+
+<div class="two-col">
+
+  <div class="shell-group">
+    <div class="shell-label">Mobile — stacked</div>
+    <div class="phone">
+      <div class="card-inner">
+        <div class="logo-area">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+          <div class="logo-sub">Plan your trip</div>
+        </div>
+        <span class="form-col-label">Required</span>
+        <div class="f"><label>City</label><input placeholder="New York"></div>
+        <div class="f-row">
+          <div class="f"><label>Start</label><input type="date"></div>
+          <div class="f"><label>End</label><input type="date"></div>
+        </div>
+        <div class="f"><label>Maps URL</label><input placeholder="maps.app.goo.gl/…"></div>
+        <div class="divider"></div>
+        <span class="optional-col-label">Optional</span>
+        <div class="toggle-section">
+          <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">✈️</span><span class="toggle-label">Flights</span></div><span class="toggle-arrow">›</span></div>
+        </div>
+        <div class="toggle-section">
+          <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">🏨</span><span class="toggle-label">Stay</span></div><span class="toggle-arrow">›</span></div>
+        </div>
+        <div class="toggle-section">
+          <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">⏰</span><span class="toggle-label">Schedule</span></div><span class="toggle-arrow">›</span></div>
+        </div>
+        <button class="btn-submit">Let's go →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell-group">
+    <div class="shell-label">Desktop — two columns side by side</div>
+    <div class="desktop" style="max-width:580px">
+      <div class="card-inner">
+        <div class="logo-area" style="margin-bottom:0.65rem">
+          <div class="dna-mark">D · N · A</div>
+          <div class="logo-title">DNA TRAVELS</div>
+          <div class="logo-sub">Plan your trip</div>
+        </div>
+        <div class="form-two-col">
+          <!-- Required column -->
+          <div class="form-col">
+            <span class="form-col-label">Required</span>
+            <div class="f"><label>City <span class="req">*</span></label><input placeholder="New York"></div>
+            <div class="f"><label>Trip starts <span class="req">*</span></label><input type="date"></div>
+            <div class="f"><label>Trip ends <span class="req">*</span></label><input type="date"></div>
+            <div class="f">
+              <label>Google Maps URL <span class="req">*</span></label>
+              <input placeholder="maps.app.goo.gl/…">
+              <div class="hint">Saved → Your list → Share → Copy link</div>
+            </div>
+          </div>
+          <!-- Optional column -->
+          <div class="form-col">
+            <span class="optional-col-label">Optional</span>
+            <div class="toggle-section" style="margin-bottom:0.35rem">
+              <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">✈️</span><div><div class="toggle-label">Flights</div><div class="toggle-meta">arrival + departure</div></div></div><span class="toggle-arrow">›</span></div>
+            </div>
+            <div class="toggle-section" style="margin-bottom:0.35rem">
+              <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">🏨</span><div><div class="toggle-label">Stay</div><div class="toggle-meta">check-in / check-out</div></div></div><span class="toggle-arrow">›</span></div>
+            </div>
+            <div class="toggle-section" style="margin-bottom:0.35rem">
+              <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">⏰</span><div><div class="toggle-label">Day schedule</div><div class="toggle-meta">8am–10pm default</div></div></div><span class="toggle-arrow">›</span></div>
+            </div>
+            <div class="toggle-section">
+              <div class="toggle-head"><div class="toggle-head-left"><span class="toggle-icon">🏠</span><div><div class="toggle-label">Home base</div><div class="toggle-meta">Midtown default</div></div></div><span class="toggle-arrow">›</span></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-submit">Let's go →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="pro-con">
+  <div class="pro-con-col">
+    <div class="pro-con-label">✓ Pros</div>
+    <ul class="pros">
+      <li>Clear visual separation: required vs. optional</li>
+      <li>Everything visible on desktop at a glance</li>
+      <li>Clean on mobile too (stacks naturally)</li>
+    </ul>
+  </div>
+  <div class="pro-con-col">
+    <div class="pro-con-label">· Trade-offs</div>
+    <ul class="pros cons">
+      <li>Two columns can feel busy on small desktops</li>
+      <li>Still need to expand optional sections</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================================= -->
+<!-- CHANGES SHARED BY ALL OPTIONS           -->
+<!-- ======================================= -->
+<div style="max-width:900px;margin:2.5rem auto 0;background:#fff;border-radius:14px;padding:1.25rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.07)">
+  <div style="font-size:0.9rem;font-weight:800;color:#1a2e2e;margin-bottom:0.75rem">⚪ Changes all 3 options share</div>
+  <div style="display:flex;flex-direction:column;gap:0.45rem">
+    <div style="font-size:0.72rem;color:#333">🗑 <strong>Removed:</strong> Excursions website URL field (very niche, rarely used)</div>
+    <div style="font-size:0.72rem;color:#333">🗑 <strong>Removed:</strong> State + Country fields — city is enough</div>
+    <div style="font-size:0.72rem;color:#333">🗑 <strong>Removed:</strong> Flight number / confirmation field — not used by the app</div>
+    <div style="font-size:0.72rem;color:#333">🗑 <strong>Removed:</strong> Google Places API key — moved to Nearby tab (already planned)</div>
+    <div style="font-size:0.72rem;color:#333">✏️ <strong>Simplified:</strong> Flights down to just airport + date + time (no separate takes off / lands rows)</div>
+    <div style="font-size:0.72rem;color:#333">✨ <strong>Added:</strong> "Edit" link in planner bar so you can come back and change any of this later</div>
+  </div>
+</div>
+
+</body>
+</html>

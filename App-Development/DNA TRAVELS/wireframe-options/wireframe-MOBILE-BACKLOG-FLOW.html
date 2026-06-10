@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA TRAVELS — Mobile Backlog Flow Wireframe</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; padding: 2rem 1rem; }
+  h1 { text-align: center; font-size: 1.1rem; color: #333; margin-bottom: 0.4rem; }
+  .subtitle { text-align: center; font-size: 0.78rem; color: #888; margin-bottom: 2rem; }
+
+  .screens { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+
+  .screen-group { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .screen-label { font-size: 0.72rem; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; max-width: 220px; }
+  .screen-desc { font-size: 0.68rem; color: #888; text-align: center; max-width: 220px; line-height: 1.4; }
+
+  /* Phone shell */
+  .phone {
+    width: 220px;
+    height: 440px;
+    background: #fff;
+    border-radius: 28px;
+    border: 3px solid #222;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+
+  /* Top bar */
+  .top-bar {
+    background: #1a2e2e;
+    color: #fff;
+    padding: 0.5rem 0.75rem 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .top-bar-brand { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; color: #a8d5d0; }
+  .top-bar-right { font-size: 0.55rem; color: #7aa; }
+
+  /* Pane head */
+  .pane-head {
+    padding: 0.5rem 0.75rem 0.35rem;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+  .pane-head h2 { font-size: 0.82rem; font-weight: 800; color: #1a2e2e; }
+  .pane-head p { font-size: 0.6rem; color: #888; margin-top: 1px; }
+
+  /* Scroll area */
+  .page-scroll { flex: 1; overflow: hidden; padding: 0.5rem 0.65rem; display: flex; flex-direction: column; gap: 0.35rem; }
+
+  /* Backlog item */
+  .backlog-item {
+    background: #f8f8f8;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 0.45rem 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .backlog-item.highlighted {
+    border-color: #2d6a6a;
+    background: #eef6f6;
+    box-shadow: 0 2px 8px rgba(45,106,106,0.15);
+  }
+  .item-emoji { font-size: 1rem; flex-shrink: 0; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 0.68rem; font-weight: 700; color: #1a2e2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-meta { font-size: 0.58rem; color: #888; margin-top: 1px; }
+  .item-tag { font-size: 0.55rem; font-weight: 700; padding: 0.12rem 0.4rem; border-radius: 999px; background: #e8f4f3; color: #2d6a6a; }
+
+  /* Nav bar */
+  .nav-bar {
+    display: flex;
+    border-top: 1.5px solid #e8e8e8;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.45rem 0;
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: #aaa;
+    gap: 2px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .nav-btn.active { color: #2d6a6a; }
+  .nav-btn .icon { font-size: 1rem; }
+
+  /* Bottom sheet overlay */
+  .sheet-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 26px;
+    overflow: hidden;
+  }
+  .sheet {
+    background: #fff;
+    border-radius: 18px 18px 0 0;
+    padding: 0.85rem 0.85rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    max-height: 78%;
+  }
+  .sheet-handle { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 0.3rem; }
+  .sheet-title { font-size: 0.75rem; font-weight: 800; color: #1a2e2e; }
+  .sheet-activity { display: flex; align-items: center; gap: 0.45rem; background: #f3f3f3; border-radius: 8px; padding: 0.4rem 0.6rem; }
+  .sheet-activity-name { font-size: 0.68rem; font-weight: 700; color: #1a2e2e; }
+  .sheet-activity-meta { font-size: 0.58rem; color: #888; }
+  .sheet-section-label { font-size: 0.6rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+  .day-list { display: flex; flex-direction: column; gap: 0.3rem; }
+  .day-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.6rem;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 9px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    background: #fff;
+  }
+  .day-option.selected { border-color: #2d6a6a; background: #eef6f6; }
+  .day-option-left { display: flex; flex-direction: column; gap: 1px; }
+  .day-option-name { font-weight: 700; color: #1a2e2e; }
+  .day-option-chips { font-size: 0.55rem; color: #888; }
+  .day-option-check { font-size: 0.75rem; color: #2d6a6a; }
+
+  /* Time row */
+  .time-row { display: flex; align-items: center; gap: 0.4rem; }
+  .time-label { font-size: 0.62rem; color: #555; flex-shrink: 0; }
+  .time-select {
+    flex: 1;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.5rem;
+    border: 1.5px solid #ddd;
+    border-radius: 7px;
+    background: #fafafa;
+    color: #1a2e2e;
+  }
+  .time-skip { font-size: 0.58rem; color: #888; text-decoration: underline; }
+
+  /* Add button */
+  .add-btn {
+    background: #2d6a6a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+  .add-btn.disabled { background: #ccc; color: #888; }
+
+  /* Success state */
+  .success-toast {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a2e2e;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Discover add flow */
+  .discover-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.6rem;
+    background: #f8f8f8;
+    border-radius: 10px;
+    border: 1.5px solid #e8e8e8;
+  }
+  .discover-item.new { border-color: #f0c040; background: #fffbea; }
+  .discover-info { flex: 1; min-width: 0; }
+  .discover-name { font-size: 0.65rem; font-weight: 700; color: #1a2e2e; }
+  .discover-meta { font-size: 0.57rem; color: #888; margin-top: 1px; }
+  .new-badge { font-size: 0.5rem; font-weight: 700; background: #fef3c7; color: #92400e; border-radius: 4px; padding: 0.08rem 0.3rem; margin-left: 4px; }
+  .add-chip { font-size: 0.58rem; font-weight: 700; color: #2d6a6a; border: 1.5px solid #2d6a6a; border-radius: 999px; padding: 0.2rem 0.5rem; background: #fff; flex-shrink: 0; }
+  .added-chip { font-size: 0.58rem; font-weight: 700; color: #888; border: 1.5px solid #ddd; border-radius: 999px; padding: 0.2rem 0.5rem; background: #f5f5f5; flex-shrink: 0; }
+
+  /* Fix note */
+  .fix-badge {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.25rem;
+  }
+  .bug-badge {
+    display: inline-block;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Section divider */
+  .divider { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+  .divider-line { flex: 1; height: 1px; background: #eee; }
+  .divider-text { font-size: 0.6rem; color: #bbb; white-space: nowrap; }
+
+  /* Arrow connector */
+  .arrow { font-size: 1.5rem; color: #bbb; align-self: center; margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<h1>DNA TRAVELS — Mobile UX Fixes</h1>
+<p class="subtitle">Wireframe for approval · Do not implement until approved</p>
+
+<div class="screens">
+
+  <!-- ===== FIX 1: Nav bar stays visible ===== -->
+  <div class="screen-group">
+    <div class="fix-badge">✅ Fix 1 — Nav bar always visible</div>
+    <div class="screen-label">Backlog tab</div>
+    <div class="screen-desc">Nav bar no longer disappears. Always pinned to bottom.</div>
+    <div class="phone">
+      <div class="top-bar">
+        <span class="top-bar-brand">DNA TRAVELS</span>
+        <span class="top-bar-right">NYC · 5 days</span>
+      </div>
+      <div class="pane-head">
+        <h2>📋 Backlog</h2>
+        <p>Tap any activity to add it to a day</p>
+      </div>
+      <div class="page-scroll">
+        <div class="backlog-item">
+          <div class="item-emoji">🗽</div>
+          <div class="item-info">
+            <div class="item-name">Statue of Liberty</div>
+            <div class="item-meta">2–3 hrs · <span class="item-tag">landmark</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🍕</div>
+          <div class="item-info">
+            <div class="item-name">Di Fara Pizza</div>
+            <div class="item-meta">1 hr · <span class="item-tag">food</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🎨</div>
+          <div class="item-info">
+            <div class="item-name">MoMA</div>
+            <div class="item-meta">2 hrs · <span class="item-tag">museum</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🌿</div>
+          <div class="item-info">
+            <div class="item-name">Brooklyn Botanic Garden</div>
+            <div class="item-meta">1.5 hrs · <span class="item-tag">outdoors</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🎭</div>
+          <div class="item-info">
+            <div class="item-name">Broadway Show</div>
+            <div class="item-meta">2.5 hrs · <span class="item-tag">entertainment</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn"><span class="icon">📅</span>Trip</button>
+        <button class="nav-btn"><span class="icon">🗓</span>Day</button>
+        <button class="nav-btn active"><span class="icon">📋</span>Backlog</button>
+        <button class="nav-btn"><span class="icon">✨</span>Nearby</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- ===== FIX 2: Tap activity → bottom sheet ===== -->
+  <div class="screen-group">
+    <div class="fix-badge">✅ Fix 2 — Tap to add flow</div>
+    <div class="screen-label">Tap an activity → "Add to Trip" sheet opens</div>
+    <div class="screen-desc">Pick a day, pick a time (optional), tap Add.</div>
+    <div class="phone">
+      <div class="top-bar">
+        <span class="top-bar-brand">DNA TRAVELS</span>
+        <span class="top-bar-right">NYC · 5 days</span>
+      </div>
+      <div class="pane-head">
+        <h2>📋 Backlog</h2>
+        <p>Tap any activity to add it to a day</p>
+      </div>
+      <div class="page-scroll">
+        <div class="backlog-item">
+          <div class="item-emoji">🗽</div>
+          <div class="item-info">
+            <div class="item-name">Statue of Liberty</div>
+            <div class="item-meta">2–3 hrs · <span class="item-tag">landmark</span></div>
+          </div>
+        </div>
+        <div class="backlog-item highlighted">
+          <div class="item-emoji">🍕</div>
+          <div class="item-info">
+            <div class="item-name">Di Fara Pizza</div>
+            <div class="item-meta">1 hr · <span class="item-tag">food</span></div>
+          </div>
+        </div>
+        <div class="backlog-item" style="opacity:0.35">
+          <div class="item-emoji">🎨</div>
+          <div class="item-info">
+            <div class="item-name">MoMA</div>
+            <div class="item-meta">2 hrs · <span class="item-tag">museum</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn"><span class="icon">📅</span>Trip</button>
+        <button class="nav-btn"><span class="icon">🗓</span>Day</button>
+        <button class="nav-btn active"><span class="icon">📋</span>Backlog</button>
+        <button class="nav-btn"><span class="icon">✨</span>Nearby</button>
+      </div>
+      <!-- Bottom Sheet -->
+      <div class="sheet-overlay">
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">Add to your trip</div>
+          <div class="sheet-activity">
+            <span style="font-size:1.1rem">🍕</span>
+            <div>
+              <div class="sheet-activity-name">Di Fara Pizza</div>
+              <div class="sheet-activity-meta">~1 hr · food</div>
+            </div>
+          </div>
+          <div class="sheet-section-label">Which day?</div>
+          <div class="day-list">
+            <div class="day-option">
+              <div class="day-option-left">
+                <div class="day-option-name">Thu, Jun 12</div>
+                <div class="day-option-chips">3 stops planned</div>
+              </div>
+            </div>
+            <div class="day-option selected">
+              <div class="day-option-left">
+                <div class="day-option-name">Fri, Jun 13</div>
+                <div class="day-option-chips">1 stop · mostly open</div>
+              </div>
+              <span class="day-option-check">✓</span>
+            </div>
+            <div class="day-option">
+              <div class="day-option-left">
+                <div class="day-option-name">Sat, Jun 14</div>
+                <div class="day-option-chips">5 stops planned</div>
+              </div>
+            </div>
+          </div>
+          <div class="time-row">
+            <span class="time-label">Time (optional)</span>
+            <select class="time-select">
+              <option>Anytime / unscheduled</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+            </select>
+          </div>
+          <div class="add-btn">+ Add to Fri, Jun 13</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- ===== After adding ===== -->
+  <div class="screen-group">
+    <div class="fix-badge">✅ After adding</div>
+    <div class="screen-label">Sheet closes · toast confirms</div>
+    <div class="screen-desc">Activity disappears from backlog. Toast shows confirmation.</div>
+    <div class="phone">
+      <div class="top-bar">
+        <span class="top-bar-brand">DNA TRAVELS</span>
+        <span class="top-bar-right">NYC · 5 days</span>
+      </div>
+      <div class="pane-head">
+        <h2>📋 Backlog</h2>
+        <p>Tap any activity to add it to a day</p>
+      </div>
+      <div class="page-scroll">
+        <div class="backlog-item">
+          <div class="item-emoji">🗽</div>
+          <div class="item-info">
+            <div class="item-name">Statue of Liberty</div>
+            <div class="item-meta">2–3 hrs · <span class="item-tag">landmark</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🎨</div>
+          <div class="item-info">
+            <div class="item-name">MoMA</div>
+            <div class="item-meta">2 hrs · <span class="item-tag">museum</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🌿</div>
+          <div class="item-info">
+            <div class="item-name">Brooklyn Botanic Garden</div>
+            <div class="item-meta">1.5 hrs · <span class="item-tag">outdoors</span></div>
+          </div>
+        </div>
+        <div class="backlog-item">
+          <div class="item-emoji">🎭</div>
+          <div class="item-info">
+            <div class="item-name">Broadway Show</div>
+            <div class="item-meta">2.5 hrs · <span class="item-tag">entertainment</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn"><span class="icon">📅</span>Trip</button>
+        <button class="nav-btn"><span class="icon">🗓</span>Day</button>
+        <button class="nav-btn active"><span class="icon">📋</span>Backlog</button>
+        <button class="nav-btn"><span class="icon">✨</span>Nearby</button>
+      </div>
+      <div class="success-toast">✓ Di Fara Pizza added to Fri, Jun 13</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== Row 2: Nearby tab same flow ===== -->
+<div style="margin:2.5rem 0 1rem; text-align:center">
+  <div style="font-size:0.8rem;font-weight:800;color:#333">Same "Add to Trip" flow works from the Nearby tab too</div>
+  <div style="font-size:0.72rem;color:#888;margin-top:0.25rem">Tap "+ Add" on any activity → same bottom sheet appears</div>
+</div>
+
+<div class="screens">
+
+  <div class="screen-group">
+    <div class="screen-label">✨ Nearby tab — tap + Add</div>
+    <div class="phone">
+      <div class="top-bar">
+        <span class="top-bar-brand">DNA TRAVELS</span>
+        <span class="top-bar-right">Fri, Jun 13</span>
+      </div>
+      <div class="pane-head">
+        <h2>✨ Nearby</h2>
+        <p>Fri, Jun 13 · Free: 2pm+</p>
+      </div>
+      <div class="page-scroll">
+        <div style="font-size:0.58rem;font-weight:700;color:#2d6a6a;text-transform:uppercase;letter-spacing:0.04em;padding:0.1rem 0 0.2rem">📋 From your list</div>
+        <div class="discover-item">
+          <div style="font-size:1rem">🗽</div>
+          <div class="discover-info">
+            <div class="discover-name">Statue of Liberty</div>
+            <div class="discover-meta">0.4 mi · 2–3 hrs</div>
+          </div>
+          <div class="add-chip">+ Add</div>
+        </div>
+        <div class="discover-item">
+          <div style="font-size:1rem">🌉</div>
+          <div class="discover-info">
+            <div class="discover-name">Brooklyn Bridge</div>
+            <div class="discover-meta">0.8 mi · 1.5 hrs</div>
+          </div>
+          <div class="add-chip">+ Add</div>
+        </div>
+        <div style="font-size:0.58rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.04em;padding:0.3rem 0 0.2rem">✨ Discover new</div>
+        <div class="discover-item new">
+          <div style="font-size:1rem">☕</div>
+          <div class="discover-info">
+            <div class="discover-name">Cafe Grumpy <span class="new-badge">✨ new</span></div>
+            <div class="discover-meta">0.2 mi · ★4.6</div>
+          </div>
+          <div class="add-chip">+ Add</div>
+        </div>
+        <div class="discover-item new">
+          <div style="font-size:1rem">🍜</div>
+          <div class="discover-info">
+            <div class="discover-name">Xi'an Famous Foods <span class="new-badge">✨ new</span></div>
+            <div class="discover-meta">0.5 mi · ★4.5</div>
+          </div>
+          <div class="add-chip">+ Add</div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn"><span class="icon">📅</span>Trip</button>
+        <button class="nav-btn"><span class="icon">🗓</span>Day</button>
+        <button class="nav-btn"><span class="icon">📋</span>Backlog</button>
+        <button class="nav-btn active"><span class="icon">✨</span>Nearby</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <div class="screen-group">
+    <div class="screen-label">Tap + Add → same sheet</div>
+    <div class="phone">
+      <div class="top-bar">
+        <span class="top-bar-brand">DNA TRAVELS</span>
+        <span class="top-bar-right">Fri, Jun 13</span>
+      </div>
+      <div class="pane-head">
+        <h2>✨ Nearby</h2>
+        <p>Fri, Jun 13 · Free: 2pm+</p>
+      </div>
+      <div class="page-scroll" style="opacity:0.4">
+        <div style="font-size:0.58rem;font-weight:700;color:#2d6a6a;text-transform:uppercase;letter-spacing:0.04em;padding:0.1rem 0 0.2rem">📋 From your list</div>
+        <div class="discover-item">
+          <div style="font-size:1rem">🗽</div>
+          <div class="discover-info"><div class="discover-name">Statue of Liberty</div></div>
+          <div class="add-chip">+ Add</div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn"><span class="icon">📅</span>Trip</button>
+        <button class="nav-btn"><span class="icon">🗓</span>Day</button>
+        <button class="nav-btn"><span class="icon">📋</span>Backlog</button>
+        <button class="nav-btn active"><span class="icon">✨</span>Nearby</button>
+      </div>
+      <div class="sheet-overlay">
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">Add to your trip</div>
+          <div class="sheet-activity">
+            <span style="font-size:1.1rem">☕</span>
+            <div>
+              <div class="sheet-activity-name">Cafe Grumpy</div>
+              <div class="sheet-activity-meta">0.2 mi · ★4.6 · café</div>
+            </div>
+          </div>
+          <div class="sheet-section-label">Which day?</div>
+          <div class="day-list">
+            <div class="day-option selected">
+              <div class="day-option-left">
+                <div class="day-option-name">Fri, Jun 13</div>
+                <div class="day-option-chips">current day · 1 stop</div>
+              </div>
+              <span class="day-option-check">✓</span>
+            </div>
+            <div class="day-option">
+              <div class="day-option-left">
+                <div class="day-option-name">Sat, Jun 14</div>
+                <div class="day-option-chips">5 stops planned</div>
+              </div>
+            </div>
+            <div class="day-option">
+              <div class="day-option-left">
+                <div class="day-option-name">Sun, Jun 15</div>
+                <div class="day-option-chips">2 stops planned</div>
+              </div>
+            </div>
+          </div>
+          <div class="time-row">
+            <span class="time-label">Time (optional)</span>
+            <select class="time-select">
+              <option>Anytime / unscheduled</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+            </select>
+          </div>
+          <div class="add-btn">+ Add to Fri, Jun 13</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Summary -->
+<div style="max-width:600px;margin:3rem auto 1rem;background:#fff;border-radius:14px;padding:1.25rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+  <div style="font-size:0.85rem;font-weight:800;color:#1a2e2e;margin-bottom:0.75rem">📋 Summary of changes</div>
+  <div style="display:flex;flex-direction:column;gap:0.5rem">
+    <div style="display:flex;gap:0.6rem;align-items:flex-start">
+      <div style="font-size:0.75rem;background:#dcfce7;color:#166534;font-weight:700;padding:0.1rem 0.5rem;border-radius:999px;flex-shrink:0">Fix</div>
+      <div style="font-size:0.72rem;color:#333"><strong>Nav bar always visible</strong> — currently disappears when in Backlog. Will be pinned to bottom on all tabs.</div>
+    </div>
+    <div style="display:flex;gap:0.6rem;align-items:flex-start">
+      <div style="font-size:0.75rem;background:#dbeafe;color:#1e40af;font-weight:700;padding:0.1rem 0.5rem;border-radius:999px;flex-shrink:0">New</div>
+      <div style="font-size:0.72rem;color:#333"><strong>Tap to add sheet (Backlog)</strong> — tapping any activity opens a bottom sheet with day picker + optional time.</div>
+    </div>
+    <div style="display:flex;gap:0.6rem;align-items:flex-start">
+      <div style="font-size:0.75rem;background:#dbeafe;color:#1e40af;font-weight:700;padding:0.1rem 0.5rem;border-radius:999px;flex-shrink:0">New</div>
+      <div style="font-size:0.72rem;color:#333"><strong>Same sheet for Nearby tab</strong> — "+ Add" buttons open the same day/time picker instead of adding immediately to the current day.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

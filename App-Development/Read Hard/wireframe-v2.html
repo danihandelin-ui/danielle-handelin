@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Read Hard — Wireframe v2 (3 Style Options)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&family=Fredoka+One&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a2e;
+      color: #e0d9c8;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 24px;
+    }
+    h1 { font-size: 13px; color: #f5c842; margin-bottom: 4px; }
+    .page-sub { font-size: 7px; color: #888; margin-bottom: 32px; }
+    h2 { font-size: 10px; color: #a8d8a8; margin-bottom: 12px; margin-top: 8px; }
+    h3 { font-size: 8px; color: #f5c842; margin-bottom: 8px; }
+    .section { margin-bottom: 40px; }
+    .row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+    .annotation {
+      font-size: 6px; color: #888;
+      border-left: 2px solid #444;
+      padding-left: 8px;
+      margin-top: 8px;
+      line-height: 2;
+    }
+    .anno-green { border-color: #27ae60; color: #7ec897; }
+    .anno-yellow { border-color: #f5c842; color: #c8a832; }
+    .anno-red { border-color: #e05252; color: #c87878; }
+    .anno-blue { border-color: #5299e0; color: #78a8c8; }
+    hr { border: 1px solid #2a2a3e; margin: 32px 0; }
+
+    /* ═══════════════════════════════
+       ENGINE EXPLAINER BOX
+    ═══════════════════════════════ */
+    .engine-box {
+      background: #0a120a;
+      border: 2px solid #3a8a3a;
+      padding: 16px;
+      max-width: 860px;
+      margin-bottom: 32px;
+    }
+    .engine-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .engine-card {
+      background: #111;
+      border: 1px solid #333;
+      padding: 10px;
+    }
+    .engine-name { font-size: 8px; color: #f5c842; margin-bottom: 6px; }
+    .engine-eli5 { font-size: 6px; color: #e0d9c8; line-height: 2; margin-bottom: 6px; }
+    .engine-verdict {
+      font-size: 6px;
+      padding: 4px 6px;
+      margin-top: 4px;
+    }
+    .verdict-yes { background: #1a3a1a; color: #27ae60; border: 1px solid #27ae60; }
+    .verdict-maybe { background: #2a2a0a; color: #f5c842; border: 1px solid #f5c842; }
+    .verdict-no { background: #2a0a0a; color: #e05252; border: 1px solid #e05252; }
+
+    /* ═══════════════════════════════
+       CONTROLS DIAGRAM
+    ═══════════════════════════════ */
+    .controls-box {
+      background: #0a0a1a;
+      border: 2px solid #5299e0;
+      padding: 14px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .key-grid { display: grid; grid-template-columns: repeat(3, 28px); gap: 4px; margin: 8px 0; justify-content: center; }
+    .key {
+      width: 28px; height: 28px;
+      background: #222;
+      border: 2px solid #555;
+      border-bottom: 4px solid #333;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 7px; color: #e0d9c8;
+      border-radius: 3px;
+    }
+    .key.active { background: #3a5a8a; border-color: #5299e0; color: #fff; }
+    .key.action { background: #3a3a0a; border-color: #f5c842; color: #f5c842; }
+    .key.run { background: #3a0a0a; border-color: #e05252; color: #e05252; }
+    .key.empty { background: transparent; border: none; }
+    .controls-note { font-size: 6px; color: #888; line-height: 2.2; margin-top: 8px; }
+    .controls-note span { color: #a8d8a8; }
+
+    /* ═══════════════════════════════
+       CART GLOW DEMO
+    ═══════════════════════════════ */
+    .glow-demo {
+      background: #0d1b0d;
+      border: 2px solid #333;
+      padding: 16px;
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .shelf-strip {
+      width: 100%;
+      height: 36px;
+      background: #2a1a0a;
+      border: 2px solid #5a3a1a;
+      display: flex;
+      align-items: flex-end;
+      padding: 2px 4px;
+      gap: 2px;
+    }
+    .mini-book { width: 9px; border-radius: 1px; }
+    .cart-glow-off {
+      width: 44px; height: 28px;
+      background: #8b6914;
+      border: 2px solid #5a4010;
+      position: relative;
+    }
+    .cart-glow-on {
+      width: 44px; height: 28px;
+      background: #8b6914;
+      border: 2px solid #5a4010;
+      box-shadow: 0 0 12px 6px rgba(100, 220, 100, 0.7), 0 0 24px 10px rgba(100, 220, 100, 0.3);
+      animation: cartPulse 1.2s ease-in-out infinite;
+      position: relative;
+    }
+    @keyframes cartPulse {
+      0%, 100% { box-shadow: 0 0 10px 5px rgba(100,220,100,0.6), 0 0 20px 8px rgba(100,220,100,0.25); }
+      50% { box-shadow: 0 0 18px 10px rgba(100,220,100,0.9), 0 0 36px 16px rgba(100,220,100,0.4); }
+    }
+    .glow-label { font-size: 6px; color: #888; text-align: center; }
+    .glow-label.on { color: #7ec897; }
+
+    /* ═══════════════════════════════
+       INVENTORY POPUP (AC style)
+    ═══════════════════════════════ */
+    .inventory-popup {
+      width: 340px;
+      background: #f5f0e0;
+      border: 4px solid #8b6914;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 0 #5a4010, 4px 8px 0 rgba(0,0,0,0.4);
+      font-family: 'Nunito', sans-serif;
+    }
+    .inv-header {
+      background: #8b6914;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .inv-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 13px; color: #fff; }
+    .inv-subtitle { font-family: 'Nunito', sans-serif; font-size: 9px; color: #e8d090; margin-left: auto; }
+    .inv-body { padding: 10px; }
+    .inv-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .inv-slot {
+      aspect-ratio: 1;
+      background: #e8dcc0;
+      border: 2px solid #c4a870;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .inv-slot:hover, .inv-slot.selected { background: #d4c090; border-color: #8b6914; }
+    .inv-slot.empty { background: #f0ead8; border-style: dashed; }
+    .book-thumb {
+      width: 12px;
+      border-radius: 2px;
+      display: block;
+    }
+    .book-thumb-tall { height: 28px; }
+    .book-thumb-med  { height: 24px; }
+    .book-thumb-short{ height: 20px; }
+    .inv-detail {
+      background: #e8dcc0;
+      border: 2px solid #c4a870;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .inv-book-spine {
+      width: 16px; height: 56px;
+      background: #c0392b;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      font-family: 'Nunito', sans-serif;
+      font-size: 6px;
+      color: #fff;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .inv-book-info { font-family: 'Nunito', sans-serif; font-size: 9px; line-height: 1.8; color: #4a3a20; }
+    .inv-book-info strong { color: #5a2800; }
+    .inv-tag {
+      display: inline-block;
+      background: #8b6914;
+      color: #fff;
+      font-size: 7px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .inv-tag.fiction { background: #27ae60; }
+    .inv-tag.nonfic { background: #2980b9; }
+    .inv-tag.ref { background: #8e44ad; }
+    .inv-footer {
+      padding: 6px 10px 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .inv-btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 9px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .inv-btn-close { background: #c4a870; color: #5a3800; }
+    .inv-btn-sort { background: #8b6914; color: #fff; }
+    .inv-btn-go { background: #27ae60; color: #fff; }
+
+    /* ═══════════════════════════════
+       PIXEL CHARACTERS (shared base)
+    ═══════════════════════════════ */
+    .pchar {
+      position: relative;
+      display: inline-block;
+    }
+    /* Head */
+    .phead {
+      width: 20px; height: 18px;
+      border: 2px solid #333;
+      position: relative;
+      margin: 0 auto;
+    }
+    .phead::before { /* eyes */
+      content: '';
+      position: absolute;
+      top: 5px; left: 3px;
+      width: 4px; height: 4px;
+      background: #222;
+      box-shadow: 8px 0 0 #222;
+    }
+    .phead::after { /* smile */
+      content: '';
+      position: absolute;
+      bottom: 3px; left: 4px;
+      width: 10px; height: 3px;
+      border-bottom: 2px solid #a03020;
+      border-left: 2px solid #a03020;
+      border-right: 2px solid #a03020;
+      border-radius: 0 0 4px 4px;
+    }
+    .phair {
+      position: absolute;
+      top: -4px; left: -2px;
+      width: 24px; height: 10px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+    .pbody {
+      width: 20px; height: 20px;
+      border: 2px solid #333;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .plegs {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+    }
+    .pleg { width: 7px; height: 8px; border: 2px solid #333; }
+
+    /* Dewey character */
+    .dewey .phead { background: #f4c2a1; }
+    .dewey .phair { background: #4a2800; }
+    .dewey .pbody { background: #4a90d9; } /* blue shirt */
+    .dewey .pleg { background: #3a3060; }
+
+    /* Librarian character */
+    .librarian-char .phead { background: #deb887; }
+    .librarian-char .phair { background: #888; }
+    .librarian-char .pbody { background: #8a5a2a; }
+    .librarian-char .pleg { background: #4a3010; }
+
+    /* Glasses on librarian */
+    .librarian-char .phead::before {
+      box-shadow: 8px 0 0 #222, 2px -1px 0 1px #222, 10px -1px 0 1px #222;
+    }
+
+    /* Dewey with cart */
+    .cart-sprite {
+      width: 32px; height: 18px;
+      background: #8b6914;
+      border: 2px solid #5a4010;
+      position: relative;
+      display: inline-block;
+    }
+    .cart-sprite::before { /* wheel left */
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 2px;
+      width: 8px; height: 8px;
+      background: #333;
+      border-radius: 50%;
+    }
+    .cart-sprite::after { /* wheel right */
+      content: '';
+      position: absolute;
+      bottom: -5px; right: 2px;
+      width: 8px; height: 8px;
+      background: #333;
+      border-radius: 50%;
+    }
+
+    /* ═══════════════════════════════
+       OPTION A — STARDEW STYLE (TOP-DOWN)
+    ═══════════════════════════════ */
+    .option-a { --accent: #4a8a4a; --bg: #0d1b0d; --floor: #1a2e1a; --wall: #2a1a0a; }
+
+    .game-frame-a {
+      width: 480px;
+      background: var(--bg);
+      border: 3px solid var(--accent);
+      overflow: hidden;
+      position: relative;
+    }
+    .hud-a {
+      background: #080f08;
+      border-bottom: 2px solid #2a5a2a;
+      padding: 6px 10px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .hud-item { display: flex; flex-direction: column; gap: 2px; }
+    .hud-key { font-size: 5px; color: #666; }
+    .hud-val { font-size: 9px; color: #f5c842; }
+    .hud-val.red { color: #e05252; }
+    .warn-dots { display: flex; gap: 3px; margin-top: 2px; }
+    .wdot { width: 8px; height: 8px; border-radius: 50%; background: #e05252; }
+    .wdot.off { background: #333; border: 1px solid #555; }
+
+    /* Library room top-down */
+    .room-a {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      grid-template-rows: 220px;
+    }
+    .wall-shelf {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 4px 3px;
+    }
+    .wall-shelf-left { background: #1e1008; border-right: 3px solid #5a3a1a; }
+    .wall-shelf-right { background: #1e1008; border-left: 3px solid #5a3a1a; }
+    .shelf-band {
+      flex: 1;
+      background: #2a1a0a;
+      border: 1px solid #5a3a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 2px;
+    }
+    .shelf-band-label { font-size: 4px; color: #c89050; text-align: center; line-height: 1.4; }
+    .shelf-books-vert {
+      display: flex;
+      gap: 1px;
+      justify-content: center;
+    }
+    .sb { width: 7px; border-radius: 1px; }
+    .sb-red { background: #c0392b; }
+    .sb-blue { background: #2980b9; }
+    .sb-green { background: #27ae60; }
+    .sb-yellow { background: #d4ac0d; }
+    .sb-purple { background: #8e44ad; }
+    .sb-orange { background: #e67e22; }
+    .sb-teal { background: #16a085; }
+    .sb-grey { background: #7f8c8d; }
+    .sb.h28 { height: 28px; }
+    .sb.h24 { height: 24px; }
+    .sb.h22 { height: 22px; }
+    .sb.h18 { height: 18px; }
+
+    /* Floor */
+    .floor-a {
+      background: #141f14;
+      position: relative;
+    }
+    /* Checkerboard floor tiles */
+    .floor-a::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-conic-gradient(#161e16 0% 25%, #1c281c 0% 50%) 0 0 / 20px 20px;
+      opacity: 0.6;
+    }
+
+    /* Character positioning */
+    .char-wrap {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Vision cone on librarian */
+    .vision-cone-a {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 55px solid rgba(255,230,100,0.18);
+      top: -55px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    /* Cart glow active */
+    .cart-glow-active {
+      animation: cartPulse 1.1s ease-in-out infinite;
+    }
+
+    .bottom-bar-a {
+      background: #080f08;
+      border-top: 2px solid #2a5a2a;
+      padding: 8px 10px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .book-next {
+      border: 1px solid #2a5a2a;
+      padding: 6px;
+      min-width: 130px;
+    }
+    .bn-title { font-size: 6px; color: #f5c842; margin-bottom: 3px; }
+    .bn-info { font-size: 5px; color: #a8d8a8; line-height: 2; }
+    .bn-badge {
+      display: inline-block;
+      background: #1a3a5a;
+      padding: 2px 4px;
+      font-size: 5px;
+      color: #7ab8e8;
+      margin-top: 2px;
+    }
+    .spacebar-hint {
+      border: 1px solid #5a5a1a;
+      padding: 6px;
+      font-size: 5px;
+      color: #e0d9c8;
+      line-height: 2.2;
+    }
+    .spacebar-hint .sk {
+      display: inline-block;
+      background: #333; border: 1px solid #555;
+      padding: 1px 5px; font-size: 5px; color: #f5c842;
+    }
+
+    /* ═══════════════════════════════
+       OPTION B — ANIMAL CROSSING (ISOMETRIC)
+    ═══════════════════════════════ */
+    .game-frame-b {
+      width: 480px;
+      background: #d4e8d0;
+      border: 4px solid #6aaa5a;
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+    }
+    .hud-b {
+      background: #6aaa5a;
+      padding: 6px 10px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .hud-b-item { display: flex; flex-direction: column; gap: 1px; }
+    .hud-b-key { font-size: 7px; color: rgba(255,255,255,0.7); font-family: 'Nunito', sans-serif; font-weight: 700; }
+    .hud-b-val { font-size: 11px; color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; }
+    .hud-b-val.warn { color: #ffe060; }
+    .hud-b-title { margin-left: auto; font-family: 'Fredoka One', sans-serif; font-size: 14px; color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+    .wdot-b { width: 10px; height: 10px; border-radius: 50%; background: #e05252; display: inline-block; box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+    .wdot-b.off { background: rgba(255,255,255,0.3); box-shadow: none; }
+
+    /* Isometric room */
+    .iso-room {
+      height: 240px;
+      position: relative;
+      background: linear-gradient(160deg, #c8e0c0 0%, #b8d4b0 100%);
+      overflow: hidden;
+    }
+    /* Isometric floor */
+    .iso-floor {
+      position: absolute;
+      inset: 20px 60px 0px 60px;
+      background: #c0d8b8;
+      transform: perspective(400px) rotateX(20deg);
+      border-radius: 4px;
+    }
+    /* Iso shelf left */
+    .iso-shelf {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .iso-shelf-l {
+      left: 6px; top: 10px;
+      width: 58px;
+    }
+    .iso-shelf-r {
+      right: 6px; top: 10px;
+      width: 58px;
+    }
+    .iso-shelf-unit {
+      background: #c8a060;
+      border: 2px solid #8a6030;
+      border-radius: 4px;
+      padding: 5px 4px;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    }
+    .iso-shelf-tag {
+      font-family: 'Nunito', sans-serif;
+      font-size: 7px;
+      font-weight: 900;
+      color: #4a2800;
+      text-align: center;
+      margin-bottom: 3px;
+    }
+    .iso-books {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+    }
+    .iso-book {
+      width: 7px; border-radius: 1px 1px 0 0;
+    }
+    .iso-book.h20 { height: 20px; }
+    .iso-book.h16 { height: 16px; }
+    .iso-book.h18 { height: 18px; }
+
+    /* AC-style characters */
+    .ac-char-wrap {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .ac-head {
+      width: 24px; height: 22px;
+      border-radius: 50% 50% 45% 45%;
+      border: 2px solid #333;
+      position: relative;
+    }
+    .ac-head::before { /* eyes */
+      content: '';
+      position: absolute;
+      top: 7px; left: 4px;
+      width: 5px; height: 5px;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: 9px 0 0 #222;
+    }
+    .ac-head::after { /* smile */
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 5px;
+      width: 12px; height: 5px;
+      border-bottom: 2px solid #a03020;
+      border-left: 2px solid #a03020;
+      border-right: 2px solid #a03020;
+      border-radius: 0 0 8px 8px;
+    }
+    .ac-hair {
+      position: absolute;
+      top: -5px; left: -3px;
+      width: 30px; height: 12px;
+      border-radius: 50% 50% 0 0;
+    }
+    .ac-body {
+      width: 22px; height: 18px;
+      border-radius: 6px;
+      border: 2px solid #333;
+      margin: 0 auto;
+    }
+    .ac-legs {
+      display: flex; gap: 4px; justify-content: center;
+    }
+    .ac-leg {
+      width: 8px; height: 10px;
+      border-radius: 0 0 4px 4px;
+      border: 2px solid #333;
+      border-top: none;
+    }
+    .ac-shadow {
+      width: 20px; height: 5px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+    /* Dewey AC */
+    .dewey-ac .ac-head { background: #f4c2a1; }
+    .dewey-ac .ac-hair { background: #4a2800; }
+    .dewey-ac .ac-body { background: #5a99e0; }
+    .dewey-ac .ac-leg  { background: #3a3080; }
+    /* Librarian AC */
+    .lib-ac .ac-head { background: #e0c090; }
+    .lib-ac .ac-hair { background: #aaa; }
+    .lib-ac .ac-body { background: #8a5a2a; }
+    .lib-ac .ac-leg  { background: #4a3010; }
+
+    /* AC Cart */
+    .ac-cart {
+      width: 36px; height: 22px;
+      background: #c8a060;
+      border: 2px solid #8a6030;
+      border-radius: 4px;
+      position: relative;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+    .ac-cart::before {
+      content: '';
+      position: absolute;
+      bottom: -7px; left: 4px;
+      width: 9px; height: 9px;
+      background: #444;
+      border-radius: 50%;
+      box-shadow: 16px 0 0 #444;
+    }
+    .ac-cart.glowing {
+      box-shadow: 0 0 12px 6px rgba(100,220,100,0.7), 2px 2px 0 rgba(0,0,0,0.2);
+      animation: cartPulse 1.1s ease-in-out infinite;
+    }
+
+    /* AC vision cone */
+    .ac-vision {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-top: 50px solid rgba(255,230,60,0.2);
+      left: 50%; transform: translateX(-50%);
+    }
+
+    /* AC Bottom */
+    .bottom-bar-b {
+      background: #6aaa5a;
+      padding: 8px 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .ac-book-card {
+      background: #f5f0e0;
+      border: 2px solid #8b6914;
+      border-radius: 6px;
+      padding: 6px;
+      min-width: 130px;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    }
+    .ac-bn-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 8px; color: #5a2800; margin-bottom: 3px; }
+    .ac-bn-info { font-family: 'Nunito', sans-serif; font-size: 7px; color: #4a3a20; line-height: 1.8; }
+    .ac-hints { font-family: 'Nunito', sans-serif; font-size: 7px; color: rgba(255,255,255,0.85); line-height: 2.2; }
+    .ac-sk { display: inline-block; background: rgba(0,0,0,0.2); padding: 1px 4px; border-radius: 3px; color: #fff; font-weight: 700; }
+
+    /* ═══════════════════════════════
+       OPTION C — PHONE GAME STYLE
+    ═══════════════════════════════ */
+    .game-frame-c {
+      width: 320px;
+      background: #1a0a2e;
+      border: 4px solid #9b59b6;
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'Fredoka One', sans-serif;
+    }
+    .hud-c {
+      background: linear-gradient(90deg, #6a1a9b, #4a1a7a);
+      padding: 8px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 2px solid #9b59b6;
+    }
+    .hud-c-item { display: flex; flex-direction: column; gap: 1px; }
+    .hud-c-key { font-size: 7px; color: rgba(255,255,255,0.6); font-family: 'Fredoka One', sans-serif; }
+    .hud-c-val { font-size: 16px; color: #fff; font-family: 'Fredoka One', sans-serif; letter-spacing: 1px; }
+    .hud-c-val.danger { color: #ff6060; }
+    .hud-c-bar {
+      width: 60px; height: 8px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .hud-c-fill { height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); border-radius: 4px; }
+    .hud-c-fill.warn { background: linear-gradient(90deg, #e67e22, #f39c12); }
+    .hud-c-fill.danger { background: linear-gradient(90deg, #c0392b, #e05252); }
+    .stars { display: flex; gap: 2px; }
+    .star { font-size: 14px; filter: drop-shadow(0 0 4px gold); }
+    .star.off { filter: grayscale(1) brightness(0.4); }
+
+    /* Phone game room */
+    .room-c {
+      height: 260px;
+      position: relative;
+      background: linear-gradient(180deg, #2a0a4e 0%, #1a0a3e 100%);
+      overflow: hidden;
+    }
+    /* Glowing floor */
+    .room-c::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 40px;
+      background: rgba(155, 89, 182, 0.15);
+    }
+    /* Phone shelves */
+    .phone-shelf {
+      position: absolute;
+      top: 10px;
+      width: 52px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .phone-shelf-l { left: 0; }
+    .phone-shelf-r { right: 0; }
+    .phone-shelf-unit {
+      background: linear-gradient(135deg, #4a1a7a, #3a1a5a);
+      border: 2px solid #9b59b6;
+      border-radius: 6px;
+      padding: 4px;
+      box-shadow: 0 0 8px rgba(155,89,182,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .pshlabel { font-family: 'Fredoka One', sans-serif; font-size: 7px; color: #d898f0; text-align: center; margin-bottom: 2px; }
+    .pshbooks { display: flex; gap: 1px; justify-content: center; }
+    .psb { width: 6px; border-radius: 1px; }
+    .psb.h18 { height: 18px; }
+    .psb.h14 { height: 14px; }
+    .psb.h16 { height: 16px; }
+
+    /* Phone characters */
+    .phone-dewey {
+      position: absolute;
+      bottom: 60px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-char-glow {
+      position: absolute;
+      bottom: -4px;
+      width: 30px; height: 8px;
+      background: rgba(90, 180, 255, 0.4);
+      border-radius: 50%;
+      filter: blur(3px);
+    }
+    .ph-head {
+      width: 22px; height: 20px;
+      background: #f4c2a1;
+      border: 2px solid #333;
+      border-radius: 4px;
+      position: relative;
+    }
+    .ph-head::before { /* eyes */
+      content: '';
+      position: absolute;
+      top: 5px; left: 4px;
+      width: 4px; height: 4px;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: 9px 0 0 #222;
+    }
+    .ph-head::after { /* smile */
+      content: '';
+      position: absolute;
+      bottom: 3px; left: 5px;
+      width: 10px; height: 4px;
+      border-bottom: 2px solid #c06050;
+      border-left: 2px solid #c06050;
+      border-right: 2px solid #c06050;
+      border-radius: 0 0 4px 4px;
+    }
+    .ph-hair {
+      position: absolute;
+      top: -4px; left: -1px;
+      width: 22px; height: 8px;
+      background: #4a2800;
+      border-radius: 4px 4px 0 0;
+    }
+    .ph-body {
+      width: 22px; height: 18px;
+      background: linear-gradient(180deg, #4a90d9, #3a70b9);
+      border: 2px solid #333;
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* Phone cart glowing */
+    .phone-cart {
+      width: 34px; height: 18px;
+      background: linear-gradient(135deg, #c8a060, #a07030);
+      border: 2px solid #8a6030;
+      border-radius: 4px;
+      box-shadow: 0 0 14px 6px rgba(100,220,100,0.8), 0 0 28px 12px rgba(100,220,100,0.35);
+      animation: cartPulse 1s ease-in-out infinite;
+    }
+
+    /* Floating score pop */
+    .score-pop {
+      position: absolute;
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 18px;
+      color: #f5c842;
+      text-shadow: 0 0 10px rgba(245,200,66,0.8), 2px 2px 0 rgba(0,0,0,0.5);
+      pointer-events: none;
+      animation: popUp 1.5s ease-out forwards;
+    }
+    @keyframes popUp {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      60%  { opacity: 1; transform: translateY(-30px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-50px) scale(0.8); }
+    }
+
+    /* Phone bottom */
+    .bottom-bar-c {
+      background: linear-gradient(90deg, #6a1a9b, #4a1a7a);
+      border-top: 2px solid #9b59b6;
+      padding: 8px 10px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .phone-book-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid #9b59b6;
+      border-radius: 6px;
+      padding: 6px;
+      flex: 1;
+    }
+    .pbc-title { font-family: 'Fredoka One', sans-serif; font-size: 9px; color: #d898f0; margin-bottom: 3px; }
+    .pbc-info { font-family: 'Fredoka One', sans-serif; font-size: 8px; color: rgba(255,255,255,0.7); line-height: 1.8; }
+    .phone-btn {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 8px;
+      background: linear-gradient(135deg, #9b59b6, #8a49a0);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      box-shadow: 0 3px 0 #4a1a5a;
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════
+       TITLE SCREEN PREVIEWS
+    ═══════════════════════════════ */
+    /* Shared title elements */
+    .title-preview { width: 240px; height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+
+    /* Title A — Stardew */
+    .title-a {
+      background: #0d1b0d;
+      border: 3px solid #3a8a3a;
+      font-family: 'Press Start 2P', monospace;
+    }
+    .title-a-name { font-size: 18px; color: #f5c842; text-shadow: 3px 3px 0 #8b6914; text-align: center; line-height: 1.3; }
+    .title-a-sub { font-size: 7px; color: #a8d8a8; }
+    .title-a-lamp {
+      position: relative;
+      width: 60px; height: 40px;
+      background: radial-gradient(ellipse at 50% 30%, rgba(255,230,100,0.3) 0%, transparent 70%);
+    }
+    .title-a-lamp::before {
+      content: '🏛️';
+      font-size: 28px;
+      position: absolute;
+      top: 4px; left: 50%;
+      transform: translateX(-50%);
+    }
+    .title-a-menu { display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0 20px; }
+    .title-a-btn { font-size: 7px; padding: 5px 10px; background: #1a3a1a; border: 1px solid #3a8a3a; color: #e0d9c8; text-align: center; }
+    .title-a-btn.sel { background: #3a8a3a; color: #fff; }
+
+    /* Title B — AC */
+    .title-b {
+      background: linear-gradient(160deg, #b0e8c0, #d4f0d0);
+      border: 4px solid #6aaa5a;
+      border-radius: 12px;
+      font-family: 'Fredoka One', sans-serif;
+    }
+    .title-b-name { font-family: 'Fredoka One', sans-serif; font-size: 22px; color: #3a6a2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.5); text-align: center; line-height: 1.2; }
+    .title-b-sub { font-family: 'Nunito', sans-serif; font-size: 9px; font-weight: 700; color: #5a8a4a; }
+    .title-b-char {
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+    .title-b-btn { font-family: 'Fredoka One', sans-serif; font-size: 11px; background: #6aaa5a; color: #fff; border: none; border-radius: 8px; padding: 5px 14px; box-shadow: 0 3px 0 #3a7a2a; cursor: pointer; margin-top: 4px; }
+
+    /* Title C — Phone */
+    .title-c {
+      background: linear-gradient(160deg, #2a0a4e, #1a0a2e);
+      border: 4px solid #9b59b6;
+      border-radius: 14px;
+      font-family: 'Fredoka One', sans-serif;
+    }
+    .title-c-name { font-family: 'Fredoka One', sans-serif; font-size: 26px; color: #fff; text-shadow: 0 0 20px rgba(155,89,182,0.8), 2px 2px 0 #4a1a7a; text-align: center; line-height: 1.1; }
+    .title-c-sub { font-family: 'Fredoka One', sans-serif; font-size: 8px; color: #d898f0; letter-spacing: 2px; }
+    .title-c-btn { font-family: 'Fredoka One', sans-serif; font-size: 14px; background: linear-gradient(135deg, #9b59b6, #7a3a9a); color: #fff; border: none; border-radius: 20px; padding: 8px 20px; box-shadow: 0 4px 0 #4a1a5a, 0 0 20px rgba(155,89,182,0.5); cursor: pointer; margin-top: 6px; }
+    .title-c-stars { font-size: 16px; }
+
+    /* layout helpers */
+    .option-section {
+      margin-bottom: 48px;
+    }
+    .option-label {
+      font-size: 7px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      padding: 4px 8px;
+      border-left: 3px solid #555;
+    }
+    .option-label.a { border-color: #3a8a3a; color: #7ec897; }
+    .option-label.b { border-color: #6aaa5a; color: #a0d090; }
+    .option-label.c { border-color: #9b59b6; color: #c090e0; }
+
+    .comparison-note {
+      background: #0a0a1a;
+      border: 1px solid #333;
+      padding: 10px;
+      font-size: 6px;
+      line-height: 2.2;
+      color: #a0a0b8;
+      max-width: 860px;
+      margin-top: 16px;
+    }
+    .comparison-note .yes { color: #7ec897; }
+    .comparison-note .no  { color: #c07878; }
+    .comparison-note .q   { color: #f5c842; }
+  </style>
+</head>
+<body>
+
+<h1>READ HARD — Wireframe v2</h1>
+<p class="page-sub">3 style options · corrected layout · ELI5 engines · new controls · cart glow · inventory popup</p>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     ENGINE ELI5
+════════════════════════════════════════════ -->
+<div class="section">
+  <h2>1. Engine Explainer (ELI5)</h2>
+  <div class="engine-box">
+    <p style="font-size:6px;color:#888;margin-bottom:10px;">Think of a game as a puppet show. Here are three ways to run it:</p>
+    <div class="engine-grid">
+
+      <div class="engine-card">
+        <div class="engine-name">Vanilla HTML5 Canvas</div>
+        <div class="engine-eli5">
+          You're the puppet master and you make every single puppet yourself out of raw wire.
+          You draw every frame by hand — "put a blue square here, a red one there" — 60 times per second.
+          You have to build EVERYTHING: movement, collisions, animations, the whole stage.
+          Total control, but lots of work.
+        </div>
+        <div class="engine-verdict verdict-maybe">🟡 Fine for tiny demos. Gets painful fast for a real game.</div>
+      </div>
+
+      <div class="engine-card">
+        <div class="engine-name">Phaser.js</div>
+        <div class="engine-eli5">
+          You get a full LEGO puppet theater kit. Sprites, tilemaps, physics, collision, sound, cameras, input — all the pieces are pre-built.
+          You just snap them together and say "Dewey moves with arrow keys" and it handles the rest.
+          Used by thousands of 2D browser games. Works perfectly for this style of game.
+        </div>
+        <div class="engine-verdict verdict-yes">🟢 Best choice for Read Hard. Fast to build, tons of examples online.</div>
+      </div>
+
+      <div class="engine-card">
+        <div class="engine-name">PixiJS</div>
+        <div class="engine-eli5">
+          An incredibly fast drawing board — great at putting lots of things on screen quickly.
+          But it's ONLY graphics. No physics, no input management, no game loop built in.
+          Like getting a stage but no puppets, no strings, and no script.
+          You'd have to add a separate library for everything else.
+        </div>
+        <div class="engine-verdict verdict-no">🔴 Skip it. It's a rendering tool, not a game engine.</div>
+      </div>
+
+    </div>
+    <p style="font-size:6px;color:#7ec897;margin-top:10px;">▶ Recommendation: Phaser.js. One file, runs in any browser, huge community, built-in pixel-art support.</p>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     CONTROLS + CART GLOW + INVENTORY
+════════════════════════════════════════════ -->
+<div class="section">
+  <h2>2. New Controls · Cart Glow · Inventory Popup</h2>
+  <div class="row">
+
+    <!-- Controls diagram -->
+    <div>
+      <h3>Controls</h3>
+      <div class="controls-box">
+        <div style="font-size:7px;color:#a8d8a8;margin-bottom:8px;">Movement</div>
+        <div class="key-grid">
+          <div class="key empty"></div>
+          <div class="key active">↑</div>
+          <div class="key empty"></div>
+          <div class="key active">←</div>
+          <div class="key active">↓</div>
+          <div class="key active">→</div>
+        </div>
+        <div style="font-size:6px;color:#888;margin-top:6px;margin-bottom:10px;">Arrow keys = walk quietly</div>
+
+        <div style="font-size:7px;color:#e05252;margin-bottom:6px;">To Run</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div class="key run">SHIFT</div>
+          <div style="font-size:7px;color:#888;">+</div>
+          <div class="key run">↑↓←→</div>
+        </div>
+        <div style="font-size:6px;color:#888;margin-top:4px;margin-bottom:10px;">Hold SHIFT + direction to run (makes noise!)</div>
+
+        <div style="font-size:7px;color:#888;margin-bottom:4px;">Drop SHIFT → back to walking</div>
+
+        <div style="font-size:7px;color:#f5c842;margin-top:10px;margin-bottom:6px;">Shelving  (at a shelf)</div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <div class="key action" style="width:60px;font-size:6px;">SPACE</div>
+          <div style="font-size:6px;color:#888;">then press:</div>
+        </div>
+        <div class="controls-note" style="margin-top:6px;">
+          <span>F</span> = Fiction (author A–Z)<br/>
+          <span>N</span> = Non-Fiction<br/>
+          <span>D</span> = Dewey Decimal #<br/>
+          <span>L</span> = Author's Last Name<br/>
+          <span>TAB</span> = Open cart inventory
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart glow demo -->
+    <div>
+      <h3>Cart Glow (near correct shelf)</h3>
+      <div class="row">
+        <div>
+          <div class="glow-demo">
+            <div style="font-size:6px;color:#888;text-align:center;">Far from shelf</div>
+            <div style="display:flex;align-items:flex-end;gap:10px;">
+              <div>
+                <div class="pchar dewey" style="display:flex;flex-direction:column;align-items:center;">
+                  <div class="phead" style="background:#f4c2a1;">
+                    <div class="phair" style="background:#4a2800;"></div>
+                  </div>
+                  <div class="pbody" style="background:#4a90d9;"></div>
+                  <div class="plegs"><div class="pleg" style="background:#3a3060;"></div><div class="pleg" style="background:#3a3060;"></div></div>
+                </div>
+              </div>
+              <div class="cart-glow-off" style="margin-bottom:8px;">
+                <div style="position:absolute;top:2px;left:2px;width:8px;height:14px;background:#c0392b;"></div>
+                <div style="position:absolute;top:3px;left:12px;width:8px;height:12px;background:#2980b9;"></div>
+              </div>
+            </div>
+            <div class="glow-label">No glow — cart is neutral</div>
+          </div>
+        </div>
+        <div>
+          <div class="glow-demo">
+            <div style="font-size:6px;color:#7ec897;text-align:center;">Near correct shelf!</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;">
+              <div>
+                <div class="pchar dewey" style="display:flex;flex-direction:column;align-items:center;">
+                  <div class="phead" style="background:#f4c2a1;">
+                    <div class="phair" style="background:#4a2800;"></div>
+                  </div>
+                  <div class="pbody" style="background:#4a90d9;"></div>
+                  <div class="plegs"><div class="pleg" style="background:#3a3060;"></div><div class="pleg" style="background:#3a3060;"></div></div>
+                </div>
+              </div>
+              <div class="cart-glow-on" style="margin-bottom:8px;">
+                <div style="position:absolute;top:2px;left:2px;width:8px;height:14px;background:#c0392b;"></div>
+                <div style="position:absolute;top:3px;left:12px;width:8px;height:12px;background:#2980b9;"></div>
+              </div>
+              <div class="shelf-strip" style="height:50px;margin-bottom:0px;width:50px;">
+                <div class="mini-book sb-teal h28"></div>
+                <div class="mini-book sb-green h24"></div>
+                <div class="mini-book sb-blue h22"></div>
+              </div>
+            </div>
+            <div class="glow-label on">Green pulse = book on cart belongs here!</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation anno-green">
+        • Cart glows green when you're within ~1 tile of a shelf that holds a book on your cart<br/>
+        • Stronger/faster pulse = you have MULTIPLE books for this shelf<br/>
+        • Wrong shelf = no glow (teaches you to explore the library)
+      </div>
+    </div>
+
+    <!-- Inventory popup -->
+    <div>
+      <h3>Cart Inventory (TAB — Animal Crossing style)</h3>
+      <div class="inventory-popup">
+        <div class="inv-header">
+          <div class="inv-title">📚 Book Cart</div>
+          <div class="inv-subtitle">7 / 12 remaining</div>
+        </div>
+        <div class="inv-body">
+          <div class="inv-grid">
+            <!-- Row 1 -->
+            <div class="inv-slot selected">
+              <div class="book-thumb book-thumb-tall" style="background:#c0392b;"></div>
+            </div>
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-med" style="background:#2980b9;"></div>
+            </div>
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-tall" style="background:#27ae60;"></div>
+            </div>
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-short" style="background:#d4ac0d;"></div>
+            </div>
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-med" style="background:#8e44ad;"></div>
+            </div>
+            <!-- Row 2 -->
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-tall" style="background:#e67e22;"></div>
+            </div>
+            <div class="inv-slot">
+              <div class="book-thumb book-thumb-short" style="background:#16a085;"></div>
+            </div>
+            <div class="inv-slot empty"></div>
+            <div class="inv-slot empty"></div>
+            <div class="inv-slot empty"></div>
+          </div>
+          <!-- Detail panel for selected book -->
+          <div class="inv-detail">
+            <div class="inv-book-spine">OCEAN DEEP</div>
+            <div class="inv-book-info">
+              <strong>Title:</strong> The Ocean Deep<br/>
+              <strong>Author:</strong> Vasquez, Maria<br/>
+              <strong>Call #:</strong> 551.46 VAS<br/>
+              <strong>Type:</strong> Non-Fiction<br/>
+              <strong>Subject:</strong> Earth Sciences<br/>
+              <span class="inv-tag nonfic">Non-Fiction</span>
+              <span class="inv-tag" style="background:#2a6a8a;">500–699</span>
+            </div>
+          </div>
+        </div>
+        <div class="inv-footer">
+          <button class="inv-btn inv-btn-close">Close (TAB)</button>
+          <button class="inv-btn inv-btn-go">Go to Shelf →</button>
+        </div>
+      </div>
+      <div class="annotation anno-yellow">
+        • TAB opens/closes the cart inventory at any time<br/>
+        • Grid shows all books as color-coded spines<br/>
+        • Click/hover to see full details on selected book<br/>
+        • "Go to Shelf" puts a small arrow indicator on screen pointing toward correct shelf<br/>
+        • Not all books are Dewey! Fiction shows: Author A–Z · Juvenile: separate section · Periodicals, Reference have own areas
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     OPTION A — STARDEW VALLEY STYLE
+════════════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label a">Option A — Stardew Valley Style · Top-Down Pixel Art · Forest Green Palette</div>
+  <div class="row">
+
+    <!-- Title A -->
+    <div>
+      <h3>Title Screen</h3>
+      <div class="title-preview title-a">
+        <div class="title-a-lamp"></div>
+        <div class="title-a-name">READ<br/>HARD</div>
+        <div class="title-a-sub">A Library Survival Story</div>
+        <div class="title-a-menu">
+          <div class="title-a-btn sel">▶  START GAME</div>
+          <div class="title-a-btn">   HOW TO PLAY</div>
+          <div class="title-a-btn">   HIGH SCORES</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game A -->
+    <div>
+      <h3>Game Screen</h3>
+      <div class="game-frame-a">
+        <!-- HUD -->
+        <div class="hud-a">
+          <div class="hud-item">
+            <div class="hud-key">TIME</div>
+            <div class="hud-val red">1:42</div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-key">BOOKS</div>
+            <div class="hud-val">7/12</div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-key">WARNINGS</div>
+            <div class="warn-dots">
+              <div class="wdot"></div>
+              <div class="wdot off"></div>
+              <div class="wdot off"></div>
+            </div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-key">LVL</div>
+            <div class="hud-val">03</div>
+          </div>
+          <div style="margin-left:auto;font-size:7px;color:#4a8a4a;">READ HARD</div>
+        </div>
+
+        <!-- Room -->
+        <div class="room-a">
+          <!-- Left shelves -->
+          <div class="wall-shelf wall-shelf-left">
+            <div class="shelf-band">
+              <div class="shelf-band-label">FICTION<br/>A – L</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-red h28"></div>
+                <div class="sb sb-blue h24"></div>
+                <div class="sb sb-green h28"></div>
+                <div class="sb sb-purple h22"></div>
+                <div class="sb sb-orange h28"></div>
+              </div>
+            </div>
+            <div class="shelf-band">
+              <div class="shelf-band-label">FICTION<br/>M – Z</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-teal h24"></div>
+                <div class="sb sb-grey h22"></div>
+                <div class="sb sb-yellow h28"></div>
+                <div class="sb sb-red h22"></div>
+              </div>
+            </div>
+            <div class="shelf-band">
+              <div class="shelf-band-label">000–099<br/>General</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-blue h28"></div>
+                <div class="sb sb-green h24"></div>
+                <div class="sb sb-orange h22"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floor -->
+          <div class="floor-a">
+            <!-- Dewey with cart (glowing — near correct shelf) -->
+            <div class="char-wrap" style="bottom:50px;left:40%;">
+              <div style="display:flex;flex-direction:column;align-items:center;">
+                <div class="phead" style="background:#f4c2a1;width:20px;height:18px;">
+                  <div class="phair" style="background:#4a2800;"></div>
+                </div>
+                <div class="pbody" style="background:#4a90d9;"></div>
+                <div class="plegs"><div class="pleg" style="background:#3a3060;"></div><div class="pleg" style="background:#3a3060;"></div></div>
+              </div>
+              <div class="cart-sprite cart-glow-active" style="margin-top:4px;">
+                <div style="position:absolute;top:2px;left:2px;width:7px;height:13px;background:#c0392b;"></div>
+                <div style="position:absolute;top:2px;left:11px;width:7px;height:11px;background:#2980b9;"></div>
+              </div>
+            </div>
+
+            <!-- Librarian -->
+            <div class="char-wrap" style="bottom:90px;right:25%;">
+              <div class="vision-cone-a"></div>
+              <div style="display:flex;flex-direction:column;align-items:center;">
+                <div class="phead" style="background:#deb887;width:20px;height:18px;">
+                  <div class="phair" style="background:#888;"></div>
+                </div>
+                <div class="pbody" style="background:#8a5a2a;"></div>
+                <div class="plegs"><div class="pleg" style="background:#4a3010;"></div><div class="pleg" style="background:#4a3010;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right shelves -->
+          <div class="wall-shelf wall-shelf-right">
+            <div class="shelf-band">
+              <div class="shelf-band-label">100–299<br/>Philosophy</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-purple h28"></div>
+                <div class="sb sb-teal h24"></div>
+                <div class="sb sb-grey h22"></div>
+              </div>
+            </div>
+            <div class="shelf-band">
+              <div class="shelf-band-label">300–499<br/>Social Sci</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-red h24"></div>
+                <div class="sb sb-blue h28"></div>
+                <div class="sb sb-green h22"></div>
+                <div class="sb sb-yellow h24"></div>
+              </div>
+            </div>
+            <div class="shelf-band">
+              <div class="shelf-band-label">500–699<br/>Science</div>
+              <div class="shelf-books-vert">
+                <div class="sb sb-orange h28"></div>
+                <div class="sb sb-teal h24"></div>
+                <div class="sb sb-grey h22"></div>
+                <div class="sb sb-purple h28"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="bottom-bar-a">
+          <div class="book-next">
+            <div class="bn-title">Next Book:</div>
+            <div class="bn-info">
+              Ocean Deep<br/>Vasquez, M.<br/>Non-Fic · 551.46
+            </div>
+            <span class="bn-badge">→ 500–699 shelf</span>
+          </div>
+          <div class="spacebar-hint">
+            <span class="sk">SPACE</span> shelve book<br/>
+            then: <span class="sk">F</span>/<span class="sk">N</span>/<span class="sk">D</span>/<span class="sk">L</span><br/>
+            <span class="sk">TAB</span> view cart<br/>
+            <span class="sk">SHIFT+↑</span> run!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes A -->
+    <div style="max-width:180px;">
+      <div class="annotation anno-green">
+        <strong style="color:#7ec897;">STARDEW STYLE</strong><br/>
+        • Warm earth tones: brown, forest green, cream<br/>
+        • Top-down bird's eye view<br/>
+        • Chunky pixel characters with faces<br/>
+        • Shelves ONLY on left and right walls<br/>
+        • Open floor space in middle<br/>
+        • Checkerboard wood floor tiles<br/>
+        • Vision cone on librarian<br/>
+        • Cart glows green near correct shelf<br/>
+        • Pixel font throughout<br/>
+        • Feels like Stardew / early Zelda<br/><br/>
+        <strong style="color:#7ec897;">Best for:</strong> Classic game feel, cozy vibes, players who love retro games
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     OPTION B — ANIMAL CROSSING STYLE
+════════════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label b">Option B — Animal Crossing Style · Slightly Angled / Isometric · Soft Pastel Palette</div>
+  <div class="row">
+
+    <!-- Title B -->
+    <div>
+      <h3>Title Screen</h3>
+      <div class="title-preview title-b">
+        <div class="title-b-name">Read Hard</div>
+        <div class="title-b-sub">A Library Adventure</div>
+        <div class="title-b-char">
+          <!-- Mini AC Dewey on title -->
+          <div class="ac-char-wrap" style="position:relative;">
+            <div class="ac-head dewey-ac" style="width:20px;height:18px;border-radius:50% 50% 45% 45%;background:#f4c2a1;border:2px solid #333;position:relative;">
+              <div class="ac-hair" style="background:#4a2800;width:24px;height:10px;border-radius:50% 50% 0 0;position:absolute;top:-4px;left:-2px;"></div>
+            </div>
+            <div class="ac-body" style="background:#5a99e0;width:18px;height:14px;border:2px solid #333;border-radius:4px;margin:0 auto;"></div>
+            <div class="ac-legs" style="display:flex;gap:3px;justify-content:center;">
+              <div class="ac-leg" style="background:#3a3080;width:6px;height:8px;border:2px solid #333;border-radius:0 0 3px 3px;border-top:none;"></div>
+              <div class="ac-leg" style="background:#3a3080;width:6px;height:8px;border:2px solid #333;border-radius:0 0 3px 3px;border-top:none;"></div>
+            </div>
+            <div class="ac-shadow" style="width:18px;height:4px;background:rgba(0,0,0,0.12);border-radius:50%;margin-top:1px;"></div>
+          </div>
+        </div>
+        <button class="title-b-btn">▶  Let's Read!</button>
+        <div style="font-family:'Nunito',sans-serif;font-size:7px;color:#5a8a4a;">High Scores · How to Play</div>
+      </div>
+    </div>
+
+    <!-- Game B -->
+    <div>
+      <h3>Game Screen</h3>
+      <div class="game-frame-b">
+        <!-- HUD -->
+        <div class="hud-b">
+          <div class="hud-b-item">
+            <div class="hud-b-key">Time</div>
+            <div class="hud-b-val warn">1:42</div>
+          </div>
+          <div class="hud-b-item">
+            <div class="hud-b-key">Books Left</div>
+            <div class="hud-b-val">7</div>
+          </div>
+          <div class="hud-b-item">
+            <div class="hud-b-key">Warnings</div>
+            <div style="display:flex;gap:3px;margin-top:2px;">
+              <div class="wdot-b"></div>
+              <div class="wdot-b off"></div>
+              <div class="wdot-b off"></div>
+            </div>
+          </div>
+          <div class="hud-b-title">Read Hard</div>
+        </div>
+
+        <!-- Iso Room -->
+        <div class="iso-room">
+          <!-- Left shelves -->
+          <div class="iso-shelf iso-shelf-l">
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">Fiction A–L</div>
+              <div class="iso-books">
+                <div class="iso-book h20" style="background:#c0392b;"></div>
+                <div class="iso-book h16" style="background:#2980b9;"></div>
+                <div class="iso-book h18" style="background:#27ae60;"></div>
+                <div class="iso-book h20" style="background:#8e44ad;"></div>
+                <div class="iso-book h16" style="background:#e67e22;"></div>
+              </div>
+            </div>
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">Fiction M–Z</div>
+              <div class="iso-books">
+                <div class="iso-book h18" style="background:#16a085;"></div>
+                <div class="iso-book h20" style="background:#d4ac0d;"></div>
+                <div class="iso-book h16" style="background:#7f8c8d;"></div>
+                <div class="iso-book h18" style="background:#c0392b;"></div>
+              </div>
+            </div>
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">000–099</div>
+              <div class="iso-books">
+                <div class="iso-book h16" style="background:#2980b9;"></div>
+                <div class="iso-book h18" style="background:#27ae60;"></div>
+                <div class="iso-book h20" style="background:#e67e22;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floor / open area -->
+          <div class="iso-floor"></div>
+
+          <!-- Dewey AC character -->
+          <div class="ac-char-wrap" style="bottom:55px;left:45%;">
+            <div style="position:relative;">
+              <div class="ac-head" style="background:#f4c2a1;width:22px;height:20px;border-radius:50% 50% 45% 45%;border:2px solid #333;">
+                <div class="ac-hair" style="background:#4a2800;position:absolute;top:-5px;left:-3px;width:28px;height:12px;border-radius:50% 50% 0 0;"></div>
+              </div>
+              <div class="ac-body" style="background:#5a99e0;width:20px;height:16px;border-radius:4px;border:2px solid #333;margin:0 auto;"></div>
+              <div style="display:flex;gap:3px;justify-content:center;">
+                <div style="width:7px;height:9px;background:#3a3080;border:2px solid #333;border-radius:0 0 4px 4px;border-top:none;"></div>
+                <div style="width:7px;height:9px;background:#3a3080;border:2px solid #333;border-radius:0 0 4px 4px;border-top:none;"></div>
+              </div>
+            </div>
+            <!-- Glowing cart -->
+            <div class="ac-cart glowing" style="margin-top:5px;">
+              <div style="position:absolute;top:2px;left:3px;width:9px;height:15px;background:#c0392b;border-radius:1px;"></div>
+              <div style="position:absolute;top:3px;left:14px;width:9px;height:12px;background:#2980b9;border-radius:1px;"></div>
+            </div>
+            <div style="width:20px;height:5px;background:rgba(0,0,0,0.1);border-radius:50%;margin-top:8px;"></div>
+          </div>
+
+          <!-- Librarian AC character -->
+          <div class="ac-char-wrap" style="bottom:90px;right:20%;">
+            <div class="ac-vision"></div>
+            <div style="position:relative;">
+              <div class="ac-head" style="background:#e0c090;width:22px;height:20px;border-radius:50% 50% 45% 45%;border:2px solid #333;">
+                <div class="ac-hair" style="background:#999;position:absolute;top:-5px;left:-3px;width:28px;height:12px;border-radius:50% 50% 0 0;"></div>
+              </div>
+              <div class="ac-body" style="background:#8a5a2a;width:20px;height:16px;border-radius:4px;border:2px solid #333;margin:0 auto;"></div>
+              <div style="display:flex;gap:3px;justify-content:center;">
+                <div style="width:7px;height:9px;background:#4a3010;border:2px solid #333;border-radius:0 0 4px 4px;border-top:none;"></div>
+                <div style="width:7px;height:9px;background:#4a3010;border:2px solid #333;border-radius:0 0 4px 4px;border-top:none;"></div>
+              </div>
+            </div>
+            <div style="width:20px;height:5px;background:rgba(0,0,0,0.08);border-radius:50%;margin-top:8px;"></div>
+          </div>
+
+          <!-- Right shelves -->
+          <div class="iso-shelf iso-shelf-r">
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">100–299</div>
+              <div class="iso-books">
+                <div class="iso-book h20" style="background:#8e44ad;"></div>
+                <div class="iso-book h16" style="background:#16a085;"></div>
+                <div class="iso-book h18" style="background:#7f8c8d;"></div>
+              </div>
+            </div>
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">300–499</div>
+              <div class="iso-books">
+                <div class="iso-book h16" style="background:#c0392b;"></div>
+                <div class="iso-book h20" style="background:#2980b9;"></div>
+                <div class="iso-book h18" style="background:#27ae60;"></div>
+                <div class="iso-book h16" style="background:#d4ac0d;"></div>
+              </div>
+            </div>
+            <div class="iso-shelf-unit">
+              <div class="iso-shelf-tag">500–699</div>
+              <div class="iso-books">
+                <div class="iso-book h18" style="background:#e67e22;"></div>
+                <div class="iso-book h20" style="background:#16a085;"></div>
+                <div class="iso-book h16" style="background:#7f8c8d;"></div>
+                <div class="iso-book h18" style="background:#8e44ad;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom bar B -->
+        <div class="bottom-bar-b">
+          <div class="ac-book-card">
+            <div class="ac-bn-title">📖 Next Book</div>
+            <div class="ac-bn-info">
+              Ocean Deep<br/>
+              Vasquez, M.<br/>
+              Non-Fic · 551.46<br/>
+              <span class="inv-tag nonfic" style="font-size:6px;">→ 500–699</span>
+            </div>
+          </div>
+          <div class="ac-hints">
+            <span class="ac-sk">↑↓←→</span> Walk<br/>
+            <span class="ac-sk">SHIFT</span>+arrow Run<br/>
+            <span class="ac-sk">SPACE</span> Shelve<br/>
+            <span class="ac-sk">TAB</span> Cart bag
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes B -->
+    <div style="max-width:180px;">
+      <div class="annotation anno-green" style="border-color:#6aaa5a;color:#8aba78;">
+        <strong style="color:#8aba78;">ANIMAL CROSSING STYLE</strong><br/>
+        • Soft greens, creams, wood tones<br/>
+        • Slightly angled top view (not full isometric but tipped forward)<br/>
+        • Rounded characters with big heads, cute proportions<br/>
+        • Shelves have wooden unit frames like AC furniture<br/>
+        • Soft drop shadows on everything<br/>
+        • Rounded UI, Fredoka font<br/>
+        • Feels friendly and relaxing<br/>
+        • Cart glows with warm green aura<br/><br/>
+        <strong style="color:#8aba78;">Best for:</strong> Cozy, approachable feel — great for all ages, feels less intense
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     OPTION C — PHONE GAME STYLE
+════════════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label c">Option C — Addictive Phone Game Style · Bold Colors · Landscape Browser / Mobile</div>
+  <div class="row">
+
+    <!-- Title C -->
+    <div>
+      <h3>Title Screen</h3>
+      <div class="title-preview title-c">
+        <div class="title-c-stars">⭐⭐⭐</div>
+        <div class="title-c-name">READ<br/>HARD</div>
+        <div class="title-c-sub">SHELVE IT OR FAIL</div>
+        <button class="title-c-btn">▶ PLAY NOW</button>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:8px;color:#9b59b6;margin-top:4px;">🏆 Best: 4,820 pts</div>
+      </div>
+    </div>
+
+    <!-- Game C -->
+    <div>
+      <h3>Game Screen</h3>
+      <div class="game-frame-c">
+        <!-- HUD -->
+        <div class="hud-c">
+          <div class="hud-c-item">
+            <div class="hud-c-key">Time</div>
+            <div class="hud-c-val danger">0:42</div>
+          </div>
+          <div class="hud-c-item">
+            <div class="hud-c-key">Books</div>
+            <div class="hud-c-val">7</div>
+          </div>
+          <div class="hud-c-item" style="flex:1;">
+            <div class="hud-c-key">Progress</div>
+            <div class="hud-c-bar" style="width:100%;">
+              <div class="hud-c-fill danger" style="width:35%;"></div>
+            </div>
+          </div>
+          <div class="stars">
+            <div class="star">★</div>
+            <div class="star">★</div>
+            <div class="star off">★</div>
+          </div>
+        </div>
+
+        <!-- Room C -->
+        <div class="room-c">
+          <!-- Left shelves -->
+          <div class="phone-shelf phone-shelf-l">
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">Fiction</div>
+              <div class="pshbooks">
+                <div class="psb h18" style="background:#ff6b9d;"></div>
+                <div class="psb h14" style="background:#ffd700;"></div>
+                <div class="psb h16" style="background:#00e5ff;"></div>
+                <div class="psb h18" style="background:#ff6b35;"></div>
+              </div>
+            </div>
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">000–299</div>
+              <div class="pshbooks">
+                <div class="psb h16" style="background:#a8ff78;"></div>
+                <div class="psb h18" style="background:#ff9a8b;"></div>
+                <div class="psb h14" style="background:#c77dff;"></div>
+              </div>
+            </div>
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">300–499</div>
+              <div class="pshbooks">
+                <div class="psb h18" style="background:#ffd700;"></div>
+                <div class="psb h14" style="background:#00e5ff;"></div>
+                <div class="psb h16" style="background:#ff6b9d;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dewey phone character (centered) -->
+          <div class="phone-dewey">
+            <div style="position:relative;">
+              <div class="ph-hair"></div>
+              <div class="ph-head"></div>
+              <div class="ph-body"></div>
+            </div>
+            <!-- Glowing cart -->
+            <div class="phone-cart" style="margin-top:4px;position:relative;">
+              <div style="position:absolute;top:2px;left:2px;width:8px;height:13px;background:#ff6b9d;border-radius:1px;"></div>
+              <div style="position:absolute;top:2px;left:12px;width:8px;height:11px;background:#ffd700;border-radius:1px;"></div>
+            </div>
+            <div class="phone-char-glow"></div>
+          </div>
+
+          <!-- Floating score popup -->
+          <div class="score-pop" style="top:60px;left:45%;">+100!</div>
+
+          <!-- Right shelves -->
+          <div class="phone-shelf phone-shelf-r">
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">500–699</div>
+              <div class="pshbooks">
+                <div class="psb h18" style="background:#a8ff78;"></div>
+                <div class="psb h14" style="background:#c77dff;"></div>
+                <div class="psb h16" style="background:#ff9a8b;"></div>
+                <div class="psb h18" style="background:#00e5ff;"></div>
+              </div>
+            </div>
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">700–899</div>
+              <div class="pshbooks">
+                <div class="psb h16" style="background:#ffd700;"></div>
+                <div class="psb h18" style="background:#ff6b35;"></div>
+                <div class="psb h14" style="background:#ff6b9d;"></div>
+              </div>
+            </div>
+            <div class="phone-shelf-unit">
+              <div class="pshlabel">900+/Ref</div>
+              <div class="pshbooks">
+                <div class="psb h18" style="background:#c77dff;"></div>
+                <div class="psb h14" style="background:#a8ff78;"></div>
+                <div class="psb h16" style="background:#ff9a8b;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom bar C -->
+        <div class="bottom-bar-c">
+          <div class="phone-book-card">
+            <div class="pbc-title">Next Up:</div>
+            <div class="pbc-info">
+              Ocean Deep<br/>Vasquez · 551.46<br/>→ 500–699
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <button class="phone-btn">📦 CART</button>
+            <button class="phone-btn">📚 SHELVE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes C -->
+    <div style="max-width:180px;">
+      <div class="annotation" style="border-color:#9b59b6;color:#c090e0;">
+        <strong style="color:#c090e0;">PHONE GAME STYLE</strong><br/>
+        • Deep purple/indigo background with neon accents<br/>
+        • Bold, saturated book colors — instant visual candy<br/>
+        • Glowing shelves + character aura effects<br/>
+        • Score numbers pop up on shelf (+100! ⭐)<br/>
+        • Star rating system (1–3 stars per level)<br/>
+        • Big readable font (Fredoka One)<br/>
+        • Feels like Hay Day, Two Dots, Threes<br/>
+        • Works great on mobile browser<br/>
+        • Timer going red = tension!<br/><br/>
+        <strong style="color:#c090e0;">Best for:</strong> Addictive quick-play sessions, score chasing, younger players
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════
+     COMPARISON SUMMARY
+════════════════════════════════════════════ -->
+<h2>Quick Comparison</h2>
+<div class="comparison-note">
+  <table style="width:100%;border-collapse:collapse;line-height:2.5;">
+    <tr style="color:#a8d8a8;">
+      <th style="text-align:left;padding:3px 8px;"></th>
+      <th style="text-align:left;padding:3px 8px;">A — Stardew</th>
+      <th style="text-align:left;padding:3px 8px;">B — Animal Crossing</th>
+      <th style="text-align:left;padding:3px 8px;">C — Phone Game</th>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">View angle</td>
+      <td style="padding:2px 8px;">Top-down (straight)</td>
+      <td style="padding:2px 8px;">Angled / soft isometric</td>
+      <td style="padding:2px 8px;">Top-down (straight)</td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">Art vibe</td>
+      <td style="padding:2px 8px;">Cozy retro pixel</td>
+      <td style="padding:2px 8px;">Soft, cute, rounded</td>
+      <td style="padding:2px 8px;">Bold, neon, punchy</td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">Font style</td>
+      <td style="padding:2px 8px;">Press Start (pixel)</td>
+      <td style="padding:2px 8px;">Fredoka One (round)</td>
+      <td style="padding:2px 8px;">Fredoka One (big)</td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">Pixel sprites needed?</td>
+      <td style="padding:2px 8px;"><span class="yes">Yes — classic style</span></td>
+      <td style="padding:2px 8px;"><span class="yes">Yes — cuter style</span></td>
+      <td style="padding:2px 8px;"><span class="no">Less critical — CSS can do it</span></td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">Easiest to build?</td>
+      <td style="padding:2px 8px;"><span class="yes">Yes (Phaser tilemap)</span></td>
+      <td style="padding:2px 8px;">Medium (angle math)</td>
+      <td style="padding:2px 8px;"><span class="yes">Yes (CSS + Phaser)</span></td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px;" class="q">Mobile friendly?</td>
+      <td style="padding:2px 8px;">With work</td>
+      <td style="padding:2px 8px;">With work</td>
+      <td style="padding:2px 8px;"><span class="yes">Built for it</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="annotation anno-yellow" style="margin-top:16px;max-width:860px;">
+  🟡 After you pick a style, next steps:<br/>
+  1. Source or sketch pixel sprite sheets for Dewey, librarian, shelves, books, cart<br/>
+  2. Build the Phaser.js project scaffold (HTML + JS + asset loader)<br/>
+  3. Implement level 1 first (Fiction vs Non-Fiction only, no librarian patrol)
+</div>
+
+</body>
+</html>

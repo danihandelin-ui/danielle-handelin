@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA TRAVELS — Desktop Cleanup Wireframe</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #e8eaed; padding: 2rem 1.5rem 4rem; }
+  h1 { text-align:center; font-size:1.15rem; font-weight:800; color:#222; margin-bottom:0.3rem; }
+  .page-subtitle { text-align:center; font-size:0.78rem; color:#888; margin-bottom:2.5rem; }
+
+  /* ---- Section headers ---- */
+  .section-title {
+    font-size:0.95rem; font-weight:800; color:#1a2e2e;
+    margin:2.5rem 0 0.4rem;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .section-title .badge {
+    font-size:0.62rem; font-weight:700; padding:0.15rem 0.55rem;
+    border-radius:999px; background:#dbeafe; color:#1e40af;
+  }
+  .section-title .badge.fix { background:#dcfce7; color:#166534; }
+  .section-title .badge.new { background:#fef3c7; color:#92400e; }
+  .section-desc { font-size:0.75rem; color:#666; margin-bottom:1.25rem; line-height:1.5; max-width:900px; }
+
+  /* ---- Desktop shell ---- */
+  .desktop {
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 8px 40px rgba(0,0,0,0.18);
+    border:2px solid #222;
+    background:#fff;
+    max-width:960px;
+    margin:0 auto;
+  }
+
+  /* Top bar */
+  .top-bar {
+    height:48px;
+    background:linear-gradient(135deg,#1a2e2e 0%,#2d6a6a 100%);
+    display:flex;
+    align-items:center;
+    padding:0 1rem;
+    gap:0.75rem;
+    flex-shrink:0;
+  }
+  .top-brand {
+    font-family:Georgia,serif;
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:0.12em;
+    color:#e8f5f4;
+    white-space:nowrap;
+  }
+  .top-meta { flex:1; min-width:0; }
+  .top-trip-label { font-size:0.72rem; color:rgba(255,253,249,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .top-save { font-size:0.58rem; color:rgba(255,253,249,0.6); }
+  .top-btn {
+    font-size:0.68rem; font-weight:600; padding:0.3rem 0.65rem;
+    border-radius:7px; border:1px solid rgba(255,253,249,0.3);
+    background:rgba(255,253,249,0.12); color:#fff; cursor:pointer; white-space:nowrap;
+  }
+  .top-btn.accent { background:rgba(255,253,249,0.22); }
+
+  /* Body */
+  .app-body { display:flex; height:480px; }
+
+  /* Backlog pane */
+  .pane-backlog {
+    width:240px;
+    flex-shrink:0;
+    border-right:1.5px solid #e8e8e8;
+    display:flex;
+    flex-direction:column;
+    background:#fafafa;
+  }
+  .pane-calendar {
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+  }
+
+  /* Pane head */
+  .pane-head {
+    padding:0.6rem 0.85rem 0.5rem;
+    border-bottom:1.5px solid #e8e8e8;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-shrink:0;
+    background:#fff;
+  }
+  .pane-head-title { font-size:0.8rem; font-weight:800; color:#1a2e2e; }
+  .pane-head-sub { font-size:0.6rem; color:#888; }
+  .pane-head-right { font-size:0.6rem; color:#2d6a6a; font-weight:600; cursor:pointer; }
+
+  /* Backlog scroll */
+  .backlog-scroll { flex:1; overflow:hidden; padding:0.5rem 0.6rem; display:flex; flex-direction:column; gap:0.3rem; }
+
+  /* Backlog item */
+  .bl-item {
+    background:#fff;
+    border:1.5px solid #e8e8e8;
+    border-radius:9px;
+    padding:0.4rem 0.55rem;
+    display:flex;
+    align-items:center;
+    gap:0.4rem;
+    cursor:pointer;
+  }
+  .bl-item:hover { border-color:#2d6a6a; }
+  .bl-emoji { font-size:0.9rem; flex-shrink:0; }
+  .bl-info { flex:1; min-width:0; }
+  .bl-name { font-size:0.65rem; font-weight:700; color:#1a2e2e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bl-meta { font-size:0.56rem; color:#888; margin-top:1px; display:flex; align-items:center; gap:0.3rem; }
+  .bl-tag { font-size:0.5rem; font-weight:700; padding:0.1rem 0.35rem; border-radius:999px; background:#e8f4f3; color:#2d6a6a; }
+  .bl-edit { font-size:0.65rem; color:#bbb; cursor:pointer; flex-shrink:0; padding:0.1rem 0.25rem; border-radius:4px; }
+  .bl-edit:hover { color:#2d6a6a; background:#eef6f6; }
+
+  /* Stay banner */
+  .stay-banner {
+    margin:0.5rem 0.6rem 0.25rem;
+    background:linear-gradient(135deg,#fdf3e3,#fff);
+    border:1.5px solid #e8d5b0;
+    border-radius:9px;
+    padding:0.4rem 0.6rem;
+    font-size:0.62rem;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    flex-shrink:0;
+  }
+  .stay-banner-name { font-weight:700; color:#7c5c2d; }
+  .stay-banner-dates { color:#888; flex:1; }
+  .stay-banner-edit { font-size:0.58rem; color:#2d6a6a; text-decoration:underline; cursor:pointer; }
+
+  /* Cal header */
+  .cal-header {
+    display:flex;
+    border-bottom:1.5px solid #e8e8e8;
+    flex-shrink:0;
+  }
+  .day-col-head {
+    flex:1;
+    padding:0.4rem 0.5rem;
+    border-right:1px solid #f0f0f0;
+    text-align:center;
+  }
+  .day-col-head:last-child { border-right:none; }
+  .day-col-date { font-size:0.62rem; font-weight:800; color:#1a2e2e; }
+  .day-col-sub { font-size:0.55rem; color:#888; }
+  .day-col-head.selected .day-col-date { color:#2d6a6a; }
+
+  /* Calendar grid */
+  .cal-grid { flex:1; display:flex; overflow:hidden; }
+  .day-col {
+    flex:1;
+    border-right:1px solid #f0f0f0;
+    padding:0.4rem 0.35rem;
+    display:flex;
+    flex-direction:column;
+    gap:0.25rem;
+    overflow:hidden;
+  }
+  .day-col:last-child { border-right:none; }
+
+  /* Day chip */
+  .day-chip {
+    border-radius:8px;
+    padding:0.32rem 0.45rem;
+    font-size:0.6rem;
+    display:flex;
+    align-items:center;
+    gap:0.3rem;
+    position:relative;
+  }
+  .dc-restaurant { background:#fef9ee; border:1px solid #f5d88a; }
+  .dc-museum { background:#f0f4ff; border:1px solid #c7d4f7; }
+  .dc-park { background:#f0fdf4; border:1px solid #a7f0b0; }
+  .dc-other { background:#f8f8f8; border:1px solid #e0e0e0; }
+  .dc-name { font-size:0.6rem; font-weight:700; color:#1a2e2e; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dc-time { font-size:0.54rem; color:#888; white-space:nowrap; }
+  .dc-edit { font-size:0.6rem; color:#ccc; cursor:pointer; padding:0 0.15rem; flex-shrink:0; }
+  .dc-edit:hover { color:#2d6a6a; }
+
+  /* Empty slot */
+  .day-drop-hint { font-size:0.55rem; color:#ccc; text-align:center; padding:0.5rem 0; border:1.5px dashed #e8e8e8; border-radius:8px; }
+
+  /* Flight chip */
+  .flight-chip { background:#fff0f0; border:1px solid #fcc; border-radius:8px; padding:0.3rem 0.45rem; font-size:0.58rem; color:#c44; font-weight:600; }
+
+  /* ---- Duration edit modal ---- */
+  .modal-overlay {
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+  }
+  .modal {
+    background:#fff;
+    border-radius:14px;
+    padding:1.1rem 1.25rem;
+    width:240px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.2);
+  }
+  .modal-title { font-size:0.82rem; font-weight:800; color:#1a2e2e; margin-bottom:0.25rem; }
+  .modal-sub { font-size:0.65rem; color:#888; margin-bottom:0.85rem; }
+  .modal-activity { display:flex; align-items:center; gap:0.4rem; background:#f5f5f5; border-radius:8px; padding:0.4rem 0.6rem; margin-bottom:0.75rem; }
+  .modal-dur-row { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.75rem; }
+  .dur-pill {
+    font-size:0.65rem; font-weight:700; padding:0.3rem 0.65rem;
+    border-radius:999px; border:1.5px solid #e0e0e0;
+    background:#fff; color:#555; cursor:pointer;
+  }
+  .dur-pill.active { background:#1a2e2e; color:#fff; border-color:#1a2e2e; }
+  .dur-custom { display:flex; align-items:center; gap:0.35rem; margin-bottom:0.75rem; }
+  .dur-custom input { flex:1; font-size:0.7rem; padding:0.3rem 0.5rem; border:1.5px solid #ddd; border-radius:7px; }
+  .dur-custom span { font-size:0.65rem; color:#888; }
+  .modal-btns { display:flex; gap:0.4rem; }
+  .modal-btn { flex:1; font-size:0.68rem; font-weight:700; padding:0.4rem; border-radius:8px; cursor:pointer; text-align:center; border:none; }
+  .modal-btn.cancel { background:#f0f0f0; color:#555; }
+  .modal-btn.save { background:#1a2e2e; color:#fff; }
+
+  /* ---- API key connected state ---- */
+  .api-connected {
+    display:flex; align-items:center; gap:0.4rem;
+    font-size:0.62rem; color:#166534; font-weight:600;
+    background:#dcfce7; border:1px solid #bbf7d0;
+    border-radius:7px; padding:0.3rem 0.6rem;
+    flex-shrink:0; margin:0.5rem 0.6rem 0;
+  }
+  .api-gear { font-size:0.75rem; cursor:pointer; margin-left:auto; color:#888; }
+
+  /* ---- Comparison labels ---- */
+  .compare-row { display:flex; gap:2rem; max-width:960px; margin:0 auto; }
+  .compare-side { flex:1; }
+  .compare-label {
+    text-align:center; font-size:0.72rem; font-weight:800;
+    text-transform:uppercase; letter-spacing:0.06em;
+    padding:0.4rem 0.6rem; margin-bottom:0.75rem; border-radius:8px;
+  }
+  .compare-label.before { background:#fee2e2; color:#991b1b; }
+  .compare-label.after { background:#dcfce7; color:#166534; }
+
+  /* ---- Annotation bubbles ---- */
+  .annotation {
+    font-size:0.65rem; color:#333; background:#fffde7;
+    border:1.5px solid #f0c040; border-radius:8px;
+    padding:0.35rem 0.6rem; margin:0.4rem 0;
+    max-width:960px; margin:0.35rem auto;
+    display:flex; gap:0.4rem; align-items:flex-start;
+  }
+  .annotation .ann-icon { flex-shrink:0; font-size:0.85rem; }
+  .annotation .ann-text { line-height:1.45; }
+  .annotation.green { background:#f0fdf4; border-color:#86efac; }
+  .annotation.blue { background:#eff6ff; border-color:#93c5fd; }
+
+  .spacer { height:0.75rem; }
+
+  /* Pills row */
+  .pills-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .pill {
+    font-size:0.68rem; font-weight:700; padding:0.25rem 0.75rem;
+    border-radius:999px;
+  }
+  .pill.fix { background:#dcfce7; color:#166534; }
+  .pill.new { background:#dbeafe; color:#1e40af; }
+  .pill.warn { background:#fef3c7; color:#92400e; }
+
+  /* Change summary */
+  .summary-box {
+    max-width:960px; margin:2.5rem auto 0;
+    background:#fff; border-radius:14px;
+    padding:1.25rem 1.5rem;
+    box-shadow:0 2px 12px rgba(0,0,0,0.07);
+  }
+  .summary-title { font-size:0.9rem; font-weight:800; color:#1a2e2e; margin-bottom:0.85rem; }
+  .summary-row { display:flex; gap:0.6rem; align-items:flex-start; margin-bottom:0.55rem; }
+  .summary-badge {
+    font-size:0.65rem; font-weight:700; padding:0.1rem 0.5rem;
+    border-radius:999px; flex-shrink:0; margin-top:1px;
+  }
+  .summary-text { font-size:0.72rem; color:#333; line-height:1.5; }
+  .summary-text strong { color:#1a2e2e; }
+</style>
+</head>
+<body>
+
+<h1>DNA TRAVELS — Desktop Cleanup + Feature Wireframe</h1>
+<p class="page-subtitle">Wireframe for approval · Do not implement until approved</p>
+
+<!-- ============================= -->
+<!-- SECTION 1: DESKTOP LAYOUT     -->
+<!-- ============================= -->
+<div class="section-title">1. Desktop Layout Cleanup <span class="badge fix">Fix</span></div>
+<p class="section-desc">Current desktop has some rough edges — uneven spacing, backlog items lack edit access, and the pane headers feel heavy. Proposed: tighter header, ✎ pencil on every backlog item, cleaner day chips with inline edit.</p>
+
+<div class="compare-row">
+
+  <!-- BEFORE -->
+  <div class="compare-side">
+    <div class="compare-label before">Before — current state</div>
+    <div class="desktop" style="position:relative">
+      <div class="top-bar">
+        <span class="top-brand">DNA TRAVELS</span>
+        <div class="top-meta">
+          <div class="top-trip-label">NYC · Jun 12–16 · 5 days</div>
+          <div class="top-save">Saved just now</div>
+        </div>
+        <button class="top-btn">✈ Flights</button>
+        <button class="top-btn">📋 Plan</button>
+        <button class="top-btn accent">💾 Export</button>
+        <a class="top-btn" href="#">🗺 Maps</a>
+      </div>
+      <div class="app-body">
+        <div class="pane-backlog">
+          <div class="pane-head">
+            <span class="pane-head-title">📋 Backlog</span>
+            <span class="pane-head-sub">6 places</span>
+          </div>
+          <div class="backlog-scroll">
+            <div class="bl-item">
+              <span class="bl-emoji">🗽</span>
+              <div class="bl-info">
+                <div class="bl-name">Statue of Liberty</div>
+                <div class="bl-meta">2 hrs <span class="bl-tag">landmark</span></div>
+              </div>
+              <!-- NO edit button here in current state -->
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🍕</span>
+              <div class="bl-info">
+                <div class="bl-name">Di Fara Pizza</div>
+                <div class="bl-meta">1 hr <span class="bl-tag">food</span></div>
+              </div>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🎨</span>
+              <div class="bl-info">
+                <div class="bl-name">MoMA</div>
+                <div class="bl-meta">2 hrs <span class="bl-tag">museum</span></div>
+              </div>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🌿</span>
+              <div class="bl-info">
+                <div class="bl-name">Brooklyn Botanic Garden</div>
+                <div class="bl-meta">1.5 hrs <span class="bl-tag">outdoors</span></div>
+              </div>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🎭</span>
+              <div class="bl-info">
+                <div class="bl-name">Broadway Show</div>
+                <div class="bl-meta">2.5 hrs <span class="bl-tag">entertain</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pane-calendar">
+          <div class="cal-header">
+            <div class="day-col-head selected"><div class="day-col-date">Thu 12</div><div class="day-col-sub">2 stops</div></div>
+            <div class="day-col-head"><div class="day-col-date">Fri 13</div><div class="day-col-sub">1 stop</div></div>
+            <div class="day-col-head"><div class="day-col-date">Sat 14</div><div class="day-col-sub">3 stops</div></div>
+            <div class="day-col-head"><div class="day-col-date">Sun 15</div><div class="day-col-sub">0 stops</div></div>
+            <div class="day-col-head"><div class="day-col-date">Mon 16</div><div class="day-col-sub">1 stop</div></div>
+          </div>
+          <div class="cal-grid">
+            <div class="day-col">
+              <div class="flight-chip">✈ Arrive 9am</div>
+              <div class="day-chip dc-restaurant"><span>🍕</span><span class="dc-name">Di Fara</span><span class="dc-time">12pm · 1h</span></div>
+              <div class="day-chip dc-museum"><span>🎨</span><span class="dc-name">MoMA</span><span class="dc-time">2pm · 2h</span></div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-other"><span>🗽</span><span class="dc-name">Statue of Liberty</span><span class="dc-time">10am</span></div>
+              <div class="day-drop-hint">+ drop here</div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-park"><span>🌿</span><span class="dc-name">Botanic Garden</span><span class="dc-time">10am</span></div>
+              <div class="day-chip dc-museum"><span>🏛</span><span class="dc-name">Brooklyn Museum</span><span class="dc-time">2pm</span></div>
+              <div class="day-chip dc-restaurant"><span>🍜</span><span class="dc-name">Lucali</span><span class="dc-time">7pm</span></div>
+            </div>
+            <div class="day-col">
+              <div class="day-drop-hint">+ drop here</div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-other"><span>🎭</span><span class="dc-name">Broadway</span><span class="dc-time">7pm</span></div>
+              <div class="flight-chip">✈ Depart 10pm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation" style="margin-top:0.5rem">
+      <span class="ann-icon">🔴</span>
+      <span class="ann-text">No way to edit duration from backlog. Day chips have no edit button. Backlog stays open but doesn't feel interactive.</span>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="compare-side">
+    <div class="compare-label after">After — proposed</div>
+    <div class="desktop" style="position:relative">
+      <div class="top-bar">
+        <span class="top-brand">DNA TRAVELS</span>
+        <div class="top-meta">
+          <div class="top-trip-label">NYC · Jun 12–16 · 5 days</div>
+          <div class="top-save">Saved just now</div>
+        </div>
+        <button class="top-btn">✈ Plan</button>
+        <button class="top-btn accent">💾 Export</button>
+        <a class="top-btn" href="#">🗺 Maps</a>
+      </div>
+      <div class="app-body">
+        <div class="pane-backlog">
+          <div class="pane-head">
+            <span class="pane-head-title">📋 Backlog</span>
+            <span class="pane-head-right">Sort ▾</span>
+          </div>
+          <!-- Stay banner inside backlog -->
+          <div class="stay-banner">
+            <span>🏨</span>
+            <span class="stay-banner-name">Pod Brooklyn</span>
+            <span class="stay-banner-dates">Jun 12 3pm → Jun 16 11am</span>
+            <span class="stay-banner-edit">Edit</span>
+          </div>
+          <div class="backlog-scroll">
+            <div class="bl-item">
+              <span class="bl-emoji">🗽</span>
+              <div class="bl-info">
+                <div class="bl-name">Statue of Liberty</div>
+                <div class="bl-meta">2 hrs <span class="bl-tag">landmark</span></div>
+              </div>
+              <span class="bl-edit" title="Edit duration">✎</span>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🍕</span>
+              <div class="bl-info">
+                <div class="bl-name">Di Fara Pizza</div>
+                <div class="bl-meta">1 hr <span class="bl-tag">food</span></div>
+              </div>
+              <span class="bl-edit" title="Edit duration">✎</span>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🎨</span>
+              <div class="bl-info">
+                <div class="bl-name">MoMA</div>
+                <div class="bl-meta">2 hrs <span class="bl-tag">museum</span></div>
+              </div>
+              <span class="bl-edit" title="Edit duration">✎</span>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🌿</span>
+              <div class="bl-info">
+                <div class="bl-name">Brooklyn Botanic</div>
+                <div class="bl-meta">1.5 hrs <span class="bl-tag">outdoors</span></div>
+              </div>
+              <span class="bl-edit" title="Edit duration">✎</span>
+            </div>
+            <div class="bl-item">
+              <span class="bl-emoji">🎭</span>
+              <div class="bl-info">
+                <div class="bl-name">Broadway Show</div>
+                <div class="bl-meta">2.5 hrs <span class="bl-tag">entertain</span></div>
+              </div>
+              <span class="bl-edit" title="Edit duration">✎</span>
+            </div>
+          </div>
+        </div>
+        <div class="pane-calendar">
+          <div class="cal-header">
+            <div class="day-col-head selected"><div class="day-col-date">Thu 12</div><div class="day-col-sub">2 stops · ✈ in</div></div>
+            <div class="day-col-head"><div class="day-col-date">Fri 13</div><div class="day-col-sub">1 stop</div></div>
+            <div class="day-col-head"><div class="day-col-date">Sat 14</div><div class="day-col-sub">3 stops</div></div>
+            <div class="day-col-head"><div class="day-col-date">Sun 15</div><div class="day-col-sub">open</div></div>
+            <div class="day-col-head"><div class="day-col-date">Mon 16</div><div class="day-col-sub">1 stop · ✈ out</div></div>
+          </div>
+          <div class="cal-grid">
+            <div class="day-col">
+              <div class="flight-chip">✈ Arrive 9am</div>
+              <div class="day-chip dc-restaurant"><span>🍕</span><span class="dc-name">Di Fara</span><span class="dc-time">12pm</span><span class="dc-edit">✎</span></div>
+              <div class="day-chip dc-museum"><span>🎨</span><span class="dc-name">MoMA</span><span class="dc-time">2pm</span><span class="dc-edit">✎</span></div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-other"><span>🗽</span><span class="dc-name">Statue of Liberty</span><span class="dc-edit">✎</span></div>
+              <div class="day-drop-hint">+ drop here</div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-park"><span>🌿</span><span class="dc-name">Botanic Garden</span><span class="dc-edit">✎</span></div>
+              <div class="day-chip dc-museum"><span>🏛</span><span class="dc-name">Brooklyn Museum</span><span class="dc-edit">✎</span></div>
+              <div class="day-chip dc-restaurant"><span>🍜</span><span class="dc-name">Lucali</span><span class="dc-edit">✎</span></div>
+            </div>
+            <div class="day-col">
+              <div class="day-drop-hint">+ drop here</div>
+            </div>
+            <div class="day-col">
+              <div class="day-chip dc-other"><span>🎭</span><span class="dc-name">Broadway</span><span class="dc-edit">✎</span></div>
+              <div class="flight-chip">✈ Depart 10pm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation green" style="margin-top:0.5rem">
+      <span class="ann-icon">🟢</span>
+      <span class="ann-text">✎ pencil on every backlog item and every day chip. Stay banner moved into backlog sidebar. Day sub-labels show flight info.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- SECTION 2: EDIT DURATION      -->
+<!-- ============================= -->
+<div class="spacer"></div>
+<div class="section-title" style="margin-top:2.5rem">2. Edit Duration — from any screen <span class="badge new">New</span></div>
+<p class="section-desc">Click ✎ anywhere (backlog, day chip, day view schedule, trip overview) and the same duration editor modal pops up. Pick a preset or type a custom number of minutes.</p>
+
+<div style="max-width:960px;margin:0 auto">
+  <div class="desktop" style="position:relative;height:auto">
+    <div class="top-bar">
+      <span class="top-brand">DNA TRAVELS</span>
+      <div class="top-meta"><div class="top-trip-label">NYC · Jun 12–16</div></div>
+      <button class="top-btn">✈ Plan</button>
+    </div>
+    <div class="app-body" style="position:relative">
+      <div class="pane-backlog">
+        <div class="pane-head"><span class="pane-head-title">📋 Backlog</span></div>
+        <div class="backlog-scroll">
+          <div class="bl-item" style="border-color:#2d6a6a;background:#eef6f6">
+            <span class="bl-emoji">🍕</span>
+            <div class="bl-info">
+              <div class="bl-name">Di Fara Pizza</div>
+              <div class="bl-meta">1 hr <span class="bl-tag">food</span></div>
+            </div>
+            <span class="bl-edit" style="color:#2d6a6a;background:#d4edeb">✎</span>
+          </div>
+          <div class="bl-item"><span class="bl-emoji">🗽</span><div class="bl-info"><div class="bl-name">Statue of Liberty</div><div class="bl-meta">2 hrs</div></div><span class="bl-edit">✎</span></div>
+          <div class="bl-item"><span class="bl-emoji">🎨</span><div class="bl-info"><div class="bl-name">MoMA</div><div class="bl-meta">2 hrs</div></div><span class="bl-edit">✎</span></div>
+        </div>
+      </div>
+      <div class="pane-calendar" style="opacity:0.3">
+        <div class="cal-header">
+          <div class="day-col-head"><div class="day-col-date">Thu 12</div></div>
+          <div class="day-col-head"><div class="day-col-date">Fri 13</div></div>
+          <div class="day-col-head"><div class="day-col-date">Sat 14</div></div>
+          <div class="day-col-head"><div class="day-col-date">Sun 15</div></div>
+          <div class="day-col-head"><div class="day-col-date">Mon 16</div></div>
+        </div>
+      </div>
+      <!-- MODAL -->
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="modal-title">Edit duration</div>
+          <div class="modal-sub">How long will this take?</div>
+          <div class="modal-activity">
+            <span style="font-size:1.1rem">🍕</span>
+            <div>
+              <div style="font-size:0.72rem;font-weight:700;color:#1a2e2e">Di Fara Pizza</div>
+              <div style="font-size:0.6rem;color:#888">Currently: 1 hour</div>
+            </div>
+          </div>
+          <div class="modal-dur-row">
+            <div class="dur-pill">30 min</div>
+            <div class="dur-pill active">1 hr</div>
+            <div class="dur-pill">1.5 hr</div>
+            <div class="dur-pill">2 hrs</div>
+            <div class="dur-pill">3 hrs</div>
+            <div class="dur-pill">Half day</div>
+          </div>
+          <div class="dur-custom">
+            <input type="number" placeholder="Custom" style="width:80px">
+            <span>minutes</span>
+          </div>
+          <div class="modal-btns">
+            <button class="modal-btn cancel">Cancel</button>
+            <button class="modal-btn save">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation blue" style="margin-top:0.5rem">
+    <span class="ann-icon">🔵</span>
+    <span class="ann-text">Same modal appears whether you tap ✎ in the Backlog, Day view, Trip overview, or Nearby tab. One consistent experience everywhere.</span>
+  </div>
+</div>
+
+<!-- ============================= -->
+<!-- SECTION 3: API KEY ONCE       -->
+<!-- ============================= -->
+<div class="section-title" style="margin-top:2.5rem">3. Google Places API — Enter Once, Works Everywhere <span class="badge fix">Fix</span></div>
+<p class="section-desc">Your API key is already saved to this device after you enter it once in Plan settings. The issue is you haven't entered it yet on your phone. Once you do, it saves permanently. The Nearby tab will show a "✓ Connected" badge so you always know it's active — and a small ⚙ gear to update it if needed.</p>
+
+<div style="max-width:960px;margin:0 auto;display:flex;gap:2rem;flex-wrap:wrap">
+
+  <!-- State A: Not connected -->
+  <div style="flex:1;min-width:260px">
+    <div class="compare-label before" style="margin-bottom:0.75rem">Not connected (new device)</div>
+    <div class="desktop" style="height:auto">
+      <div class="top-bar"><span class="top-brand">DNA TRAVELS</span><div class="top-meta"><div class="top-trip-label">NYC · 5 days</div></div></div>
+      <div style="padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem">
+        <div style="font-size:0.8rem;font-weight:800;color:#1a2e2e;padding-bottom:0.35rem;border-bottom:1px solid #eee">✨ Nearby</div>
+        <div style="background:#fef9c3;border:1.5px solid #fcd34d;border-radius:10px;padding:0.65rem 0.85rem">
+          <div style="font-size:0.72rem;font-weight:700;color:#92400e;margin-bottom:0.3rem">🔑 Connect Google Places to discover new spots</div>
+          <div style="font-size:0.62rem;color:#a16207;margin-bottom:0.55rem">Enter your key once — it saves to this device forever.</div>
+          <input type="password" placeholder="AIzaSy…" style="width:100%;font-size:0.65rem;padding:0.35rem 0.5rem;border:1.5px solid #fcd34d;border-radius:7px;background:#fffbeb;margin-bottom:0.4rem">
+          <button style="width:100%;background:#1a2e2e;color:#fff;border:none;border-radius:8px;padding:0.4rem;font-size:0.68rem;font-weight:700;cursor:pointer">Save & Connect</button>
+        </div>
+        <div style="font-size:0.6rem;color:#888;margin-top:0.2rem">📋 From your list will still work without a key.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State B: Connected -->
+  <div style="flex:1;min-width:260px">
+    <div class="compare-label after" style="margin-bottom:0.75rem">Connected (key saved)</div>
+    <div class="desktop" style="height:auto">
+      <div class="top-bar"><span class="top-brand">DNA TRAVELS</span><div class="top-meta"><div class="top-trip-label">NYC · 5 days</div></div></div>
+      <div style="padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem">
+        <div style="font-size:0.8rem;font-weight:800;color:#1a2e2e;padding-bottom:0.35rem;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between">
+          ✨ Nearby
+          <span style="font-size:0.6rem;background:#dcfce7;color:#166534;border:1px solid #86efac;border-radius:999px;padding:0.1rem 0.5rem;font-weight:700">✓ Google Places connected ⚙</span>
+        </div>
+        <div style="font-size:0.62rem;font-weight:700;color:#2d6a6a;text-transform:uppercase;letter-spacing:0.04em">📋 From your list</div>
+        <div style="background:#f8f8f8;border:1.5px solid #e8e8e8;border-radius:9px;padding:0.4rem 0.6rem;display:flex;align-items:center;gap:0.4rem">
+          <span>🗽</span><div style="flex:1"><div style="font-size:0.65rem;font-weight:700">Statue of Liberty</div><div style="font-size:0.57rem;color:#888">0.4 mi · 2 hrs</div></div>
+          <span style="font-size:0.6rem;font-weight:700;color:#2d6a6a;border:1.5px solid #2d6a6a;border-radius:999px;padding:0.2rem 0.5rem">+ Add</span>
+        </div>
+        <div style="font-size:0.62rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.04em;margin-top:0.2rem">✨ Discover new</div>
+        <div style="background:#fffbea;border:1.5px solid #fcd34d;border-radius:9px;padding:0.4rem 0.6rem;display:flex;align-items:center;gap:0.4rem">
+          <span>☕</span><div style="flex:1"><div style="font-size:0.65rem;font-weight:700">Cafe Grumpy <span style="font-size:0.5rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.08rem 0.3rem;margin-left:3px">✨ new</span></div><div style="font-size:0.57rem;color:#888">0.2 mi · ★4.6</div></div>
+          <span style="font-size:0.6rem;font-weight:700;color:#2d6a6a;border:1.5px solid #2d6a6a;border-radius:999px;padding:0.2rem 0.5rem">+ Add</span>
+        </div>
+        <div style="background:#fffbea;border:1.5px solid #fcd34d;border-radius:9px;padding:0.4rem 0.6rem;display:flex;align-items:center;gap:0.4rem">
+          <span>🍜</span><div style="flex:1"><div style="font-size:0.65rem;font-weight:700">Xi'an Famous Foods <span style="font-size:0.5rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.08rem 0.3rem;margin-left:3px">✨ new</span></div><div style="font-size:0.57rem;color:#888">0.5 mi · ★4.5</div></div>
+          <span style="font-size:0.6rem;font-weight:700;color:#2d6a6a;border:1.5px solid #2d6a6a;border-radius:999px;padding:0.2rem 0.5rem">+ Add</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="annotation blue" style="margin-top:0.75rem;max-width:960px">
+  <span class="ann-icon">🔵</span>
+  <span class="ann-text"><strong>How it works:</strong> You enter your key once in the Nearby tab (or Plan settings). It saves to this device's localStorage forever. On a new device (like your phone), you enter it once there too. The "✓ connected" badge tells you it's active. Tap ⚙ to update the key anytime.</span>
+</div>
+
+<!-- ============================= -->
+<!-- SUMMARY                        -->
+<!-- ============================= -->
+<div class="summary-box">
+  <div class="summary-title">📋 All proposed changes — Desktop + Mobile</div>
+  <div class="summary-row">
+    <span class="summary-badge" style="background:#dcfce7;color:#166534">Fix</span>
+    <div class="summary-text"><strong>Nav bar always visible on mobile</strong> — currently disappears in Backlog tab.</div>
+  </div>
+  <div class="summary-row">
+    <span class="summary-badge" style="background:#dbeafe;color:#1e40af">New</span>
+    <div class="summary-text"><strong>Tap-to-add bottom sheet (mobile Backlog + Nearby)</strong> — tap any activity to pick a day + optional time before adding.</div>
+  </div>
+  <div class="summary-row">
+    <span class="summary-badge" style="background:#dbeafe;color:#1e40af">New</span>
+    <div class="summary-text"><strong>✎ Edit duration from anywhere</strong> — pencil icon on every activity in backlog, day chips, schedule view, and trip overview. Opens the same quick-edit modal.</div>
+  </div>
+  <div class="summary-row">
+    <span class="summary-badge" style="background:#dcfce7;color:#166534">Fix</span>
+    <div class="summary-text"><strong>Desktop cleanup</strong> — ✎ pencil on day chips, stay banner in sidebar, cleaner day column sub-labels showing flight info, tighter header buttons.</div>
+  </div>
+  <div class="summary-row">
+    <span class="summary-badge" style="background:#dcfce7;color:#166534">Fix</span>
+    <div class="summary-text"><strong>API key enter-once flow</strong> — prominent "Connect Google Places" prompt in Nearby tab when no key is saved. Shows "✓ connected" badge once saved. Key persists in localStorage — enter once per device, never again.</div>
+  </div>
+</div>
+
+</body>
+</html>

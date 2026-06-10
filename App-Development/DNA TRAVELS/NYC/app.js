@@ -659,6 +659,7 @@
         s.dayEndTime = s.dayEndTime || DEFAULT_DAY_END_TIME;
         s.stay = s.stay || { name: '', checkinDate: '', checkinTime: '15:00', checkoutDate: '', checkoutTime: '11:00' };
         s.googlePlacesKey = s.googlePlacesKey || '';
+        s.durationOverrides = s.durationOverrides || {};
         if (!s.tripEnd && s.tripStart && s.days?.length)
           s.tripEnd = s.days[s.days.length - 1]?.date || s.tripStart;
         if (key !== STORAGE_KEY && s.days?.length && s.tripStart) s.onboarded = true;
@@ -688,6 +689,7 @@
       neverAgain: {},
       stay: { name: '', checkinDate: '', checkinTime: '15:00', checkoutDate: '', checkoutTime: '11:00' },
       googlePlacesKey: '',
+      durationOverrides: {},
     };
   }
 
@@ -744,11 +746,7 @@
     document.getElementById('planner').classList.remove('active');
     const loc = state.location || DEFAULT_LOCATION;
     document.getElementById('landing-city').value = loc.city || '';
-    document.getElementById('landing-state').value = loc.state || '';
-    document.getElementById('landing-country').value = loc.country || '';
     document.getElementById('landing-maps-list').value = state.mapsListUrl || DEFAULT_MAPS_LIST_URL;
-    const ferryInput = document.getElementById('landing-ferry-site');
-    if (ferryInput) ferryInput.value = state.ferrySiteUrl || DEFAULT_FERRY_SITE_URL;
     document.getElementById('landing-start').value = state.tripStart || todayStr();
     document.getElementById('landing-end').value = state.tripEnd || addDays(state.tripStart || todayStr(), 3);
     const sel = document.getElementById('landing-home');
@@ -768,12 +766,22 @@
     if (f('landing-stay-checkin-time')) f('landing-stay-checkin-time').value = stay.checkinTime || '15:00';
     if (f('landing-stay-checkout-date')) f('landing-stay-checkout-date').value = stay.checkoutDate || '';
     if (f('landing-stay-checkout-time')) f('landing-stay-checkout-time').value = stay.checkoutTime || '11:00';
-    if (f('landing-places-key')) f('landing-places-key').value = state.googlePlacesKey || '';
     const submitBtn = document.querySelector('#landing-form .btn-main');
     if (submitBtn) {
       const hasPlan = state.days?.some(d => d.blocks?.length);
       submitBtn.textContent = hasPlan ? 'Continue planning' : 'Start planning';
     }
+    // Auto-open toggle sections that already have saved data
+    const openToggle = (toggleId, bodyId, hasData) => {
+      if (!hasData) return;
+      document.getElementById(toggleId)?.classList.add('open');
+      const body = document.getElementById(bodyId);
+      if (body) body.hidden = false;
+    };
+    openToggle('toggle-flights', 'flights-body', flights.arrival.airport || flights.departure.airport);
+    openToggle('toggle-stay', 'stay-body', stay.name || stay.checkinDate);
+    openToggle('toggle-schedule', 'schedule-body',
+      state.dayStartTime !== DEFAULT_DAY_START_TIME || state.dayEndTime !== DEFAULT_DAY_END_TIME);
     updateSaveStatus();
   }
 
@@ -873,27 +881,32 @@
   }
 
   function bindLanding() {
+    // Toggle sections
+    document.querySelectorAll('.landing-toggle-head[data-toggle]').forEach(btn => {
+      const bodyId = btn.dataset.toggle;
+      const body = document.getElementById(bodyId);
+      const toggle = btn.closest('.landing-toggle');
+      if (!body || !toggle) return;
+      btn.addEventListener('click', () => {
+        const open = !body.hidden;
+        body.hidden = open;
+        toggle.classList.toggle('open', !open);
+      });
+    });
+
     document.getElementById('landing-form').addEventListener('submit', e => {
       e.preventDefault();
       const city = document.getElementById('landing-city').value.trim();
-      const country = document.getElementById('landing-country').value.trim();
       const mapsUrl = document.getElementById('landing-maps-list').value.trim();
-      if (!city || !country) return toast('Enter city and country');
+      if (!city) return toast('Enter a city');
       if (!mapsUrl) return toast('Paste your Google Maps list link');
       if (!isMapsListUrl(mapsUrl)) return toast('Use a Google Maps share link');
       const start = document.getElementById('landing-start').value;
       const end = document.getElementById('landing-end').value;
       if (!start || !end) return toast('Pick both dates');
       if (end < start) return toast('End date must be on or after start');
-      state.location = {
-        city,
-        state: document.getElementById('landing-state').value.trim(),
-        country,
-      };
+      state.location = { city };
       state.mapsListUrl = mapsUrl;
-      const ferryUrl = document.getElementById('landing-ferry-site')?.value.trim();
-      if (ferryUrl && !/^https?:\/\//i.test(ferryUrl)) return toast('Ferry site should start with http');
-      state.ferrySiteUrl = ferryUrl || DEFAULT_FERRY_SITE_URL;
       state.tripStart = start;
       state.tripEnd = end;
       const homeId = document.getElementById('landing-home')?.value || DEFAULT_HOME;
@@ -1273,6 +1286,7 @@
     return a.placeId || a.id;
   }
   function getDuration(id) {
+    if (state.durationOverrides?.[id]) return clampDur(state.durationOverrides[id]);
     return clampDur(getActivity(id)?.duration || 60);
   }
   function clampDur(m) {
@@ -1700,8 +1714,20 @@
         ${myList.length ? myList.map(p => listItemHtml(p, false)).join('') : '<div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">Everything on your list is already scheduled!</div>'}
       </div>
       <div class="discover-section" id="discover-new-section">
-        <div class="discover-section-title new">✨ Discover — not in your list</div>
-        ${hasKey ? '<div class="discover-loading" id="discover-loading">Loading nearby places…</div>' : '<div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">Add your Google Places API key in Plan settings to discover new places.</div>'}
+        <div class="discover-section-title new">✨ Discover — not in your list${hasKey ? ' <button type="button" class="api-connected-gear" id="discover-key-reset" title="Change API key">⚙</button>' : ''}</div>
+        ${hasKey
+          ? '<div class="discover-loading" id="discover-loading">Loading nearby places…</div>'
+          : `<div style="padding:0.65rem">
+              <div class="api-connect-banner">
+                <div class="api-connect-title">🔑 Connect Google Places</div>
+                <div class="api-connect-sub">Enter your key once — saved to this device forever. <a href="https://console.cloud.google.com/" target="_blank" rel="noopener" style="color:var(--teal)">Get a key →</a></div>
+                <div class="api-connect-row">
+                  <input type="password" class="api-connect-input" id="nearby-api-key" placeholder="AIzaSy…" autocomplete="off" spellcheck="false" value="${esc(state.googlePlacesKey||'')}">
+                  <button type="button" class="api-connect-btn" id="nearby-api-save">Save &amp; connect</button>
+                </div>
+              </div>
+            </div>`
+        }
       </div>`;
 
     container.querySelectorAll('.discover-day-btn').forEach(btn => {
@@ -1709,6 +1735,21 @@
     });
 
     bindDiscoverAddButtons(container, dayBlocks, day);
+
+    container.querySelector('#discover-key-reset')?.addEventListener('click', () => {
+      state.googlePlacesKey = '';
+      saveState();
+      renderDiscover();
+    });
+
+    container.querySelector('#nearby-api-save')?.addEventListener('click', () => {
+      const key = (container.querySelector('#nearby-api-key')?.value || '').trim();
+      if (!key) return toast('Paste your API key first');
+      state.googlePlacesKey = key;
+      saveState();
+      toast('Connected! Loading nearby places…');
+      renderDiscover();
+    });
 
     if (hasKey && centerLat && centerLng) {
       fetchNearbyPlaces(centerLat, centerLng).then(googlePlaces => {
@@ -1778,6 +1819,118 @@
         btn.textContent = '✓'; btn.disabled = true;
       });
     });
+  }
+
+  function showEditPlaceDuration(placeId) {
+    const activity = getActivity(placeId);
+    if (!activity) return;
+    const current = clampDur(state.durationOverrides?.[placeId] || getDuration(placeId));
+    const dialog = document.createElement('dialog');
+    dialog.className = 'timeline-dialog';
+    dialog.innerHTML = `
+      <div class="dialog-form">
+        <h3 style="margin:0 0 0.5rem;font-size:1rem;color:var(--ink)">${esc(activity.name)}</h3>
+        <label for="duration-select">How long to enjoy</label>
+        <select id="duration-select">${durationOptionsHtml(current)}</select>
+        <label for="duration-custom-h" style="margin-top:0.6rem">Custom (hours &amp; minutes)</label>
+        <div class="dur-custom-row">
+          <input type="number" id="duration-custom-h" min="0" max="12" step="1" value="${Math.floor(current/60)}" aria-label="Hours">
+          <span>hr</span>
+          <input type="number" id="duration-custom-m" min="0" max="59" step="5" value="${current%60}" aria-label="Minutes">
+          <span>min</span>
+        </div>
+        <p class="dur-hint">Updates default duration for this activity everywhere.</p>
+        <div class="dialog-actions">
+          <button class="btn-cancel" onclick="this.closest('dialog').close()">Cancel</button>
+          <button class="btn-save" id="save-duration">Save</button>
+        </div>
+      </div>`;
+    document.body.appendChild(dialog);
+    dialog.showModal();
+    const selEl = dialog.querySelector('#duration-select');
+    const hEl = dialog.querySelector('#duration-custom-h');
+    const mEl = dialog.querySelector('#duration-custom-m');
+    selEl.addEventListener('change', () => { const v = parseInt(selEl.value,10)||60; hEl.value=Math.floor(v/60); mEl.value=v%60; });
+    dialog.querySelector('#save-duration').addEventListener('click', () => {
+      const total = (parseInt(hEl.value,10)||0)*60 + (parseInt(mEl.value,10)||0);
+      state.durationOverrides = state.durationOverrides || {};
+      state.durationOverrides[placeId] = clampDur(total || parseInt(selEl.value,10) || 60);
+      saveState(); renderAll(); dialog.close(); dialog.remove();
+      toast('Duration updated');
+    });
+    dialog.addEventListener('close', () => dialog.remove());
+  }
+
+  function showAddToTripSheet(placeId, preselectedDayId) {
+    const activity = getActivity(placeId);
+    if (!activity || !state.days?.length) { toast('Set up your trip dates first'); return; }
+    let selectedDay = preselectedDayId || selectedDayId || state.days[0]?.id;
+    const overlay = document.createElement('div');
+    overlay.className = 'add-sheet-overlay';
+
+    const startH = Math.round(parseTimeToHour(state.dayStartTime || DEFAULT_DAY_START_TIME));
+    const endH = Math.round(parseTimeToHour(state.dayEndTime || DEFAULT_DAY_END_TIME));
+    const timeOpts = Array.from({length: endH - startH}, (_,i) => startH + i)
+      .map(h => `<option value="${h}">${formatHour(h)}</option>`).join('');
+
+    const render = () => {
+      const dayName = d => new Date(d.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      overlay.innerHTML = `<div class="add-sheet">
+        <div class="add-sheet-handle"></div>
+        <div class="add-sheet-title">Add to your trip</div>
+        <div class="add-sheet-activity">
+          <span style="font-size:1.2rem">${catEmoji(activity)||'📌'}</span>
+          <div>
+            <div class="add-sheet-activity-name">${esc(activity.name)}</div>
+            <div class="add-sheet-activity-meta">${durationLabel(getDuration(placeId))} · ${esc(activity.neighborhood||getCategory(activity)||'')}</div>
+          </div>
+        </div>
+        <div class="add-sheet-section-label">Which day?</div>
+        <div class="add-sheet-days">
+          ${state.days.map(day => {
+            const alreadyAdded = day.blocks.some(b => b.placeId === placeId);
+            const isSel = day.id === selectedDay;
+            return `<button class="add-sheet-day${isSel?' selected':''}" data-sheet-day="${attr(day.id)}"${alreadyAdded?' disabled':''}>
+              <div>
+                <div class="add-sheet-day-name">${esc(dayName(day))}${alreadyAdded?' · already added':''}</div>
+                <div class="add-sheet-day-sub">${day.blocks.length} stop${day.blocks.length!==1?'s':''} planned</div>
+              </div>
+              ${isSel?'<span class="add-sheet-day-check">✓</span>':''}
+            </button>`;
+          }).join('')}
+        </div>
+        <div class="add-sheet-time-row">
+          <span class="add-sheet-time-label">Time</span>
+          <select class="add-sheet-time-select" id="add-sheet-time">
+            <option value="">Anytime / unscheduled</option>
+            ${timeOpts}
+          </select>
+        </div>
+        <button class="add-sheet-btn" id="add-sheet-confirm"${!selectedDay?' disabled':''}>
+          + Add to ${selectedDay ? dayName(state.days.find(d=>d.id===selectedDay)||state.days[0]) : 'a day'}
+        </button>
+      </div>`;
+
+      overlay.querySelectorAll('[data-sheet-day]').forEach(btn => {
+        btn.addEventListener('click', () => { if (!btn.disabled) { selectedDay=btn.dataset.sheetDay; render(); } });
+      });
+      overlay.querySelector('#add-sheet-confirm')?.addEventListener('click', () => {
+        const hourVal = overlay.querySelector('#add-sheet-time')?.value;
+        const hour = hourVal !== '' ? parseInt(hourVal,10) : null;
+        const day = state.days.find(d => d.id === selectedDay);
+        if (!day) return;
+        if (day.blocks.some(b => b.placeId === placeId)) { toast('Already on this day'); return; }
+        day.blocks.push({id:'b-'+Date.now(), placeId, hour, duration:getDuration(placeId)});
+        selectedDayId = selectedDay;
+        saveState(); renderAll();
+        toast('Added to '+dayLabel(day));
+        overlay.remove();
+      });
+      overlay.addEventListener('click', e => { if (e.target===overlay) overlay.remove(); });
+    };
+
+    render();
+    document.body.appendChild(overlay);
   }
 
   /* ———— End Stay / Trip / Discover ———— */
@@ -2350,6 +2503,7 @@
         <span class="chip-time">${timeLabel}</span>
       </div>
       <span class="chip-emoji">${catEmoji(a)}</span>
+      <button type="button" class="chip-edit" data-edit-block="${attr(b.id)}" data-day="${attr(day.id)}" title="Edit duration">✎</button>
       <button type="button" class="chip-remove" data-remove-block="${attr(b.id)}" data-day="${attr(day.id)}">×</button>
     </div>`;
   }
@@ -2435,6 +2589,13 @@
       btn.addEventListener('click', e => {
         e.stopPropagation();
         autoScheduleDay(btn.dataset.autoDay);
+      });
+    });
+
+    root.querySelectorAll('[data-edit-block]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        showEditDurationDialog(btn.dataset.editBlock, btn.dataset.day);
       });
     });
 
@@ -2749,6 +2910,7 @@
     const dur = getDuration(id);
     const cc = catClass(a);
     return `<article class="spot-card ${cc}${sel}${isSuggest ? ' suggest' : ''}" draggable="true" data-place-id="${attr(id)}">
+      <button type="button" class="spot-edit-btn" data-edit-place="${attr(id)}" title="Edit duration">✎</button>
       <h4>${catEmoji(a)} ${esc(a.name)}</h4>
       <p class="spot-enjoy">${enjoyLabel(dur)}</p>
       <p class="spot-meta">${esc(a.neighborhood || 'NYC')}</p>
@@ -2765,10 +2927,15 @@
   }
 
   function bindBacklogCards(root) {
+    const mobile = window.innerWidth <= 640;
     root.querySelectorAll('.spot-card').forEach(card => {
       card.addEventListener('click', e => {
         if (e.target.closest('a, button')) return;
         const id = card.dataset.placeId;
+        if (mobile) {
+          showAddToTripSheet(id, selectedDayId);
+          return;
+        }
         selectedPlaceId = selectedPlaceId === id ? null : id;
         document.querySelectorAll('.spot-card').forEach(c =>
           c.classList.toggle('selected', c.dataset.placeId === selectedPlaceId)
@@ -2782,11 +2949,22 @@
     root.querySelectorAll('.btn-add').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
+        const id = btn.dataset.placeId;
+        if (mobile) {
+          showAddToTripSheet(id, selectedDayId);
+          return;
+        }
         if (!selectedDayId) {
           toast('Tap a day header on the calendar first, then Add to day');
           return;
         }
-        addToDay(btn.dataset.placeId, selectedDayId);
+        addToDay(id, selectedDayId);
+      });
+    });
+    root.querySelectorAll('[data-edit-place]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        showEditPlaceDuration(btn.dataset.editPlace);
       });
     });
     bindDragSources(root);

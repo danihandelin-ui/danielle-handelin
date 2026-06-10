@@ -1589,6 +1589,76 @@
       .toast { bottom:calc(var(--nav-h) + 0.75rem); }
       .pane-hint { font-size:0.7rem; padding:0.5rem 1rem 0.55rem; }
     }
+
+    /* ---- Landing toggle sections ---- */
+    .landing-toggle { border:1.5px solid var(--line); border-radius:10px; margin-bottom:0.5rem; overflow:hidden; }
+    .landing-toggle-head {
+      width:100%; display:flex; align-items:center; gap:0.6rem;
+      padding:0.65rem 0.85rem; background:var(--bg); border:none;
+      cursor:pointer; font:inherit; text-align:left;
+    }
+    .landing-toggle-head:hover { background:#f0f5f5; }
+    .landing-toggle-icon { font-size:1rem; flex-shrink:0; }
+    .landing-toggle-label { flex:1; font-size:0.8rem; font-weight:600; color:var(--ink); }
+    .landing-toggle-label .optional { font-size:0.65rem; font-weight:400; color:var(--muted); margin-left:0.35rem; }
+    .landing-toggle-arrow { font-size:0.85rem; color:var(--muted); transition:transform 0.2s; display:inline-block; }
+    .landing-toggle.open .landing-toggle-arrow { transform:rotate(90deg); }
+    .landing-toggle-body { padding:0.75rem 0.85rem 0.5rem; border-top:1px solid var(--line); background:var(--paper); }
+
+    /* ---- Mobile bottom sheet ---- */
+    .add-sheet-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.45);
+      z-index:1000; display:flex; flex-direction:column; justify-content:flex-end;
+    }
+    .add-sheet {
+      background:var(--paper); border-radius:18px 18px 0 0;
+      padding:1rem 1.1rem 1.75rem; max-height:85vh; overflow-y:auto;
+      display:flex; flex-direction:column; gap:0.65rem;
+      animation:sheet-up 0.22s ease;
+    }
+    @keyframes sheet-up { from { transform:translateY(100%); } to { transform:translateY(0); } }
+    .add-sheet-handle { width:36px; height:4px; background:#ddd; border-radius:2px; margin:0 auto 0.1rem; flex-shrink:0; }
+    .add-sheet-title { font-size:0.9rem; font-weight:800; color:var(--ink); }
+    .add-sheet-activity { display:flex; align-items:center; gap:0.5rem; background:var(--bg); border-radius:9px; padding:0.45rem 0.65rem; }
+    .add-sheet-activity-name { font-size:0.78rem; font-weight:700; color:var(--ink); }
+    .add-sheet-activity-meta { font-size:0.62rem; color:var(--muted); }
+    .add-sheet-section-label { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }
+    .add-sheet-days { display:flex; flex-direction:column; gap:0.3rem; }
+    .add-sheet-day {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.5rem 0.75rem; border:1.5px solid var(--line);
+      border-radius:9px; cursor:pointer; background:var(--paper);
+      font:inherit; text-align:left; width:100%;
+    }
+    .add-sheet-day.selected { border-color:var(--teal); background:var(--teal-soft); }
+    .add-sheet-day:disabled { opacity:0.45; cursor:default; }
+    .add-sheet-day-name { font-size:0.72rem; font-weight:700; color:var(--ink); }
+    .add-sheet-day-sub { font-size:0.58rem; color:var(--muted); margin-top:1px; }
+    .add-sheet-day-check { color:var(--teal); font-size:0.9rem; }
+    .add-sheet-time-row { display:flex; align-items:center; gap:0.5rem; }
+    .add-sheet-time-label { font-size:0.68rem; color:var(--ink); font-weight:600; flex-shrink:0; }
+    .add-sheet-time-select { flex:1; font:inherit; font-size:0.7rem; padding:0.32rem 0.5rem; border:1.5px solid var(--line); border-radius:7px; background:var(--paper); }
+    .add-sheet-btn { background:var(--teal); color:#fff; border:none; border-radius:10px; padding:0.65rem; font-size:0.8rem; font-weight:700; cursor:pointer; text-align:center; width:100%; }
+    .add-sheet-btn:disabled { background:#ccc; color:#888; cursor:default; }
+
+    /* ---- Backlog card edit button ---- */
+    .spot-card { position:relative; }
+    .spot-edit-btn { position:absolute; top:0.4rem; right:0.4rem; background:none; border:none; font-size:0.75rem; color:#ccc; cursor:pointer; padding:0.15rem 0.25rem; border-radius:4px; line-height:1; }
+    .spot-edit-btn:hover { color:var(--teal); background:var(--teal-soft); }
+
+    /* ---- Day chip edit button ---- */
+    .chip-edit { font-size:0.62rem; color:#ccc; cursor:pointer; padding:0 0.18rem; border-radius:4px; line-height:1; background:none; border:none; flex-shrink:0; }
+    .chip-edit:hover { color:var(--teal); }
+
+    /* ---- API key connect banner (Nearby tab) ---- */
+    .api-connect-banner { background:#fffbea; border:1.5px solid #fcd34d; border-radius:12px; padding:0.85rem 1rem; display:flex; flex-direction:column; gap:0.5rem; margin:0.5rem 0; }
+    .api-connect-title { font-size:0.78rem; font-weight:700; color:#92400e; }
+    .api-connect-sub { font-size:0.65rem; color:#a16207; }
+    .api-connect-row { display:flex; gap:0.5rem; }
+    .api-connect-input { flex:1; font:inherit; font-size:0.7rem; padding:0.35rem 0.55rem; border:1.5px solid #fcd34d; border-radius:7px; background:#fffbeb; }
+    .api-connect-btn { font:inherit; font-size:0.7rem; font-weight:700; padding:0.35rem 0.75rem; background:var(--teal); color:#fff; border:none; border-radius:7px; cursor:pointer; white-space:nowrap; }
+    .api-connected-badge { display:flex; align-items:center; gap:0.4rem; font-size:0.65rem; font-weight:700; color:#166534; background:#dcfce7; border:1px solid #bbf7d0; border-radius:7px; padding:0.3rem 0.65rem; margin:0.25rem 0; }
+    .api-connected-gear { margin-left:auto; cursor:pointer; font-size:0.8rem; color:#888; background:none; border:none; }
   </style>
 </head>
 <body>
@@ -1599,131 +1669,121 @@
       <p class="landing-sub">DNA TRAVELS</p>
       <form id="landing-form">
         <div class="field">
-          <label>Where are you going?</label>
-          <div class="field-row">
-            <div class="field" style="margin-bottom:0">
-              <label for="landing-city">City</label>
-              <input type="text" id="landing-city" required placeholder="New York" autocomplete="address-level2">
-            </div>
-            <div class="field" style="margin-bottom:0">
-              <label for="landing-state">State</label>
-              <input type="text" id="landing-state" placeholder="NY" autocomplete="address-level1" maxlength="8">
-            </div>
-            <div class="field" style="margin-bottom:0">
-              <label for="landing-country">Country</label>
-              <input type="text" id="landing-country" required placeholder="USA" autocomplete="country-name">
-            </div>
-          </div>
+          <label for="landing-city">Where are you going?</label>
+          <input type="text" id="landing-city" required placeholder="New York City" autocomplete="address-level2">
         </div>
         <div class="field">
           <label for="landing-maps-list">Google Maps saved list</label>
           <input type="url" id="landing-maps-list" required placeholder="https://maps.app.goo.gl/…" inputmode="url">
-          <p class="field-hint">Saved → your list → Share → copy link. Saving here refreshes your backlog from that list (use <strong>./start.sh</strong> so sync works).</p>
+          <p class="field-hint">Saved → your list → Share → copy link.</p>
         </div>
-        <div class="field">
-          <label for="landing-ferry-site">Excursions website (NYC Ferry)</label>
-          <input type="url" id="landing-ferry-site" placeholder="https://www.ferry.nyc/routes-and-schedules/" inputmode="url">
-          <p class="field-hint">Optional. Used in day suggestions for ferries/excursions.</p>
+        <div class="field field-row">
+          <div class="field" style="margin-bottom:0">
+            <label for="landing-start">Trip starts</label>
+            <input type="date" id="landing-start" required>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label for="landing-end">Trip ends</label>
+            <input type="date" id="landing-end" required>
+          </div>
         </div>
-        <div class="field">
-          <label for="landing-start">Trip starts</label>
-          <input type="date" id="landing-start" required>
+
+        <div class="landing-toggle" id="toggle-flights">
+          <button type="button" class="landing-toggle-head" data-toggle="flights-body">
+            <span class="landing-toggle-icon">✈️</span>
+            <span class="landing-toggle-label">Flights <span class="optional">optional — blocks travel time on calendar</span></span>
+            <span class="landing-toggle-arrow">›</span>
+          </button>
+          <div class="landing-toggle-body" id="flights-body" hidden>
+            <div class="flight-leg">
+              <label>Arrival flight</label>
+              <div class="flight-leg-row">
+                <select id="landing-arrival-airport" aria-label="Arrival airport">
+                  <option value="">— Airport —</option>
+                  <option value="JFK">JFK (Kennedy)</option>
+                  <option value="LGA">LGA (LaGuardia)</option>
+                  <option value="EWR">EWR (Newark)</option>
+                  <option value="OTHER">Other…</option>
+                </select>
+                <input type="date" id="landing-arrival-date" aria-label="Arrival date">
+                <input type="text" class="flight-other" id="landing-arrival-airport-other" placeholder="Airport name" hidden>
+              </div>
+              <div class="flight-time-row">
+                <label>Lands<input type="time" id="landing-arrival-arr" aria-label="Landing time"></label>
+              </div>
+            </div>
+            <div class="flight-leg">
+              <label>Departure flight</label>
+              <div class="flight-leg-row">
+                <select id="landing-departure-airport" aria-label="Departure airport">
+                  <option value="">— Airport —</option>
+                  <option value="JFK">JFK (Kennedy)</option>
+                  <option value="LGA">LGA (LaGuardia)</option>
+                  <option value="EWR">EWR (Newark)</option>
+                  <option value="OTHER">Other…</option>
+                </select>
+                <input type="date" id="landing-departure-date" aria-label="Departure date">
+                <input type="text" class="flight-other" id="landing-departure-airport-other" placeholder="Airport name" hidden>
+              </div>
+              <div class="flight-time-row">
+                <label>Takes off<input type="time" id="landing-departure-dep" aria-label="Departure time"></label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="field">
-          <label for="landing-end">Trip ends</label>
-          <input type="date" id="landing-end" required>
+
+        <div class="landing-toggle" id="toggle-stay">
+          <button type="button" class="landing-toggle-head" data-toggle="stay-body">
+            <span class="landing-toggle-icon">🏨</span>
+            <span class="landing-toggle-label">Stay <span class="optional">optional — adds check-in/out to Trip overview</span></span>
+            <span class="landing-toggle-arrow">›</span>
+          </button>
+          <div class="landing-toggle-body" id="stay-body" hidden>
+            <div class="flight-leg">
+              <label for="landing-stay-name">Accommodation name</label>
+              <input type="text" id="landing-stay-name" placeholder="Pod Brooklyn Hotel, Airbnb on Bedford…">
+            </div>
+            <div class="flight-leg">
+              <label>Check-in</label>
+              <div class="flight-time-row">
+                <label>Date<input type="date" id="landing-stay-checkin-date"></label>
+                <label>Time<input type="time" id="landing-stay-checkin-time" value="15:00" step="900"></label>
+              </div>
+            </div>
+            <div class="flight-leg">
+              <label>Check-out</label>
+              <div class="flight-time-row">
+                <label>Date<input type="date" id="landing-stay-checkout-date"></label>
+                <label>Time<input type="time" id="landing-stay-checkout-time" value="11:00" step="900"></label>
+              </div>
+            </div>
+          </div>
         </div>
-        <fieldset class="flight-section">
-          <legend>Flights <span class="optional">optional</span></legend>
-          <p class="field-hint" style="margin-top:0">The calendar blocks <strong>everything before your arrival lands</strong> on day 1 and <strong>everything after your departure takes off</strong> on the last day.</p>
-          <div class="flight-leg">
-            <label for="landing-arrival-airport">Arrival flight</label>
-            <div class="flight-leg-row">
-              <select id="landing-arrival-airport" aria-label="Arrival airport">
-                <option value="">— Airport —</option>
-                <option value="JFK">JFK (Kennedy)</option>
-                <option value="LGA">LGA (LaGuardia)</option>
-                <option value="EWR">EWR (Newark)</option>
-                <option value="OTHER">Other…</option>
-              </select>
-              <input type="date" id="landing-arrival-date" aria-label="Arrival date">
-              <input type="text" class="flight-other" id="landing-arrival-airport-other" placeholder="Airport name" hidden>
+
+        <div class="landing-toggle" id="toggle-schedule">
+          <button type="button" class="landing-toggle-head" data-toggle="schedule-body">
+            <span class="landing-toggle-icon">⏰</span>
+            <span class="landing-toggle-label">Day schedule &amp; home base <span class="optional">8am–10pm default</span></span>
+            <span class="landing-toggle-arrow">›</span>
+          </button>
+          <div class="landing-toggle-body" id="schedule-body" hidden>
+            <div class="field-row day-schedule-row" style="margin-bottom:0.5rem">
+              <div class="field" style="margin-bottom:0">
+                <label for="landing-day-start">Day starts</label>
+                <input type="time" id="landing-day-start" value="08:00" step="900">
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label for="landing-day-end">Day ends</label>
+                <input type="time" id="landing-day-end" value="22:00" step="900">
+              </div>
             </div>
-            <div class="flight-time-row">
-              <label>Takes off<input type="time" id="landing-arrival-dep" aria-label="Arrival flight take-off time"></label>
-              <label>Lands<input type="time" id="landing-arrival-arr" aria-label="Arrival flight landing time"></label>
-            </div>
-            <input type="text" class="flight-number" id="landing-arrival-flightno" placeholder="Flight # / confirmation (e.g. DL123 / ABC123)">
-          </div>
-          <div class="flight-leg">
-            <label for="landing-departure-airport">Departure flight</label>
-            <div class="flight-leg-row">
-              <select id="landing-departure-airport" aria-label="Departure airport">
-                <option value="">— Airport —</option>
-                <option value="JFK">JFK (Kennedy)</option>
-                <option value="LGA">LGA (LaGuardia)</option>
-                <option value="EWR">EWR (Newark)</option>
-                <option value="OTHER">Other…</option>
-              </select>
-              <input type="date" id="landing-departure-date" aria-label="Departure date">
-              <input type="text" class="flight-other" id="landing-departure-airport-other" placeholder="Airport name" hidden>
-            </div>
-            <div class="flight-time-row">
-              <label>Takes off<input type="time" id="landing-departure-dep" aria-label="Departure flight take-off time"></label>
-              <label>Lands<input type="time" id="landing-departure-arr" aria-label="Departure flight landing time"></label>
-            </div>
-            <input type="text" class="flight-number" id="landing-departure-flightno" placeholder="Flight # / confirmation (e.g. DL456 / ABC123)">
-          </div>
-        </fieldset>
-        <fieldset class="flight-section">
-          <legend>Stay <span class="optional">optional</span></legend>
-          <p class="field-hint" style="margin-top:0">Adds check-in/checkout info to your Trip overview.</p>
-          <div class="flight-leg">
-            <label for="landing-stay-name">Accommodation name</label>
-            <input type="text" id="landing-stay-name" placeholder="Pod Brooklyn Hotel, Airbnb on Bedford…">
-          </div>
-          <div class="flight-leg">
-            <label>Check-in</label>
-            <div class="flight-time-row">
-              <label>Date<input type="date" id="landing-stay-checkin-date"></label>
-              <label>Time<input type="time" id="landing-stay-checkin-time" value="15:00" step="900"></label>
-            </div>
-          </div>
-          <div class="flight-leg">
-            <label>Check-out</label>
-            <div class="flight-time-row">
-              <label>Date<input type="date" id="landing-stay-checkout-date"></label>
-              <label>Time<input type="time" id="landing-stay-checkout-time" value="11:00" step="900"></label>
-            </div>
-          </div>
-        </fieldset>
-        <fieldset class="flight-section">
-          <legend>Discover nearby <span class="optional">optional</span></legend>
-          <p class="field-hint" style="margin-top:0">Paste your Google Places API key to unlock the "✨ not in your list" section in the Nearby tab. <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Get a key →</a></p>
-          <div class="flight-leg">
-            <label for="landing-places-key">Google Places API key</label>
-            <input type="password" id="landing-places-key" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
-          </div>
-        </fieldset>
-        <div class="field">
-          <label>Your day schedule</label>
-          <div class="field-row day-schedule-row">
             <div class="field" style="margin-bottom:0">
-              <label for="landing-day-start">Day starts</label>
-              <input type="time" id="landing-day-start" value="08:00" step="900">
-            </div>
-            <div class="field" style="margin-bottom:0">
-              <label for="landing-day-end">Day ends</label>
-              <input type="time" id="landing-day-end" value="22:00" step="900">
+              <label for="landing-home">Starting from (home base)</label>
+              <select id="landing-home"></select>
             </div>
           </div>
-          <p class="field-hint">Calendar hours and flight blocks use this range (not everyone starts at 7 AM).</p>
         </div>
-        <div class="field">
-          <label for="landing-home">Starting from (home base)</label>
-          <select id="landing-home"></select>
-          <p class="field-hint">Pick your hotel or apartment from spots in your list.</p>
-        </div>
+
         <button type="submit" class="btn-main">Start planning</button>
       </form>
       <p class="landing-note">Reloading always returns here. Use <strong>Save</strong> in the planner before <strong>Export</strong>. Your last trip stays filled in below.</p>
