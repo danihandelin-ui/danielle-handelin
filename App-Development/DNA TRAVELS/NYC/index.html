@@ -1562,6 +1562,18 @@
     .discover-divider-label { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); white-space:nowrap; }
     .discover-add.on-list { background:var(--teal-soft); color:var(--teal); border:1px solid var(--teal); border-radius:999px; font:inherit; font-size:0.62rem; font-weight:600; padding:0.18rem 0.5rem; cursor:default; }
     .discover-add.on-list-day { background:var(--teal); color:#fff; border:none; border-radius:999px; font:inherit; font-size:0.62rem; font-weight:600; padding:0.18rem 0.5rem; cursor:default; }
+    /* split add buttons */
+    .d-split-wrap { position:relative; flex-shrink:0; }
+    .d-split { display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+    .d-list-btn { font:inherit; font-size:0.62rem; font-weight:600; padding:0.3rem 0.5rem; border:none; border-right:1px solid var(--line); background:var(--teal-soft); color:var(--teal); cursor:pointer; white-space:nowrap; }
+    .d-list-btn:hover { background:var(--teal); color:#fff; }
+    .d-split .d-day-btn { font:inherit; font-size:0.62rem; font-weight:600; padding:0.3rem 0.5rem; border:none; background:var(--ink); color:#fff; cursor:pointer; white-space:nowrap; }
+    .d-split-wrap > .d-day-btn { font:inherit; font-size:0.68rem; font-weight:600; padding:0.28rem 0.6rem; border:1px solid var(--line); border-radius:8px; background:var(--ink); color:#fff; cursor:pointer; white-space:nowrap; }
+    .d-picker { position:absolute; right:0; top:calc(100% + 3px); background:var(--paper); border:1.5px solid var(--teal); border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15); z-index:40; min-width:170px; overflow:hidden; }
+    .d-day-pick { display:block; width:100%; padding:0.48rem 0.75rem; font:inherit; font-size:0.75rem; font-weight:600; border:none; border-bottom:1px solid var(--line); background:transparent; text-align:left; cursor:pointer; }
+    .d-day-pick:last-child { border-bottom:none; }
+    .d-day-pick:hover:not(:disabled) { background:var(--teal-soft); color:var(--teal); }
+    .d-day-pick:disabled { color:var(--muted); cursor:default; }
     .discover-item { display:flex; align-items:center; gap:0.55rem; padding:0.6rem 0.85rem; border-bottom:1px solid var(--line); }
     .discover-item:last-child { border-bottom:none; }
     .discover-emoji { font-size:1.05rem; flex-shrink:0; line-height:1; }
@@ -1692,7 +1704,7 @@
           <input type="url" id="landing-maps-list" required placeholder="https://maps.app.goo.gl/…" inputmode="url">
           <p class="field-hint">Saved → your list → Share → copy link.</p>
         </div>
-        <div class="field field-row">
+        <div class="field field-row day-schedule-row">
           <div class="field" style="margin-bottom:0">
             <label for="landing-start">Trip starts</label>
             <input type="date" id="landing-start" required>

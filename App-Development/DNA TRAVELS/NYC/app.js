@@ -1683,15 +1683,32 @@
       return `<button class="discover-day-btn${d.id === day.id ? ' active' : ''}" data-did="${attr(d.id)}">${esc(lbl)}</button>`;
     }).join('');
 
+    function dayPickerHtml(pid, gpData) {
+      return state.days.map(d => {
+        const lbl = dayLabel(d);
+        const onThisDay = pid
+          ? d.blocks.some(b => b.placeId === pid)
+          : false;
+        const attrs = pid
+          ? `data-pid="${attr(pid)}" data-day="${attr(d.id)}"`
+          : `data-gpid="${attr(gpData.gpid)}" data-gname="${attr(gpData.gname)}" data-glat="${gpData.glat}" data-glng="${gpData.glng}" data-gcat="${attr(gpData.gcat)}" data-day="${attr(d.id)}"`;
+        return `<button class="d-day-pick" ${attrs}${onThisDay ? ' disabled' : ''}>${esc(lbl)}${onThisDay ? ' ✓' : ''}</button>`;
+      }).join('');
+    }
+
     function listItemHtml(p, isNew) {
       const emoji = catEmoji(p) || '📌';
       const distStr = (p._dist != null && p._dist < 99) ? p._dist + ' mi' : '';
       const badge = isNew ? '<span class="discover-new-badge">✨ new</span>' : '';
       const ratStr = p.rating ? ' · ★' + p.rating : '';
       const isOnDay = dayBlocks.some(b => b.placeId === activityId(p));
+      const pid = activityId(p);
       const btnHtml = isOnDay
         ? `<span class="discover-add on-list-day">✓ On day</span>`
-        : `<button class="discover-add" data-pid="${attr(activityId(p))}" data-did="${attr(day.id)}">+ Add</button>`;
+        : `<div class="d-split-wrap">
+            <button class="d-day-btn" data-pid="${attr(pid)}">+ Day ▾</button>
+            <div class="d-picker" hidden>${dayPickerHtml(pid, null)}</div>
+           </div>`;
       return `<div class="discover-item">
         <div class="discover-emoji">${emoji}</div>
         <div class="discover-info">
@@ -1734,7 +1751,7 @@
       btn.addEventListener('click', () => { selectedDayId = btn.dataset.did; renderDiscover(); });
     });
 
-    bindDiscoverAddButtons(container, dayBlocks, day);
+    bindDiscoverAddButtons(container);
 
     container.querySelector('#discover-key-reset')?.addEventListener('click', () => {
       state.googlePlacesKey = '';
@@ -1768,56 +1785,108 @@
           const emoji = getGEmoji(p);
           const distStr = p._dist < 99 ? p._dist + ' mi' : '';
           const ratStr = p.rating ? ' · ★' + p.rating : '';
+          const gpData = { gpid: p.googlePlaceId, gname: p.name, glat: p.lat, glng: p.lng, gcat: getGCategory(p) };
+          const picker = dayPickerHtml(null, gpData);
           return `<div class="discover-item">
             <div class="discover-emoji">${emoji}</div>
             <div class="discover-info">
               <div class="discover-name">${esc(p.name)}<span class="discover-new-badge">✨ new</span></div>
               <div class="discover-meta">${esc(p.address?.split(',')[0] || '')}${distStr ? ' · ' + distStr : ''}${ratStr}</div>
             </div>
-            <button class="discover-add" data-gpid="${attr(p.googlePlaceId)}" data-gname="${attr(p.name)}" data-glat="${p.lat}" data-glng="${p.lng}" data-gcat="${attr(getGCategory(p))}" data-did="${attr(day.id)}">+ Add</button>
+            <div class="d-split-wrap">
+              <div class="d-split">
+                <button class="d-list-btn" data-gpid="${attr(p.googlePlaceId)}" data-gname="${attr(p.name)}" data-glat="${p.lat}" data-glng="${p.lng}" data-gcat="${attr(getGCategory(p))}">+ List</button>
+                <button class="d-day-btn" data-gpid="${attr(p.googlePlaceId)}">+ Day ▾</button>
+              </div>
+              <div class="d-picker" hidden>${picker}</div>
+            </div>
           </div>`;
         }).join('');
         newSection.innerHTML = '<div class="discover-section-title new">✨ Discover — not in your list</div>' + itemsHtml;
-        newSection.querySelectorAll('.discover-add').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const d = state.days.find(x => x.id === btn.dataset.did);
-            if (!d) return;
-            const newPlace = {
-              id: 'gp-' + Date.now(),
-              placeId: 'gp-' + btn.dataset.gpid,
-              name: btn.dataset.gname,
-              lat: parseFloat(btn.dataset.glat) || null,
-              lng: parseFloat(btn.dataset.glng) || null,
-              neighborhood: '',
-              duration: 60,
-              category: btn.dataset.gcat,
-            };
-            if (!state.customPlaces.find(p => p.placeId === newPlace.placeId)) {
-              state.customPlaces.push(newPlace);
-            }
-            if (!d.blocks.some(b => b.placeId === newPlace.placeId)) {
-              d.blocks.push({ id: 'b-' + Date.now(), placeId: newPlace.placeId, hour: null, duration: 60 });
-            }
-            saveState();
-            toast('Added ' + newPlace.name);
-            btn.textContent = '✓'; btn.disabled = true;
-          });
-        });
+        bindDiscoverSplitButtons(newSection);
       });
     }
   }
 
-  function bindDiscoverAddButtons(container, dayBlocks, day) {
-    container.querySelectorAll('.discover-add[data-pid]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const placeId = btn.dataset.pid;
-        const d = state.days.find(x => x.id === btn.dataset.did);
-        if (!d || d.blocks.some(b => b.placeId === placeId)) { toast('Already on this day'); return; }
-        d.blocks.push({ id: 'b-' + Date.now(), placeId, hour: null, duration: getDuration(placeId) });
+  function bindDiscoverAddButtons(container) {
+    bindDiscoverSplitButtons(container);
+  }
+
+  function bindDiscoverSplitButtons(root) {
+    // Toggle day picker open/close
+    root.addEventListener('click', e => {
+      const dayBtn = e.target.closest('.d-day-btn');
+      if (dayBtn) {
+        e.stopPropagation();
+        const wrap = dayBtn.closest('.d-split-wrap');
+        const picker = wrap?.querySelector('.d-picker');
+        root.querySelectorAll('.d-picker').forEach(p => { if (p !== picker) p.hidden = true; });
+        if (picker) picker.hidden = !picker.hidden;
+        return;
+      }
+      if (!e.target.closest('.d-picker')) {
+        root.querySelectorAll('.d-picker').forEach(p => { p.hidden = true; });
+      }
+    });
+
+    // "+ List" for Google Places — add to backlog only
+    root.addEventListener('click', e => {
+      const btn = e.target.closest('.d-list-btn');
+      if (!btn) return;
+      const placeId = 'gp-' + btn.dataset.gpid;
+      if (!state.customPlaces.find(p => p.placeId === placeId)) {
+        state.customPlaces.push({
+          id: 'gp-' + Date.now(), placeId,
+          name: btn.dataset.gname,
+          lat: parseFloat(btn.dataset.glat) || null,
+          lng: parseFloat(btn.dataset.glng) || null,
+          neighborhood: '', duration: 60, category: btn.dataset.gcat,
+        });
         saveState();
-        toast('Added to ' + dayLabel(d));
-        btn.textContent = '✓'; btn.disabled = true;
-      });
+        toast(btn.dataset.gname + ' saved to backlog');
+        btn.textContent = '✓ Saved'; btn.disabled = true;
+      } else {
+        toast('Already in your backlog');
+      }
+    });
+
+    // Day pick for catalog/backlog items
+    root.addEventListener('click', e => {
+      const btn = e.target.closest('.d-day-pick[data-pid]');
+      if (!btn) return;
+      const d = state.days.find(x => x.id === btn.dataset.day);
+      const placeId = btn.dataset.pid;
+      if (!d || d.blocks.some(b => b.placeId === placeId)) { toast('Already on that day'); return; }
+      d.blocks.push({ id: 'b-' + Date.now(), placeId, hour: null, duration: getDuration(placeId) });
+      saveState();
+      toast('Added to ' + dayLabel(d) + ' — go to Day tab to schedule');
+      btn.textContent = dayLabel(d) + ' ✓'; btn.disabled = true;
+      btn.closest('.d-picker').hidden = true;
+    });
+
+    // Day pick for Google Places items
+    root.addEventListener('click', e => {
+      const btn = e.target.closest('.d-day-pick[data-gpid]');
+      if (!btn) return;
+      const d = state.days.find(x => x.id === btn.dataset.day);
+      if (!d) return;
+      const placeId = 'gp-' + btn.dataset.gpid;
+      if (!state.customPlaces.find(p => p.placeId === placeId)) {
+        state.customPlaces.push({
+          id: 'gp-' + Date.now(), placeId,
+          name: btn.dataset.gname,
+          lat: parseFloat(btn.dataset.glat) || null,
+          lng: parseFloat(btn.dataset.glng) || null,
+          neighborhood: '', duration: 60, category: btn.dataset.gcat,
+        });
+      }
+      if (!d.blocks.some(b => b.placeId === placeId)) {
+        d.blocks.push({ id: 'b-' + Date.now(), placeId, hour: null, duration: 60 });
+      }
+      saveState();
+      toast('Added to ' + dayLabel(d) + ' — go to Day tab to schedule');
+      btn.textContent = dayLabel(d) + ' ✓'; btn.disabled = true;
+      btn.closest('.d-picker').hidden = true;
     });
   }
 
@@ -2562,7 +2631,9 @@
       : past
         ? `<button type="button" class="btn-rate" data-rate-block="${attr(b.id)}" data-day="${attr(dayId)}">Rate this stop</button>`
         : '';
-    return `<div class="block ${catClass(a)}" draggable="true" data-block-id="${attr(b.id)}" data-place-id="${attr(b.placeId)}" data-day-id="${attr(dayId)}" data-hour="${b.hour}">
+    const dur = b.duration || getDuration(b.placeId);
+    const minH = Math.max(Math.round((dur / 60) * 52), 52);
+    return `<div class="block ${catClass(a)}" draggable="true" style="min-height:${minH}px" data-block-id="${attr(b.id)}" data-place-id="${attr(b.placeId)}" data-day-id="${attr(dayId)}" data-hour="${b.hour}">
       <button type="button" class="remove" data-remove-block="${attr(b.id)}" data-day="${attr(dayId)}">×</button>
       <div class="block-name">${catEmoji(a)} ${esc(a.name)}</div>
       <div class="block-enjoy">${enjoyLabel(b.duration)}</div>

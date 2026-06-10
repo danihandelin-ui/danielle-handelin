@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Nearby Add Options</title>
+<style>
+  :root {
+    --bg: #f7f4ef; --paper: #fffdf9; --ink: #1c1917; --muted: #78716c;
+    --line: #e7e0d6; --accent: #b4534b; --accent-soft: #f5e8e6;
+    --teal: #2d6a6a; --teal-soft: #e8f2f2;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Outfit", system-ui, sans-serif; background: #e8e4de; margin: 0; padding: 1rem; color: var(--ink); }
+  h1 { font-size: 1.2rem; font-weight: 700; margin: 0 0 0.25rem; }
+  p.desc { font-size: 0.82rem; color: var(--muted); margin: 0 0 1.25rem; }
+  .section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin: 1.5rem 0 0.5rem; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .frame { background: var(--paper); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .frame-label { background: var(--ink); color: var(--paper); font-size: 0.65rem; font-weight: 600; padding: 0.35rem 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  /* Shared nearby list styles */
+  .nearby-card { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--line); position: relative; }
+  .nearby-icon { width: 30px; height: 30px; border-radius: 7px; background: var(--teal-soft); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+  .nearby-info { flex: 1; min-width: 0; }
+  .nearby-name { font-size: 0.8rem; font-weight: 700; margin: 0 0 0.1rem; }
+  .nearby-meta { font-size: 0.62rem; color: var(--muted); margin: 0; }
+
+  /* Option A — split button */
+  .split-btn { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .split-btn-list { font: inherit; font-size: 0.62rem; font-weight: 600; padding: 0.3rem 0.5rem; border: none; background: var(--teal-soft); color: var(--teal); cursor: pointer; white-space: nowrap; border-right: 1px solid var(--line); }
+  .split-btn-day { font: inherit; font-size: 0.62rem; font-weight: 600; padding: 0.3rem 0.5rem; border: none; background: var(--ink); color: white; cursor: pointer; white-space: nowrap; }
+
+  /* Option B — single + Add button → dropdown appears */
+  .add-btn { font: inherit; font-size: 0.68rem; font-weight: 600; padding: 0.28rem 0.6rem; border: none; border-radius: 8px; background: var(--ink); color: white; cursor: pointer; flex-shrink: 0; }
+  .add-dropdown-panel { position: absolute; right: 0.85rem; top: 100%; background: var(--paper); border: 1.5px solid var(--teal); border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 10; min-width: 180px; overflow: hidden; }
+  .add-dropdown-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.85rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; border-bottom: 1px solid var(--line); }
+  .add-dropdown-item:last-child { border-bottom: none; }
+  .add-dropdown-item:hover { background: var(--teal-soft); }
+  .add-dropdown-item .item-icon { font-size: 0.9rem; }
+  .add-dropdown-item .item-sub { font-size: 0.62rem; color: var(--muted); font-weight: 400; display: block; margin-top: 0.05rem; }
+  .add-dropdown-day { font-size: 0.7rem; color: var(--muted); padding: 0.4rem 0.85rem 0.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg); }
+  .add-dropdown-day-item { display: flex; align-items: center; padding: 0.4rem 0.85rem; font-size: 0.75rem; cursor: pointer; border-bottom: 1px solid var(--line); gap: 0.35rem; }
+  .add-dropdown-day-item:hover { background: var(--teal-soft); }
+  .add-dropdown-day-item:last-child { border-bottom: none; }
+
+  /* Option C — bottom sheet on mobile */
+  .phone-frame { width: 280px; border: 2px solid var(--line); border-radius: 28px; overflow: hidden; background: var(--bg); position: relative; margin: 0 auto; }
+  .phone-status { background: var(--ink); color: white; font-size: 0.55rem; padding: 0.3rem 1rem; text-align: center; }
+  .sheet-overlay { background: rgba(0,0,0,0.4); height: 120px; }
+  .bottom-sheet { background: var(--paper); border-radius: 16px 16px 0 0; padding: 0.75rem 1rem 1rem; }
+  .sheet-handle { width: 36px; height: 3px; background: var(--line); border-radius: 999px; margin: 0 auto 0.65rem; }
+  .sheet-title { font-size: 0.78rem; font-weight: 700; margin: 0 0 0.5rem; }
+  .sheet-title span { font-weight: 400; color: var(--muted); }
+  .sheet-option { display: flex; align-items: center; gap: 0.65rem; padding: 0.6rem 0.75rem; border: 1.5px solid var(--line); border-radius: 10px; margin-bottom: 0.35rem; cursor: pointer; }
+  .sheet-option:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .sheet-option-icon { font-size: 1.1rem; }
+  .sheet-option-text strong { display: block; font-size: 0.78rem; }
+  .sheet-option-text span { font-size: 0.62rem; color: var(--muted); }
+  .sheet-days { margin-top: 0.5rem; }
+  .sheet-days-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.3rem; }
+  .sheet-day-chip { display: inline-block; padding: 0.25rem 0.6rem; border: 1px solid var(--line); border-radius: 999px; font-size: 0.7rem; font-weight: 600; margin: 0.15rem 0.2rem 0 0; cursor: pointer; background: var(--bg); }
+  .sheet-day-chip:hover { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .note-box { background: #fff8f0; border: 1.5px solid #e8d5b0; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.8rem; line-height: 1.5; }
+  .choice-box { background: var(--teal-soft); border: 1.5px solid var(--teal); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<h1>Wireframe: Nearby "+ Add" Options</h1>
+<p class="desc">User taps "+ Add" on a nearby place — should get a choice: add to backlog list only, or add to a specific day.</p>
+
+<div class="section-label">Option A — Split button (always visible, no tap needed)</div>
+<div class="two-col">
+  <div class="frame">
+    <div class="frame-label">Split button — list | day</div>
+    <div class="nearby-card">
+      <div class="nearby-icon">🍽️</div>
+      <div class="nearby-info">
+        <div class="nearby-name">Balthazar</div>
+        <div class="nearby-meta">0.5 mi · Restaurant</div>
+      </div>
+      <div class="split-btn">
+        <button class="split-btn-list">+ List</button>
+        <button class="split-btn-day">+ Day</button>
+      </div>
+    </div>
+    <div class="nearby-card">
+      <div class="nearby-icon">☕</div>
+      <div class="nearby-info">
+        <div class="nearby-name">Blue Bottle Coffee</div>
+        <div class="nearby-meta">0.3 mi · Coffee</div>
+      </div>
+      <div class="split-btn">
+        <button class="split-btn-list">+ List</button>
+        <button class="split-btn-day">+ Day</button>
+      </div>
+    </div>
+    <div style="padding:0.65rem; font-size:0.7rem; color:var(--muted);">
+      <strong>+ List</strong> = saves to backlog (no day scheduled)<br>
+      <strong>+ Day</strong> = opens a sheet to pick which day
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-label">Option B — Single "+ Add" → dropdown</div>
+    <div class="nearby-card" style="overflow:visible;">
+      <div class="nearby-icon">🍽️</div>
+      <div class="nearby-info">
+        <div class="nearby-name">Balthazar</div>
+        <div class="nearby-meta">0.5 mi · Restaurant</div>
+      </div>
+      <button class="add-btn">+ Add ▾</button>
+      <!-- dropdown shown on tap -->
+      <div class="add-dropdown-panel">
+        <div class="add-dropdown-item">
+          <span class="item-icon">📋</span>
+          <div><span>Save to backlog</span><span class="item-sub">No day scheduled yet</span></div>
+        </div>
+        <div class="add-dropdown-day">Add to a day</div>
+        <div class="add-dropdown-day-item">🗓 Day 1 — Fri Jun 21</div>
+        <div class="add-dropdown-day-item">🗓 Day 2 — Sat Jun 22</div>
+        <div class="add-dropdown-day-item">🗓 Day 3 — Sun Jun 23</div>
+      </div>
+    </div>
+    <div style="padding:0.65rem; font-size:0.7rem; color:var(--muted); margin-top:4.5rem;">
+      Tap "+ Add ▾" to open. Shows "Save to backlog" at top, then each day below.
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Option C — Bottom sheet (mobile-friendly, same as the backlog tap-to-add)</div>
+<div style="display:flex; justify-content:center; margin-bottom:1.5rem;">
+  <div>
+    <div class="phone-frame">
+      <div class="phone-status">9:41 AM</div>
+      <div style="padding:0.5rem 0.65rem; background:var(--paper); border-bottom:1px solid var(--line);">
+        <div style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--teal);">✨ Nearby</div>
+      </div>
+      <div class="nearby-card" style="background:var(--paper);">
+        <div class="nearby-icon">🍽️</div>
+        <div class="nearby-info">
+          <div class="nearby-name" style="font-size:0.72rem;">Balthazar</div>
+          <div class="nearby-meta">0.5 mi · Restaurant</div>
+        </div>
+        <button class="add-btn" style="font-size:0.6rem; padding:0.25rem 0.45rem;">+ Add</button>
+      </div>
+      <div class="sheet-overlay"></div>
+      <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">Add <span>Balthazar</span></div>
+        <div class="sheet-option">
+          <span class="sheet-option-icon">📋</span>
+          <div class="sheet-option-text">
+            <strong>Backlog only</strong>
+            <span>Save to your list, schedule later</span>
+          </div>
+        </div>
+        <div class="sheet-days">
+          <div class="sheet-days-label">Or add to a specific day</div>
+          <span class="sheet-day-chip">Day 1 · Jun 21</span>
+          <span class="sheet-day-chip">Day 2 · Jun 22</span>
+          <span class="sheet-day-chip">Day 3 · Jun 23</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:0.72rem; color:var(--muted); margin-top:0.5rem;">Tap "+ Add" → sheet slides up</div>
+  </div>
+</div>
+
+<div class="choice-box">
+  <strong>Which do you prefer?</strong><br>
+  A — Split button (two small buttons always visible: "+ List" and "+ Day")<br>
+  B — Single "+ Add ▾" that opens a dropdown<br>
+  C — Bottom sheet (consistent with how backlog tap-to-add works)
+</div>
+
+</body>
+</html>
