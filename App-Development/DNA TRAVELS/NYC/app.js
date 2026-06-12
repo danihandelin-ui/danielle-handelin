@@ -1585,6 +1585,7 @@
     });
   }
 
+  let lastNearbyError = '';
   async function fetchNearbyPlaces(lat, lng) {
     const key = GOOGLE_PLACES_KEY || state.googlePlacesKey;
     if (!key || !lat || !lng) return [];
@@ -1607,7 +1608,15 @@
           locationRestriction: { circle: { center: { latitude: lat, longitude: lng }, radius: 800 } },
         }),
       });
-      if (!res.ok) return [];
+      if (!res.ok) {
+        let reason = 'HTTP ' + res.status;
+        try { const err = await res.json(); reason = err?.error?.message || reason; } catch (e) { /* ignore */ }
+        lastNearbyError = res.status === 403
+          ? 'Google blocked this request (key restriction). Nearby only works on the live site — open this app at its github.io address. Reason: ' + reason
+          : 'Nearby unavailable: ' + reason;
+        return [];
+      }
+      lastNearbyError = '';
       const data = await res.json();
       const places = (data.places || []).map(p => ({
         name: p.displayName?.text || 'Unknown',
@@ -1621,6 +1630,7 @@
       try { sessionStorage.setItem(cacheKey, JSON.stringify(places)); } catch (e) { /* ignore */ }
       return places;
     } catch (e) {
+      lastNearbyError = 'Could not reach Google (network/CORS). Nearby works best on the live github.io site.';
       return [];
     }
   }
@@ -1778,7 +1788,10 @@
         const getGCategory = p => p.category || 'other';
         const getGEmoji = p => CAT_EMOJIS[getGCategory(p)] || '📌';
         if (!withCat.length) {
-          newSection.innerHTML = '<div class="discover-section-title new">✨ Discover — not in your list</div><div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">No new places found nearby right now.</div>';
+          const msg = lastNearbyError
+            ? esc(lastNearbyError)
+            : 'No new places found nearby right now.';
+          newSection.innerHTML = '<div class="discover-section-title new">✨ Discover — not in your list</div><div style="font-size:0.75rem;padding:0.65rem;color:var(--muted)">' + msg + '</div>';
           return;
         }
         const itemsHtml = withCat.map(p => {
@@ -1924,7 +1937,8 @@
       const total = (parseInt(hEl.value,10)||0)*60 + (parseInt(mEl.value,10)||0);
       state.durationOverrides = state.durationOverrides || {};
       state.durationOverrides[placeId] = clampDur(total || parseInt(selEl.value,10) || 60);
-      saveState(); renderAll(); dialog.close(); dialog.remove();
+      dialog.close(); dialog.remove();
+      saveState(); renderAll();
       toast('Duration updated');
     });
     dialog.addEventListener('close', () => dialog.remove());
@@ -2557,10 +2571,10 @@
       const m = parseInt(mEl.value, 10) || 0;
       const total = h * 60 + m;
       block.duration = clampDur(total || parseInt(selEl.value, 10) || 60);
-      saveState();
-      renderAll();
       dialog.close();
       dialog.remove();
+      saveState();
+      renderAll();
       toast('Set to ' + durationLabel(block.duration));
     });
 
