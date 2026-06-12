@@ -1,8 +1,10 @@
 # 📱 DNA TRAVELS — Open on your phone
 
-**Live app (use this one — saves your trip, Nearby works):**
+**Live app (use this short link — no spaces, works reliably on phones):**
 
-https://danihandelin-ui.github.io/danielle-handelin/App-Development/DNA%20TRAVELS/NYC/index.html
+https://danihandelin-ui.github.io/danielle-handelin/dna/
+
+*(This forwards to the app automatically. Saves your trip, Nearby works.)*
 
 ## Add to your home screen (one time)
 1. Open the link above in **Safari** (iPhone) or **Chrome** (Android).
