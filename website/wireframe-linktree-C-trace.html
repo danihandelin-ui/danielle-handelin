@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wireframe C (Trace) — Danielle Handelin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* Trace Strategies palette (from logo) */
+    --bg:#142420;            /* deep teal-charcoal */
+    --bg-2:#1B302A;
+    --teal:#2F7E6E;
+    --teal-light:#4A9D8C;
+    --copper:#C0834E;
+    --copper-light:#D9AE83;
+    --cream:#F2EDE4;
+    --soft:#9DB0A8;          /* muted teal-gray text */
+    --border:rgba(242,237,228,0.14);
+    --font-display:'Cormorant Garamond',Georgia,serif;
+    --font-body:'DM Sans',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--cream);font-family:var(--font-body);line-height:1.6;
+    min-height:100svh;display:flex;flex-direction:column;align-items:center;
+    padding:clamp(2rem,7vw,4rem) 1.5rem;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 50% -5%,rgba(192,131,78,.20),transparent 55%),
+                     radial-gradient(circle at 50% 110%,rgba(47,126,110,.18),transparent 50%)}
+  a{text-decoration:none;color:inherit}
+  .wrap{width:100%;max-width:430px;text-align:center}
+  .brandmark{display:block;height:34px;margin:0 auto 1.1rem;opacity:.95}
+  .avatar{display:block;width:104px;height:104px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;
+    border:3px solid var(--cream);box-shadow:0 4px 14px rgba(0,0,0,.30)}
+  .name{font-family:var(--font-display);font-size:2.2rem;font-weight:500;letter-spacing:.01em}
+  .handle{color:var(--copper-light);font-size:.74rem;font-weight:600;letter-spacing:.2em;
+    text-transform:uppercase;margin-top:.45rem}
+  .bio{color:var(--soft);font-size:.93rem;font-weight:300;margin:1.1rem auto 0;max-width:340px}
+  .links{margin-top:2.3rem;display:flex;flex-direction:column;gap:.95rem}
+  .link{display:flex;flex-direction:column;align-items:center;gap:.15rem;
+    border:2px solid var(--cream);border-radius:16px;padding:1.05rem 1.4rem;
+    font-size:1.02rem;font-weight:500;letter-spacing:.01em;background:rgba(242,237,228,.03);
+    box-shadow:0 4px 12px rgba(0,0,0,.28);
+    transition:transform .18s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .link .sub{font-weight:300;font-size:.78rem;color:var(--soft);letter-spacing:0}
+  .link:hover{transform:translateY(-2px);background:rgba(242,237,228,.06);box-shadow:0 8px 18px rgba(0,0,0,.34)}
+  .link.primary{background:var(--copper);border-color:var(--cream);color:#1a130b}
+  .link.primary .sub{color:rgba(26,19,11,.7)}
+  .link.primary:hover{background:var(--copper-light)}
+  .foot{margin-top:2.6rem;font-size:.72rem;color:var(--soft);letter-spacing:.08em}
+  .foot a{color:var(--copper-light)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="avatar" src="Headshot.png" alt="Danielle Handelin" />
+    <img class="brandmark" src="trace-logo.png" alt="Trace Strategies" />
+    <h1 class="name">Danielle Handelin</h1>
+    <div class="handle">Trace Strategies</div>
+
+    <div class="links">
+      <a class="link primary" href="#AUDIT_GUIDE_LINK">
+        Free Audit Guide
+        <span class="sub">Spot the gaps in your operations</span>
+      </a>
+      <a class="link secondary" href="#AI_COURSE_LINK">
+        AI Course
+        <span class="sub">Put AI to work in your business</span>
+      </a>
+    </div>
+
+    <div class="foot">© <span id="y"></span> Danielle Handelin · <a href="#">Trace Strategies</a></div>
+  </div>
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
