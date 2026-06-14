@@ -1,10 +1,11 @@
 {
-  "name": "Danielle Handelin",
+  "name": "Danielle Handelin | TRACE Strategies",
   "short_name": "Danielle",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F0E8",
-  "theme_color": "#C1673A",
-  "icons": []
+  "background_color": "#0A1714",
+  "theme_color": "#0A1714",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
 }
-
