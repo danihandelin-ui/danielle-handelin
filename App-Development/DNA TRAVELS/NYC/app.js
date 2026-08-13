@@ -1,7 +1,7 @@
 /* DNA TRAVELS — NYC */
 (function () {
   // Paste your Google Places API key here — works on all devices automatically
-  const GOOGLE_PLACES_KEY = 'AIzaSyC4rR3r-s-7evby2AcJbbeAoncARbVKnP4';
+  const GOOGLE_PLACES_KEY = 'AIzaSyD4v82T7drgEekCiMef21GeB8wKYwD141s';
 
   const PLACES = window.__PLACES__ || [];
   let catalogFromFile = [];
